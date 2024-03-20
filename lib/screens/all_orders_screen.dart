@@ -35,7 +35,7 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.whiteColor,
-      appBar: appBar('All Orders'),
+      appBar: appBar('All Orders', () {}),
       body: ListView.separated(
           separatorBuilder: (context, sp) {
             return ScreenSize.height(15);
@@ -99,10 +99,10 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
               orderButton(
                   status,
                   status == 'Canceled'
-                      ? const Color(0xffFF3939)
+                      ? const Color(0xff6E6E96)
                       : status == 'Completed'
-                          ? const Color(0xff6CD342)
-                          : const Color(0xffF1C644)),
+                          ? const Color(0xffFE70D8)
+                          : const Color(0xffFE70D8)),
             ],
           ),
           Align(

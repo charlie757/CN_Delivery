@@ -35,7 +35,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         bottomNavigationBar: Container(
           height: 65,
           decoration: BoxDecoration(
-              color: AppColor.whiteColor,
+              color: AppColor.blueColor,
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10)),
               boxShadow: [
@@ -81,7 +81,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        color: AppColor.whiteColor,
+        color: AppColor.blueColor,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -90,7 +90,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               height: 20,
               width: 20,
               color: provider.currentIndex == index
-                  ? AppColor.appTheme
+                  ? AppColor.whiteColor
                   : const Color(0xffB8B8B8),
             ),
             ScreenSize.height(6),
@@ -99,7 +99,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 size: 11,
                 fontFamily: FontFamily.poppinsMedium,
                 color: provider.currentIndex == index
-                    ? AppColor.appTheme
+                    ? AppColor.whiteColor
                     : const Color(0xffB8B8B8),
                 fontWeight: FontWeight.w400)
           ],

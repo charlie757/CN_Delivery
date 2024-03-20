@@ -80,7 +80,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: TextStyle(
                             fontSize: 23,
                             fontFamily: FontFamily.poppinsSemiBold,
-                            color: AppColor.appTheme,
+                            color: AppColor.blueColor,
                             fontWeight: FontWeight.w600),
                         minFontSize: 16,
                         maxLines: 1,
@@ -101,7 +101,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         AppImages.callIcon,
                       ),
                       size: 24,
-                      color: AppColor.appTheme,
+                      color: AppColor.blueColor,
                     ),
                   ),
                 ),
@@ -117,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const AssetImage(
                         AppImages.passwordIcon,
                       ),
-                      color: AppColor.appTheme,
+                      color: AppColor.blueColor,
                       size: 24,
                     ),
                   ),

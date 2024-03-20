@@ -31,7 +31,8 @@ class _AppButtonState extends State<AppButton> {
       style: ElevatedButton.styleFrom(
           elevation: 7,
           shadowColor: AppColor.appTheme,
-          primary: widget.buttonColor,
+          backgroundColor: widget.buttonColor,
+          // primary: widget.buttonColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(40))),
       onPressed: widget.onTap,

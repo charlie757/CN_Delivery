@@ -126,13 +126,13 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
                     getText(
                         title: 'Aleksandr V.',
                         size: 15,
-                        fontFamily: FontFamily.poppinsMedium,
+                        fontFamily: FontFamily.poppinsRegular,
                         color: Color(0xff2F2E36),
                         fontWeight: FontWeight.w400),
                     getText(
                         title: '+1 - 987-654-3210',
                         size: 15,
-                        fontFamily: FontFamily.poppinsMedium,
+                        fontFamily: FontFamily.poppinsRegular,
                         color: Color(0xff2F2E36),
                         fontWeight: FontWeight.w400),
                   ],
@@ -273,14 +273,15 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
                 height: 16,
                 width: 16,
                 decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xffD9D9D9), width: 2),
+                    border:
+                        Border.all(color: const Color(0xffD9D9D9), width: 2),
                     shape: BoxShape.circle),
                 child: Container(
                   margin: const EdgeInsets.all(4),
                   height: 3,
                   width: 3,
                   decoration: BoxDecoration(
-                      color: AppColor.appTheme, shape: BoxShape.circle),
+                      color: AppColor.blueColor, shape: BoxShape.circle),
                 ),
               ),
               Container(
@@ -301,28 +302,28 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
               const getText(
                   title: '88 Zurab Gorgiladze St',
                   size: 15,
-                  fontFamily: FontFamily.poppinsMedium,
+                  fontFamily: FontFamily.poppinsRegular,
                   color: Color(0xff2F2E36),
                   fontWeight: FontWeight.w400),
               ScreenSize.height(0),
               const getText(
                   title: 'Georgia, Batumi',
                   size: 13,
-                  fontFamily: FontFamily.poppinsMedium,
+                  fontFamily: FontFamily.poppinsRegular,
                   color: Color(0xffB8B8B8),
                   fontWeight: FontWeight.w400),
               ScreenSize.height(8),
               const getText(
                   title: '5 Noe Zhordania St',
                   size: 15,
-                  fontFamily: FontFamily.poppinsMedium,
+                  fontFamily: FontFamily.poppinsRegular,
                   color: Color(0xff2F2E36),
                   fontWeight: FontWeight.w400),
               ScreenSize.height(0),
               const getText(
                   title: 'Georgia, Batumi',
                   size: 13,
-                  fontFamily: FontFamily.poppinsMedium,
+                  fontFamily: FontFamily.poppinsRegular,
                   color: Color(0xffB8B8B8),
                   fontWeight: FontWeight.w400),
             ],

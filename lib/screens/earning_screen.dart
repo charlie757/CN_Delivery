@@ -18,7 +18,7 @@ class _EarningScreenState extends State<EarningScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         backgroundColor: AppColor.whiteColor,
-        appBar: appBar('Earnings'),
+        appBar: appBar('Earnings',(){}),
         body: Container(
           margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
           decoration: BoxDecoration(

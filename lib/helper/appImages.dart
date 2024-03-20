@@ -18,6 +18,7 @@ class AppImages {
   static const stateIcon = 'assets/icons/state.png';
   static const stateIdIcon = 'assets/icons/stateId.png';
   static const locationIcon = 'assets/icons/location.png';
-  static const onGoingIcon = 'assets/icons/ongoingIcon.png';
+  static const onGoingIcon = 'assets/icons/onGoingIcon.png';
   static const completedIcon = 'assets/icons/completedIcon.png';
+  static const totalOrderIcon = 'assets/icons/totalOrder.png';
 }
