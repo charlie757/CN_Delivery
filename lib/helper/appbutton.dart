@@ -10,15 +10,16 @@ class AppButton extends StatefulWidget {
   final Color buttonColor;
   final Color textColor;
   final Function() onTap;
-  const AppButton({
-    super.key,
-    required this.title,
-    required this.height,
-    required this.width,
-    required this.buttonColor,
-    this.textColor = Colors.white,
-    required this.onTap,
-  });
+  final isLoading;
+  const AppButton(
+      {super.key,
+      required this.title,
+      required this.height,
+      required this.width,
+      required this.buttonColor,
+      this.textColor = Colors.white,
+      required this.onTap,
+      this.isLoading = false});
 
   @override
   State<AppButton> createState() => _AppButtonState();
@@ -40,12 +41,21 @@ class _AppButtonState extends State<AppButton> {
         alignment: Alignment.center,
         height: widget.height,
         width: widget.width,
-        child: getText(
-            title: widget.title,
-            size: 20,
-            fontFamily: FontFamily.poppinsMedium,
-            color: widget.textColor,
-            fontWeight: FontWeight.w500),
+        child: widget.isLoading
+            ? SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: AppColor.whiteColor,
+                ),
+              )
+            : getText(
+                title: widget.title,
+                size: 20,
+                fontFamily: FontFamily.poppinsMedium,
+                color: widget.textColor,
+                fontWeight: FontWeight.w500),
       ),
     );
   }

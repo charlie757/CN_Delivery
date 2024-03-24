@@ -1,3 +1,8 @@
+import 'dart:convert';
+
+import 'package:cn_delivery/api/api_service.dart';
+import 'package:cn_delivery/api/api_url.dart';
+import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:flutter/material.dart';
 
 class DashboardProvider extends ChangeNotifier {
@@ -6,5 +11,16 @@ class DashboardProvider extends ChangeNotifier {
   updateIndex(value) {
     currentIndex = value;
     notifyListeners();
+  }
+
+  updateFcmTokenApiFunction() {
+    var body = json.encode({
+      "fcm_token": SessionManager.fcmToken,
+    });
+    ApiService.apiMethod(
+      url: ApiUrl.updateFcmTokenUrl,
+      body: body,
+      method: checkApiMethod(httpMethod.put),
+    ).then((value) {});
   }
 }

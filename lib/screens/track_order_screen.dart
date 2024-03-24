@@ -18,18 +18,23 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.whiteColor,
-      appBar: appBar('Track Order',(){
-        Navigator.pop(context);
-      }),
+      appBar: appbarWithLeading('Track Order'),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 23, left: 15, right: 15,bottom: 40),
-          child:  Column(
+          padding:
+              const EdgeInsets.only(top: 23, left: 15, right: 15, bottom: 40),
+          child: Column(
             // crossAxisAlignment: CrossAxisAlignment.start,
-            children: [orderWidget(), trackWidget(),
-            ScreenSize.height(50),
-            AppButton(title: 'TRACK DRIVER', 
-            height: 49, width: double.infinity, buttonColor: AppColor.appTheme, onTap: (){})
+            children: [
+              orderWidget(),
+              trackWidget(),
+              ScreenSize.height(50),
+              AppButton(
+                  title: 'TRACK DRIVER',
+                  height: 49,
+                  width: double.infinity,
+                  buttonColor: AppColor.appTheme,
+                  onTap: () {})
             ],
           ),
         ),
@@ -94,82 +99,92 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
   }
 
   trackWidget() {
-    return Container(
-      width: double.infinity,
-      padding:const EdgeInsets.only(left: 100),
+    return Align(
       alignment: Alignment.center,
       child: IntrinsicHeight(
-        child: Row(
-          children: [
-            Column(
-              children: [
-                Container(
-                    margin: const EdgeInsets.only(top: 2,),
-                    height: 40,
-                    child: const VerticalDivider(
-                      thickness: 4,
-                      color: Color(0xffDADADA),
-                    )),
-                Container(
-                  height: 25,
-                  width: 25,
-                  decoration:const BoxDecoration(shape: BoxShape.circle,
-                  color: Color(0xff1455AC)
-                  ),
-                ),
-                Container(
-                    height: 80,
-                    child: const VerticalDivider(
-                      thickness: 4,
-                      color: Color(0xffDADADA),
-                    )),
-                Container(
-                  height: 25,
-                  width: 25,
-                  decoration: BoxDecoration(shape: BoxShape.circle,
-                  // color: Color(0xff1455AC)
-                  border: Border.all(color:const Color(0xffDADADA),width: 2)
-                  ),
-                ),
-                Container(
-                    height: 80,
-                    child: const VerticalDivider(
-                      thickness: 4,
-                      color: Color(0xffDADADA),
-                    )),
-                Container(
-                  height: 25,
-                  width: 25,
-                  decoration: BoxDecoration(shape: BoxShape.circle,
-                  border: Border.all(color:const Color(0xffDADADA),width: 2)
-                  ),
-                ),
-              ],
-            ),
-            ScreenSize.width(8),
-            Padding(
-              padding: const EdgeInsets.only(top: 40),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 70),
+          child: Row(
+            children: [
+              Column(
                 children: [
-                  getText(title: 'Going to Delivery',
-                   size: 18, fontFamily: FontFamily.nunitoRegular, 
-                   color: AppColor.blackColor, fontWeight: FontWeight.w300),
-                const Padding(
-                   padding:  EdgeInsets.only(top: 80),
-                   child:  getText(title: 'Delivery',
-                     size: 18, fontFamily: FontFamily.nunitoRegular, 
-                     color: Color(0xff868686), fontWeight: FontWeight.w300),
-                 ),
-                 const Padding(
-                   padding:  EdgeInsets.only(top: 75),
-                   child:  getText(title: 'Completed\n& Payment Received',
-                     size: 18, fontFamily: FontFamily.nunitoRegular, 
-                     color: Color(0xff868686), fontWeight: FontWeight.w300),)
+                  const SizedBox(
+                      height: 40,
+                      child: VerticalDivider(
+                        thickness: 4,
+                        color: Color(0xffDADADA),
+                      )),
+                  Container(
+                    height: 25,
+                    width: 25,
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: Color(0xff1455AC)),
+                  ),
+                  const SizedBox(
+                      height: 80,
+                      child: VerticalDivider(
+                        thickness: 4,
+                        color: Color(0xffDADADA),
+                      )),
+                  Container(
+                    height: 25,
+                    width: 25,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: const Color(0xffDADADA), width: 3)),
+                  ),
+                  const SizedBox(
+                      height: 80,
+                      child: VerticalDivider(
+                        thickness: 4,
+                        color: Color(0xffDADADA),
+                      )),
+                  Container(
+                    height: 25,
+                    width: 25,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: const Color(0xffDADADA), width: 3)),
+                  )
                 ],
               ),
-            )
-          ],
+              ScreenSize.width(12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: getText(
+                        title: 'Going to delivery',
+                        size: 18,
+                        fontFamily: FontFamily.nunitoRegular,
+                        color: AppColor.blackColor,
+                        fontWeight: FontWeight.w300),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 80),
+                    child: getText(
+                        title: 'Delivery',
+                        size: 18,
+                        fontFamily: FontFamily.nunitoRegular,
+                        color: Color(0xff868686),
+                        fontWeight: FontWeight.w300),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.only(top: 68),
+                    child: getText(
+                        title: 'Completed\n& Payment Received',
+                        size: 18,
+                        fontFamily: FontFamily.nunitoRegular,
+                        color: Color(0xff868686),
+                        fontWeight: FontWeight.w300),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );

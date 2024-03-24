@@ -21,4 +21,5 @@ class AppImages {
   static const onGoingIcon = 'assets/icons/onGoingIcon.png';
   static const completedIcon = 'assets/icons/completedIcon.png';
   static const totalOrderIcon = 'assets/icons/totalOrder.png';
+  static const editIcon = 'assets/icons/edit.png';
 }

@@ -2,8 +2,11 @@ import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
+import 'package:cn_delivery/model/all_order_model.dart';
+import 'package:cn_delivery/provider/all_order_provider.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AllOrderScreen extends StatefulWidget {
   const AllOrderScreen({super.key});
@@ -31,26 +34,52 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
       'progress': 'In Progress',
     }
   ];
+
+  @override
+  void initState() {
+    callInitFunction();
+    super.initState();
+  }
+
+  callInitFunction() {
+    final myProvider = Provider.of<AllOrderProvider>(context, listen: false);
+    Future.delayed(Duration.zero, () {
+      myProvider.getAllOrderProvider();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.whiteColor,
-      appBar: appBar('All Orders', () {}),
-      body: ListView.separated(
-          separatorBuilder: (context, sp) {
-            return ScreenSize.height(15);
-          },
-          itemCount: orderList.length,
-          padding:
-              const EdgeInsets.only(left: 15, right: 15, bottom: 40, top: 20),
-          itemBuilder: (context, index) {
-            return orderWidget(
-                orderList[index]['img'], orderList[index]['progress']);
-          }),
+      appBar: appBar(title: 'All Orders'),
+      body: Consumer<AllOrderProvider>(builder: (context, myProvider, child) {
+        return myProvider.allOrderList.isEmpty
+            ? Center(
+                child: getText(
+                    title: 'No orders found',
+                    size: 16,
+                    fontFamily: FontFamily.poppinsRegular,
+                    color: AppColor.blackColor,
+                    fontWeight: FontWeight.w400),
+              )
+            : ListView.separated(
+                separatorBuilder: (context, sp) {
+                  return ScreenSize.height(15);
+                },
+                itemCount: myProvider.allOrderList.length,
+                padding: const EdgeInsets.only(
+                    left: 15, right: 15, bottom: 40, top: 20),
+                itemBuilder: (context, index) {
+                  var model =
+                      AllOrderModel.fromJson(myProvider.allOrderList[index]);
+                  return orderWidget(model);
+                });
+      }),
     );
   }
 
-  orderWidget(img, status) {
+  orderWidget(AllOrderModel model) {
     return Container(
       decoration: BoxDecoration(
           color: AppColor.whiteColor,
@@ -69,7 +98,7 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
           Align(
             alignment: Alignment.centerRight,
             child: getText(
-                title: '15-Mar-2020 - 13.48.15',
+                title: model.orderDate.toString(),
                 size: 12,
                 fontFamily: FontFamily.poppinsRegular,
                 color: AppColor.blackColor,
@@ -78,69 +107,134 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
           ScreenSize.height(1),
           Row(
             children: [
-              Image.asset(
-                img,
-                height: 50,
-                width: 56,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Image.network(
+                  model.product![0].image,
+                  height: 60,
+                  width: 66,
+                  fit: BoxFit.fill,
+                ),
               ),
               ScreenSize.width(12),
               Expanded(
-                  child: Text(
-                'New Mini Mart',
-                overflow: TextOverflow.ellipsis,
-                maxLines: 1,
-                style: TextStyle(
-                    fontSize: 16,
-                    fontFamily: FontFamily.poppinsMedium,
-                    color: AppColor.blackColor,
-                    fontWeight: FontWeight.w500),
-              )),
-              ScreenSize.width(2),
-              orderButton(
-                  status,
-                  status == 'Canceled'
-                      ? const Color(0xff6E6E96)
-                      : status == 'Completed'
-                          ? const Color(0xffFE70D8)
-                          : const Color(0xffFE70D8)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      model.product![0].title,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: FontFamily.poppinsMedium,
+                          color: AppColor.blackColor,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text.rich(TextSpan(
+                                  text: 'Qty: ',
+                                  style: TextStyle(
+                                      color: AppColor.blackColor,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: FontFamily.poppinsRegular),
+                                  children: [
+                                    TextSpan(
+                                        text: model.product![0].qty.toString(),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: AppColor.blackColor,
+                                            fontFamily:
+                                                FontFamily.poppinsRegular))
+                                  ])),
+                              Text.rich(TextSpan(
+                                  text: 'Price: ',
+                                  style: TextStyle(
+                                      color: AppColor.blackColor,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: FontFamily.poppinsRegular),
+                                  children: [
+                                    TextSpan(
+                                        text:
+                                            model.product![0].price.toString(),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: AppColor.blackColor,
+                                            fontFamily:
+                                                FontFamily.poppinsRegular))
+                                  ])),
+                            ],
+                          ),
+                        ),
+                        ScreenSize.width(2),
+                        orderButton(
+                            model.orderStatus,
+                            model.orderStatus.toString().toUpperCase() ==
+                                    'CANCELED'
+                                ? const Color(0xff6E6E96)
+                                : model.orderStatus.toString().toUpperCase() ==
+                                        'COMPLETED'
+                                    ? Colors.green
+                                    : const Color(0xffFE70D8)),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
+          ScreenSize.height(5),
           Align(
             alignment: Alignment.centerRight,
             child: viewOrderDetailsButton(),
           ),
+          ScreenSize.height(6),
+          Row(
+            children: [
+              getText(
+                  title: 'Total Order Value: ',
+                  size: 13,
+                  fontFamily: FontFamily.poppinsRegular,
+                  color: AppColor.blackColor.withOpacity(.5),
+                  fontWeight: FontWeight.w400),
+              getText(
+                  title: '${model.orderAmount.toString()} USD',
+                  size: 14,
+                  fontFamily: FontFamily.poppinsSemiBold,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400),
+            ],
+          ),
           ScreenSize.height(4),
-          Text.rich(TextSpan(
-              text: 'Total Order Value: ',
-              style: TextStyle(
-                  color: AppColor.blackColor.withOpacity(.6),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: FontFamily.poppinsRegular),
-              children: [
-                TextSpan(
-                    text: '200 USD',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: AppColor.blackColor,
-                        fontFamily: FontFamily.poppinsSemiBold))
-              ])),
-          ScreenSize.height(2),
-          Text.rich(TextSpan(
-              text: 'Payment Method: ',
-              style: TextStyle(
-                  color: AppColor.blackColor.withOpacity(.6),
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: FontFamily.poppinsRegular),
-              children: [
-                TextSpan(
-                    text: 'COD',
-                    style: TextStyle(
-                        fontSize: 16,
-                        color: AppColor.blackColor,
-                        fontFamily: FontFamily.poppinsSemiBold))
-              ]))
+          Row(
+            children: [
+              getText(
+                  title: 'Payment Method: ',
+                  size: 13,
+                  fontFamily: FontFamily.poppinsRegular,
+                  color: AppColor.blackColor.withOpacity(.5),
+                  fontWeight: FontWeight.w400),
+              Flexible(
+                child: Text(
+                  model.paymentMethod.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: FontFamily.poppinsSemiBold,
+                      color: AppColor.blackColor,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

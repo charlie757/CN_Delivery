@@ -4,6 +4,7 @@ import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/provider/dashboard_provider.dart';
+import 'package:cn_delivery/provider/profile_provider.dart';
 import 'package:cn_delivery/screens/all_orders_screen.dart';
 import 'package:cn_delivery/screens/current_order_screen.dart';
 import 'package:cn_delivery/screens/earning_screen.dart';
@@ -20,6 +21,23 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  @override
+  void initState() {
+    callInitFunction();
+    super.initState();
+  }
+
+  callInitFunction() {
+    final dashboardProvider =
+        Provider.of<DashboardProvider>(context, listen: false);
+    final profileProvider =
+        Provider.of<ProfileProvider>(context, listen: false);
+    Future.delayed(Duration.zero, () {
+      profileProvider.getProfileApiFunction(true);
+      dashboardProvider.updateFcmTokenApiFunction();
+    });
+  }
+
   List screenList = [
     const HomeScreen(),
     const CurrentOrderScreen(),

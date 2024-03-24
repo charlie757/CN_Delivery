@@ -1,6 +1,8 @@
 import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appImages.dart';
+import 'package:cn_delivery/screens/dashboard_screen.dart';
 import 'package:cn_delivery/screens/login_screen.dart';
+import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -19,7 +21,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
   callInitFunction() {
     Future.delayed(const Duration(seconds: 3), () {
-      AppRoutes.pushReplacementNavigation(const LoginScreen());
+      if (SessionManager.token.isNotEmpty) {
+        AppRoutes.pushReplacementNavigation(const DashboardScreen());
+      } else {
+        AppRoutes.pushReplacementNavigation(const LoginScreen());
+      }
     });
   }
 

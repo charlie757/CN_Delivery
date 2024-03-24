@@ -3,7 +3,10 @@ import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
+import 'package:cn_delivery/provider/home_provider.dart';
+import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,56 +17,72 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   @override
+  void initState() {
+    callInitFunction();
+    // TODO: implement initState
+    super.initState();
+  }
+
+  callInitFunction() {
+    final myProvider = Provider.of<HomeProvider>(context, listen: false);
+    Future.delayed(Duration.zero, () {
+      myProvider.callApiFunction();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.whiteColor,
-      appBar: AppBar(
+    return Consumer<HomeProvider>(builder: (context, myProvider, child) {
+      return Scaffold(
         backgroundColor: AppColor.whiteColor,
-        scrolledUnderElevation: 0.0,
-        automaticallyImplyLeading: false,
-        title: getText(
-            title: 'Dashboard',
-            size: 20,
-            fontFamily: FontFamily.poppinsRegular,
-            color: AppColor.blackColor,
-            fontWeight: FontWeight.w600),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding:
-              const EdgeInsets.only(top: 20, bottom: 40, left: 15, right: 15),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  onGoingCompletedWidget(AppColor.blueColor,
-                      AppImages.onGoingIcon, 'On Going', '987'),
-                  ScreenSize.width(15),
-                  onGoingCompletedWidget(AppColor.lightPinkColor,
-                      AppImages.completedIcon, 'Completed', '123,987'),
-                ],
-              ),
-              ScreenSize.height(23),
-              totalOrdersWidget(),
-              ScreenSize.height(23),
-              getText(
-                  title: 'Upcoming Orders',
-                  size: 22,
-                  fontFamily: FontFamily.poppinsRegular,
-                  color: AppColor.blackColor,
-                  fontWeight: FontWeight.w600),
-              ScreenSize.height(22),
-              Image.asset('assets/images/Group 7.png'),
-              ScreenSize.height(20),
-              Image.asset('assets/images/Group 12.png'),
-              ScreenSize.height(20),
-              Image.asset('assets/images/Group 13.png'),
-            ],
+        appBar: appBar(title: 'Dashboard', isNotification: true),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding:
+                const EdgeInsets.only(top: 20, bottom: 40, left: 15, right: 15),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    onGoingCompletedWidget(
+                        AppColor.blueColor,
+                        AppImages.onGoingIcon,
+                        'On Going',
+                        myProvider.homeModel != null &&
+                                myProvider.homeModel!.data != null
+                            ? myProvider.homeModel!.data!.totalCurrentOrders
+                                .toString()
+                            : '0'),
+                    ScreenSize.width(15),
+                    onGoingCompletedWidget(
+                        AppColor.lightPinkColor,
+                        AppImages.completedIcon,
+                        'Completed',
+                        myProvider.homeModel != null &&
+                                myProvider.homeModel!.data != null
+                            ? myProvider.homeModel!.data!.totalDeliveredOrders
+                                .toString()
+                            : '0'),
+                  ],
+                ),
+                ScreenSize.height(23),
+                totalOrdersWidget(myProvider),
+                ScreenSize.height(23),
+                getText(
+                    title: 'Upcoming Orders',
+                    size: 22,
+                    fontFamily: FontFamily.poppinsRegular,
+                    color: AppColor.blackColor,
+                    fontWeight: FontWeight.w600),
+                ScreenSize.height(22),
+                upcomingOrdersWidget(myProvider),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   onGoingCompletedWidget(
@@ -115,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  totalOrdersWidget() {
+  totalOrdersWidget(HomeProvider provider) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -146,11 +165,169 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           ScreenSize.height(22),
           getText(
-              title: '123,987',
+              title:
+                  provider.homeModel != null && provider.homeModel!.data != null
+                      ? provider.homeModel!.data!.totalOrders.toString()
+                      : '0',
               size: 30,
               fontFamily: FontFamily.poppinsSemiBold,
               color: AppColor.whiteColor,
               fontWeight: FontWeight.w700)
+        ],
+      ),
+    );
+  }
+
+  upcomingOrdersWidget(HomeProvider provider) {
+    return provider.homeModel != null &&
+            provider.homeModel!.data != null &&
+            provider.homeModel!.data!.currentOrdersList!.isNotEmpty
+        ? ListView.separated(
+            separatorBuilder: (context, sp) {
+              return ScreenSize.height(20);
+            },
+            shrinkWrap: true,
+            physics: const ScrollPhysics(),
+            itemCount: provider.homeModel!.data!.currentOrdersList!.length,
+            itemBuilder: (context, index) {
+              var model = provider.homeModel!.data!.currentOrdersList![index];
+              return orderUi(model);
+            })
+        : Center(
+            child: getText(
+                title: 'No orders found',
+                size: 16,
+                fontFamily: FontFamily.poppinsRegular,
+                color: AppColor.blackColor,
+                fontWeight: FontWeight.w400),
+          );
+  }
+
+  orderUi(model) {
+    return Container(
+      decoration: BoxDecoration(
+          color: AppColor.whiteColor,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: const Color(0xffF5F5F5)),
+          boxShadow: [
+            BoxShadow(
+                offset: const Offset(0, 2),
+                blurRadius: 4,
+                color: AppColor.blackColor.withOpacity(.2))
+          ]),
+      padding: const EdgeInsets.only(top: 15, left: 17, right: 15, bottom: 17),
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerRight,
+            child: getText(
+                title: model.orderDate.toString(),
+                size: 12,
+                fontFamily: FontFamily.poppinsRegular,
+                color: AppColor.blackColor,
+                fontWeight: FontWeight.w400),
+          ),
+          ScreenSize.height(1),
+          Row(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Image.network(
+                  model.product![0].image,
+                  height: 60,
+                  width: 66,
+                  fit: BoxFit.fill,
+                ),
+              ),
+              ScreenSize.width(12),
+              Expanded(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    model.product![0].title,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontFamily: FontFamily.poppinsMedium,
+                        color: AppColor.blackColor,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  Text.rich(TextSpan(
+                      text: 'Qty: ',
+                      style: TextStyle(
+                          color: AppColor.blackColor,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: FontFamily.poppinsRegular),
+                      children: [
+                        TextSpan(
+                            text: model.product![0].qty.toString(),
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: AppColor.blackColor,
+                                fontFamily: FontFamily.poppinsRegular))
+                      ])),
+                  Text.rich(TextSpan(
+                      text: 'Price: ',
+                      style: TextStyle(
+                          color: AppColor.blackColor,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: FontFamily.poppinsRegular),
+                      children: [
+                        TextSpan(
+                            text: model.product![0].price.toString(),
+                            style: TextStyle(
+                                fontSize: 14,
+                                color: AppColor.blackColor,
+                                fontFamily: FontFamily.poppinsRegular))
+                      ])),
+                ],
+              ))
+            ],
+          ),
+          ScreenSize.height(12),
+          Row(
+            children: [
+              getText(
+                  title: 'Total Order Value: ',
+                  size: 13,
+                  fontFamily: FontFamily.poppinsRegular,
+                  color: AppColor.blackColor.withOpacity(.5),
+                  fontWeight: FontWeight.w400),
+              getText(
+                  title: '${model.orderAmount.toString()} USD',
+                  size: 14,
+                  fontFamily: FontFamily.poppinsSemiBold,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400),
+            ],
+          ),
+          ScreenSize.height(4),
+          Row(
+            children: [
+              getText(
+                  title: 'Payment Method: ',
+                  size: 13,
+                  fontFamily: FontFamily.poppinsRegular,
+                  color: AppColor.blackColor.withOpacity(.5),
+                  fontWeight: FontWeight.w400),
+              Flexible(
+                child: Text(
+                  model.paymentMethod.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      fontSize: 14,
+                      fontFamily: FontFamily.poppinsSemiBold,
+                      color: AppColor.blackColor,
+                      fontWeight: FontWeight.w400),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

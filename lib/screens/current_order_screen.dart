@@ -1,10 +1,16 @@
+import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
-import 'package:cn_delivery/screens/track_order_screen.dart';
+import 'package:cn_delivery/model/current_order_model.dart';
+import 'package:cn_delivery/provider/current_order_provider.dart';
+import 'package:cn_delivery/screens/view_order_details_screen.dart';
+import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:provider/provider.dart';
 
 class CurrentOrderScreen extends StatefulWidget {
   const CurrentOrderScreen({super.key});
@@ -15,317 +21,203 @@ class CurrentOrderScreen extends StatefulWidget {
 
 class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    CupertinoPageRoute(
-                        builder: (context) => const TrackOrderScreen()));
-              },
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(20)),
-                child: Image.asset(
-                  'assets/images/mapImg.png',
-                  height: MediaQuery.of(context).size.height / 2.5,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            pickAndDeliveryInfo(),
-            ScreenSize.height(15),
-            orderDetails(),
-            ScreenSize.height(50),
-          ],
-        ),
-      ),
-    );
+  void initState() {
+    callInitFunction();
+    super.initState();
   }
 
-  pickAndDeliveryInfo() {
+  callInitFunction() {
+    final myProvider =
+        Provider.of<CurrentOrderProvider>(context, listen: false);
+    Future.delayed(Duration.zero, () {
+      myProvider.callApiFunction();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<CurrentOrderProvider>(
+        builder: (context, myProvider, child) {
+      return Scaffold(
+          appBar: appBar(title: 'Current Order'),
+          body: myProvider.currentOrderList.isEmpty
+              ? Center(
+                  child: getText(
+                      title: 'No orders found',
+                      size: 16,
+                      fontFamily: FontFamily.poppinsRegular,
+                      color: AppColor.blackColor,
+                      fontWeight: FontWeight.w400),
+                )
+              : ListView.separated(
+                  separatorBuilder: (context, sp) {
+                    return ScreenSize.height(15);
+                  },
+                  itemCount: myProvider.currentOrderList.length,
+                  padding: const EdgeInsets.only(
+                      left: 15, right: 15, bottom: 40, top: 20),
+                  itemBuilder: (context, index) {
+                    var model = CurrentOrderModel.fromJson(
+                        myProvider.currentOrderList[index]);
+                    return orderWidget(model);
+                  }));
+    });
+  }
+
+  orderWidget(CurrentOrderModel model) {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
           color: AppColor.whiteColor,
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(color: const Color(0xffF5F5F5)),
           boxShadow: [
             BoxShadow(
                 offset: const Offset(0, 2),
-                color: AppColor.blackColor.withOpacity(.2),
-                blurRadius: 3)
+                blurRadius: 4,
+                color: AppColor.blackColor.withOpacity(.2))
           ]),
-      padding: const EdgeInsets.only(left: 15, right: 15, top: 17, bottom: 15),
+      padding: const EdgeInsets.only(top: 15, left: 17, right: 15, bottom: 17),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          getText(
-              title: 'Pickup and Deliver Info',
-              size: 16,
-              fontFamily: FontFamily.poppinsRegular,
-              color: AppColor.blackColor,
-              fontWeight: FontWeight.w600),
+          Align(
+            alignment: Alignment.centerRight,
+            child: getText(
+                title: model.orderDate.toString(),
+                size: 12,
+                fontFamily: FontFamily.poppinsRegular,
+                color: AppColor.blackColor,
+                fontWeight: FontWeight.w400),
+          ),
+          ScreenSize.height(1),
           Row(
             children: [
-              const Spacer(),
-              const getText(
-                  title: 'Order No. 15306',
-                  size: 13,
-                  fontFamily: FontFamily.poppinsRegular,
-                  color: Color(0xffB8B8B8),
-                  fontWeight: FontWeight.w400),
-              ScreenSize.width(4),
-              const Icon(
-                Icons.more_vert,
-                size: 19,
-                color: Color(0xffB8B8B8),
-              )
-            ],
-          ),
-          ScreenSize.height(10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              customBtn('Processed'),
-              customBtn('COD'),
-            ],
-          ),
-          ScreenSize.height(16),
-          Container(
-            height: 1,
-            color: const Color(0xffD9D9D9),
-          ),
-          ScreenSize.height(16),
-          locationWidget(),
-          ScreenSize.height(16),
-          Container(
-            height: 1,
-            color: const Color(0xffD9D9D9),
-          ),
-          ScreenSize.height(15),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Image.asset(
-                'assets/images/profileImg.png',
-                height: 40,
-                width: 40,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(6),
+                child: Image.network(
+                  model.product![0].image,
+                  height: 60,
+                  width: 66,
+                  fit: BoxFit.fill,
+                ),
               ),
               ScreenSize.width(12),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    getText(
-                        title: 'Aleksandr V.',
-                        size: 15,
-                        fontFamily: FontFamily.poppinsRegular,
-                        color: Color(0xff2F2E36),
-                        fontWeight: FontWeight.w400),
-                    getText(
-                        title: '+1 - 987-654-3210',
-                        size: 15,
-                        fontFamily: FontFamily.poppinsRegular,
-                        color: Color(0xff2F2E36),
-                        fontWeight: FontWeight.w400),
+                    Text(
+                      model.product![0].title,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: FontFamily.poppinsMedium,
+                          color: AppColor.blackColor,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text.rich(TextSpan(
+                                  text: 'Qty: ',
+                                  style: TextStyle(
+                                      color: AppColor.blackColor,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: FontFamily.poppinsRegular),
+                                  children: [
+                                    TextSpan(
+                                        text: model.product![0].qty.toString(),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: AppColor.blackColor,
+                                            fontFamily:
+                                                FontFamily.poppinsRegular))
+                                  ])),
+                              Text.rich(TextSpan(
+                                  text: 'Price: ',
+                                  style: TextStyle(
+                                      color: AppColor.blackColor,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: FontFamily.poppinsRegular),
+                                  children: [
+                                    TextSpan(
+                                        text:
+                                            model.product![0].price.toString(),
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: AppColor.blackColor,
+                                            fontFamily:
+                                                FontFamily.poppinsRegular))
+                                  ])),
+                            ],
+                          ),
+                        ),
+                        ScreenSize.width(2),
+                        orderButton(
+                            model.orderStatus,
+                            model.orderStatus.toString().toUpperCase() ==
+                                    'CANCELED'
+                                ? const Color(0xff6E6E96)
+                                : model.orderStatus.toString().toUpperCase() ==
+                                        'COMPLETED'
+                                    ? Colors.green
+                                    : const Color(0xffFE70D8)),
+                      ],
+                    ),
                   ],
                 ),
               ),
-              Image.asset(
-                'assets/icons/Phone.png',
-                width: 40,
-                height: 40,
-              )
             ],
-          )
-        ],
-      ),
-    );
-  }
-
-  orderDetails() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 15),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          color: AppColor.whiteColor,
-          border: Border.all(color: const Color(0xffF5F5F5)),
-          boxShadow: [
-            BoxShadow(
-                offset: const Offset(0, 2),
-                color: AppColor.blackColor.withOpacity(.2),
-                blurRadius: 3)
-          ]),
-      padding: const EdgeInsets.only(top: 17, bottom: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16, right: 15),
-            child: Row(
-              children: [
-                const getText(
-                    title: 'Order Details',
-                    size: 16,
-                    fontFamily: FontFamily.poppinsSemiBold,
-                    color: Color(0xff2F2E36),
-                    fontWeight: FontWeight.w600),
-                const Spacer(),
-                Text.rich(TextSpan(
-                    text: 'Total Amount : ',
-                    style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: FontFamily.poppinsRegular,
-                        color: AppColor.lightTextColor),
-                    children: [
-                      TextSpan(
-                        text: '\$375',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: FontFamily.poppinsSemiBold,
-                            color: AppColor.blackColor),
-                      )
-                    ]))
-              ],
-            ),
           ),
-          ScreenSize.height(12),
-          Container(
-            height: 1,
-            color: const Color(0xffD9D9D9),
+          ScreenSize.height(5),
+          Align(
+            alignment: Alignment.centerRight,
+            child: viewOrderDetailsButton(),
           ),
-          ScreenSize.height(23),
-          orderWidget(),
-          ScreenSize.height(15),
-          Container(
-            height: 1,
-            color: const Color(0xffD9D9D9),
-          ),
-          ScreenSize.height(15),
-          orderWidget(),
-          ScreenSize.height(15),
-        ],
-      ),
-    );
-  }
-
-  orderWidget() {
-    return Container(
-      padding: const EdgeInsets.only(left: 16, right: 15),
-      child: Row(
-        children: [
-          Image.asset(
-            'assets/images/order1.png',
-            height: 50,
-            width: 56,
-          ),
-          ScreenSize.width(12),
-          Column(
+          ScreenSize.height(10),
+          Row(
             children: [
-              const getText(
-                  title: 'New Mini Mart',
-                  size: 16,
+              getText(
+                  title: 'Total Order Value: ',
+                  size: 13,
+                  fontFamily: FontFamily.poppinsRegular,
+                  color: AppColor.blackColor.withOpacity(.5),
+                  fontWeight: FontWeight.w400),
+              getText(
+                  title: '${model.orderAmount.toString()} USD',
+                  size: 14,
                   fontFamily: FontFamily.poppinsSemiBold,
-                  color: Color(0xff2F2E36),
-                  fontWeight: FontWeight.w600),
-              ScreenSize.height(2),
-              const Text.rich(TextSpan(
-                  text: 'Value : ',
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400),
+            ],
+          ),
+          ScreenSize.height(4),
+          Row(
+            children: [
+              getText(
+                  title: 'Payment Method: ',
+                  size: 13,
+                  fontFamily: FontFamily.poppinsRegular,
+                  color: AppColor.blackColor.withOpacity(.5),
+                  fontWeight: FontWeight.w400),
+              Flexible(
+                child: Text(
+                  model.paymentMethod.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                       fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: FontFamily.poppinsRegular,
-                      color: AppColor.lightTextColor),
-                  children: [
-                    TextSpan(
-                      text: '375 USD',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: FontFamily.poppinsSemiBold,
-                          color: Color(0xff0790FF)),
-                    )
-                  ]))
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  locationWidget() {
-    return IntrinsicHeight(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Column(
-            children: [
-              Container(
-                height: 16,
-                width: 16,
-                decoration: BoxDecoration(
-                    border:
-                        Border.all(color: const Color(0xffD9D9D9), width: 2),
-                    shape: BoxShape.circle),
-                child: Container(
-                  margin: const EdgeInsets.all(4),
-                  height: 3,
-                  width: 3,
-                  decoration: BoxDecoration(
-                      color: AppColor.blueColor, shape: BoxShape.circle),
+                      fontFamily: FontFamily.poppinsSemiBold,
+                      color: AppColor.blackColor,
+                      fontWeight: FontWeight.w400),
                 ),
               ),
-              Container(
-                  margin: const EdgeInsets.only(top: 2, bottom: 2),
-                  height: 40,
-                  child: const VerticalDivider()),
-              Image.asset(
-                'assets/icons/location.png',
-                height: 16,
-                width: 16,
-              ),
-            ],
-          ),
-          ScreenSize.width(7),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const getText(
-                  title: '88 Zurab Gorgiladze St',
-                  size: 15,
-                  fontFamily: FontFamily.poppinsRegular,
-                  color: Color(0xff2F2E36),
-                  fontWeight: FontWeight.w400),
-              ScreenSize.height(0),
-              const getText(
-                  title: 'Georgia, Batumi',
-                  size: 13,
-                  fontFamily: FontFamily.poppinsRegular,
-                  color: Color(0xffB8B8B8),
-                  fontWeight: FontWeight.w400),
-              ScreenSize.height(8),
-              const getText(
-                  title: '5 Noe Zhordania St',
-                  size: 15,
-                  fontFamily: FontFamily.poppinsRegular,
-                  color: Color(0xff2F2E36),
-                  fontWeight: FontWeight.w400),
-              ScreenSize.height(0),
-              const getText(
-                  title: 'Georgia, Batumi',
-                  size: 13,
-                  fontFamily: FontFamily.poppinsRegular,
-                  color: Color(0xffB8B8B8),
-                  fontWeight: FontWeight.w400),
             ],
           ),
         ],
@@ -333,19 +225,45 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
     );
   }
 
-  customBtn(String title) {
+  orderButton(String title, Color color) {
     return Container(
-      padding: const EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 12),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          color: const Color(0xffC4D9ED)),
+      height: 32,
+      padding: const EdgeInsets.only(left: 16, right: 16),
       alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(16.5),
+      ),
       child: getText(
           title: title,
-          size: 12,
+          size: 13,
           fontFamily: FontFamily.poppinsRegular,
-          color: const Color(0xff0790FF),
+          color: AppColor.whiteColor,
           fontWeight: FontWeight.w400),
+    );
+  }
+
+  viewOrderDetailsButton() {
+    return GestureDetector(
+      onTap: () {
+        AppRoutes.pushCupertinoNavigation(const ViewOrderDetailsScreen());
+      },
+      child: Container(
+        height: 32,
+        width: 143,
+        // padding: const EdgeInsets.only(left: 16, right: 16),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: const Color(0xff5DBCF2),
+          borderRadius: BorderRadius.circular(16.5),
+        ),
+        child: getText(
+            title: 'View Order Details',
+            size: 13,
+            fontFamily: FontFamily.poppinsRegular,
+            color: AppColor.whiteColor,
+            fontWeight: FontWeight.w400),
+      ),
     );
   }
 }
