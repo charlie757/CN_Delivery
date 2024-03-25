@@ -3,10 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AppRoutes {
-  static pushCupertinoNavigation(
+  static Future pushCupertinoNavigation(
     route,
   ) {
-    Navigator.push(navigatorKey.currentContext!,
+    return Navigator.push(navigatorKey.currentContext!,
         CupertinoPageRoute(builder: (context) => route));
   }
 

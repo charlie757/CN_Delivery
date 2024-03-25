@@ -9,6 +9,7 @@ import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/provider/profile_provider.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
+import 'package:cn_delivery/utils/utils.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';

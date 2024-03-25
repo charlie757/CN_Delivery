@@ -1,9 +1,11 @@
+import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/model/all_order_model.dart';
 import 'package:cn_delivery/provider/all_order_provider.dart';
+import 'package:cn_delivery/screens/view_order_details_screen.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -44,7 +46,7 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
   callInitFunction() {
     final myProvider = Provider.of<AllOrderProvider>(context, listen: false);
     Future.delayed(Duration.zero, () {
-      myProvider.getAllOrderProvider();
+      myProvider.getAllOrderApiFunction();
     });
   }
 
@@ -73,13 +75,13 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                 itemBuilder: (context, index) {
                   var model =
                       AllOrderModel.fromJson(myProvider.allOrderList[index]);
-                  return orderWidget(model);
+                  return orderWidget(model, myProvider);
                 });
       }),
     );
   }
 
-  orderWidget(AllOrderModel model) {
+  orderWidget(AllOrderModel model, AllOrderProvider provider) {
     return Container(
       decoration: BoxDecoration(
           color: AppColor.whiteColor,
@@ -193,7 +195,7 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
           ScreenSize.height(5),
           Align(
             alignment: Alignment.centerRight,
-            child: viewOrderDetailsButton(),
+            child: viewOrderDetailsButton(model.id.toString(), provider),
           ),
           ScreenSize.height(6),
           Row(
@@ -258,22 +260,31 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
     );
   }
 
-  viewOrderDetailsButton() {
-    return Container(
-      height: 32,
-      width: 143,
-      // padding: const EdgeInsets.only(left: 16, right: 16),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: const Color(0xff5DBCF2),
-        borderRadius: BorderRadius.circular(16.5),
+  viewOrderDetailsButton(String id, AllOrderProvider provider) {
+    return GestureDetector(
+      onTap: () {
+        AppRoutes.pushCupertinoNavigation(ViewOrderDetailsScreen(
+          orderId: id.toString(),
+        )).then((value) {
+          provider.getAllOrderApiFunction();
+        });
+      },
+      child: Container(
+        height: 32,
+        width: 143,
+        // padding: const EdgeInsets.only(left: 16, right: 16),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: const Color(0xff5DBCF2),
+          borderRadius: BorderRadius.circular(16.5),
+        ),
+        child: getText(
+            title: 'View Order Details',
+            size: 13,
+            fontFamily: FontFamily.poppinsRegular,
+            color: AppColor.whiteColor,
+            fontWeight: FontWeight.w400),
       ),
-      child: getText(
-          title: 'View Order Details',
-          size: 13,
-          fontFamily: FontFamily.poppinsRegular,
-          color: AppColor.whiteColor,
-          fontWeight: FontWeight.w400),
     );
   }
 }

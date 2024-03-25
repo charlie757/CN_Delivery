@@ -1,4 +1,7 @@
+import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
+import 'package:cn_delivery/screens/login_screen.dart';
+import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:flutter/material.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -79,7 +82,7 @@ class Utils {
   }
 
   static logOut() {
-    // SessionManager.setToken = '';
-    // AppRoutes.pushReplacementNavigation(const LoginScreen());
+    SessionManager.sharedPrefs.clear();
+    AppRoutes.pushReplacementNavigation(const LoginScreen());
   }
 }

@@ -193,14 +193,15 @@ class _HomeScreenState extends State<HomeScreen> {
               var model = provider.homeModel!.data!.currentOrdersList![index];
               return orderUi(model);
             })
-        : Center(
-            child: getText(
-                title: 'No orders found',
-                size: 16,
-                fontFamily: FontFamily.poppinsRegular,
-                color: AppColor.blackColor,
-                fontWeight: FontWeight.w400),
-          );
+        : Container();
+    // Center(
+    //     child: getText(
+    //         title: 'No orders found',
+    //         size: 16,
+    //         fontFamily: FontFamily.poppinsRegular,
+    //         color: AppColor.blackColor,
+    //         fontWeight: FontWeight.w400),
+    //   );
   }
 
   orderUi(model) {

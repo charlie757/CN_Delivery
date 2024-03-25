@@ -33,6 +33,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final profileProvider =
         Provider.of<ProfileProvider>(context, listen: false);
     Future.delayed(Duration.zero, () {
+      dashboardProvider.currentIndex = 0;
       profileProvider.getProfileApiFunction(true);
       dashboardProvider.updateFcmTokenApiFunction();
     });

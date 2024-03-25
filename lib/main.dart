@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cn_delivery/languages/languages.dart';
 import 'package:cn_delivery/provider/all_order_provider.dart';
 import 'package:cn_delivery/provider/current_order_provider.dart';
 import 'package:cn_delivery/provider/dashboard_provider.dart';
@@ -19,6 +20,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -77,10 +79,13 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (_) => ViewOrderDetailsProvider()),
         ChangeNotifierProvider(create: (_) => NotificationProvider()),
       ],
-      child: MaterialApp(
+      child: GetMaterialApp(
         title: 'Consumers Networks',
         navigatorKey: navigatorKey,
         debugShowCheckedModeBanner: false,
+        translations: Languages(),
+        locale: const Locale('en'),
+        fallbackLocale: const Locale('en'),
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,

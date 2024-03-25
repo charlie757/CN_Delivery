@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:cn_delivery/config/approutes.dart';
+import 'package:cn_delivery/screens/login_screen.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:cn_delivery/utils/utils.dart';
 import 'package:http/http.dart' as http;
@@ -59,13 +61,13 @@ class ApiService {
   }
 
   // Helper method to handle API response
-  static Map<String, dynamic>? _handleResponse(
-      http.Response response, isErrorMessageShow) {
+  static _handleResponse(http.Response response, isErrorMessageShow) {
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else if (response.statusCode == 401) {
       var dataAll = json.decode(response.body);
       // SessionManager.unauthorizedUser(navigatorKey.currentState!.context);
+      Utils.logOut();
       isErrorMessageShow
           ? Utils.errorSnackBar(dataAll['message'], navigatorKey.currentContext)
           : null;

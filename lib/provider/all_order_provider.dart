@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 class AllOrderProvider extends ChangeNotifier {
   List allOrderList = [];
 
-  getAllOrderProvider() {
+  getAllOrderApiFunction() {
     allOrderList.isNotEmpty
         ? null
         : showCircleProgressDialog(navigatorKey.currentContext!);

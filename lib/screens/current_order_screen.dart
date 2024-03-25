@@ -59,12 +59,12 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
                   itemBuilder: (context, index) {
                     var model = CurrentOrderModel.fromJson(
                         myProvider.currentOrderList[index]);
-                    return orderWidget(model);
+                    return orderWidget(model, myProvider);
                   }));
     });
   }
 
-  orderWidget(CurrentOrderModel model) {
+  orderWidget(CurrentOrderModel model, CurrentOrderProvider provider) {
     return Container(
       decoration: BoxDecoration(
           color: AppColor.whiteColor,
@@ -178,7 +178,7 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
           ScreenSize.height(5),
           Align(
             alignment: Alignment.centerRight,
-            child: viewOrderDetailsButton(),
+            child: viewOrderDetailsButton(model.id, provider),
           ),
           ScreenSize.height(10),
           Row(
@@ -243,10 +243,14 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
     );
   }
 
-  viewOrderDetailsButton() {
+  viewOrderDetailsButton(id, CurrentOrderProvider provider) {
     return GestureDetector(
       onTap: () {
-        AppRoutes.pushCupertinoNavigation(const ViewOrderDetailsScreen());
+        AppRoutes.pushCupertinoNavigation(ViewOrderDetailsScreen(
+          orderId: id.toString(),
+        )).then((value) {
+          provider.callApiFunction();
+        });
       },
       child: Container(
         height: 32,

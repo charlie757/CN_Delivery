@@ -1,3 +1,6 @@
+import 'package:cn_delivery/api/api_url.dart';
+import 'package:cn_delivery/helper/appbutton.dart';
+import 'package:cn_delivery/model/view_order_model.dart';
 import 'package:cn_delivery/provider/view_order_details_provider.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -14,7 +17,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 
 class ViewOrderDetailsScreen extends StatefulWidget {
-  const ViewOrderDetailsScreen({super.key});
+  final String orderId;
+  ViewOrderDetailsScreen({super.key, required this.orderId});
 
   @override
   State<ViewOrderDetailsScreen> createState() => _ViewOrderDetailsScreenState();
@@ -31,10 +35,23 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
   }
 
   @override
+  void initState() {
+    callInitFunction();
+    super.initState();
+  }
+
+  callInitFunction() {
+    final provider =
+        Provider.of<ViewOrderDetailsProvider>(context, listen: false);
+    Future.delayed(Duration.zero, () {
+      provider.callApiFunction(widget.orderId);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<ViewOrderDetailsProvider>(
         builder: (context, myProvider, child) {
-      // myProvider.callApiFunction();
       return Scaffold(
         body: SingleChildScrollView(
           child: Column(
@@ -64,18 +81,66 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                   ),
                 ),
               ),
-              pickAndDeliveryInfo(),
+              myProvider.model != null
+                  ? pickAndDeliveryInfo(myProvider)
+                  : Container(),
               ScreenSize.height(15),
-              orderDetails(),
+              myProvider.model != null
+                  ? orderDetailsWidget(myProvider)
+                  : Container(),
               ScreenSize.height(50),
             ],
           ),
         ),
+        bottomNavigationBar: myProvider.model != null &&
+                (myProvider.model!.orderStatus == 'pending' ||
+                    myProvider.model!.orderStatus == 'out_for_delivery')
+            ? Container(
+                height: 70,
+                padding: const EdgeInsets.only(
+                    left: 60, right: 60, top: 10, bottom: 10),
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(
+                          10,
+                        ),
+                        topRight: Radius.circular(10)),
+                    color: AppColor.whiteColor,
+                    border: Border.all(color: const Color(0xffF5F5F5)),
+                    boxShadow: [
+                      BoxShadow(
+                          offset: const Offset(0, 2),
+                          color: AppColor.blackColor.withOpacity(.2),
+                          blurRadius: 3)
+                    ]),
+                width: double.infinity,
+                child: AppButton(
+                    title: myProvider.model!.orderStatus == 'pending'
+                        ? 'Out for delivery'
+                        : myProvider.model!.orderStatus == 'out_for_delivery'
+                            ? 'Delivered'
+                            : '',
+                    height: 50,
+                    width: double.infinity,
+                    buttonColor: AppColor.appTheme,
+                    onTap: () {
+                      myProvider.model!.orderStatus == 'pending'
+                          ? myProvider.updateStatusApiFunction(
+                              widget.orderId, 'out_for_delivery')
+                          : myProvider.model!.orderStatus == 'out_for_delivery'
+                              ? myProvider.updateStatusApiFunction(
+                                  widget.orderId, 'delivered')
+                              : null;
+                    }),
+              )
+            : Container(
+                height: 20,
+              ),
       );
     });
   }
 
-  pickAndDeliveryInfo() {
+  pickAndDeliveryInfo(ViewOrderDetailsProvider provider) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
@@ -101,11 +166,11 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
           Row(
             children: [
               const Spacer(),
-              const getText(
-                  title: 'Order No. 15306',
+              getText(
+                  title: 'Order No. ${provider.model!.id.toString()}',
                   size: 13,
                   fontFamily: FontFamily.poppinsRegular,
-                  color: Color(0xffB8B8B8),
+                  color: const Color(0xffB8B8B8),
                   fontWeight: FontWeight.w400),
               ScreenSize.width(4),
               const Icon(
@@ -119,8 +184,8 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              customBtn('Processed'),
-              customBtn('COD'),
+              customBtn(provider.model!.orderStatus.toString()),
+              customBtn(provider.model!.paymentMethod.toString()),
             ],
           ),
           ScreenSize.height(16),
@@ -129,7 +194,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
             color: const Color(0xffD9D9D9),
           ),
           ScreenSize.height(16),
-          locationWidget(),
+          locationWidget(provider),
           ScreenSize.height(16),
           Container(
             height: 1,
@@ -139,35 +204,57 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                'assets/images/profileImg.png',
-                height: 40,
-                width: 40,
-              ),
+              provider.model!.customer!.image.isNotEmpty
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.network(
+                        provider.model!.customer!.image,
+                        height: 40,
+                        width: 40,
+                        fit: BoxFit.fill,
+                      ))
+                  : Image.asset(
+                      'assets/images/profileImg.png',
+                      height: 40,
+                      width: 40,
+                    ),
               ScreenSize.width(12),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      provider.model!.customer != null
+                          ? "${provider.model!.customer!.fName ?? ""} ${provider.model!.customer!.lName ?? ""}"
+                          : '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                          fontSize: 15,
+                          fontFamily: FontFamily.poppinsRegular,
+                          color: Color(0xff2F2E36),
+                          fontWeight: FontWeight.w400),
+                    ),
                     getText(
-                        title: 'Aleksandr V.',
+                        title:
+                            '+1 - ${provider.model!.customer != null ? provider.model!.customer!.phone.toString() : ''}',
                         size: 15,
                         fontFamily: FontFamily.poppinsRegular,
-                        color: Color(0xff2F2E36),
-                        fontWeight: FontWeight.w400),
-                    getText(
-                        title: '+1 - 987-654-3210',
-                        size: 15,
-                        fontFamily: FontFamily.poppinsRegular,
-                        color: Color(0xff2F2E36),
+                        color: const Color(0xff2F2E36),
                         fontWeight: FontWeight.w400),
                   ],
                 ),
               ),
-              Image.asset(
-                'assets/icons/Phone.png',
-                width: 40,
-                height: 40,
+              GestureDetector(
+                onTap: () {
+                  provider.callNumber(
+                      '+1${provider.model!.customer != null ? provider.model!.customer!.phone.toString() : ''}');
+                },
+                child: Image.asset(
+                  'assets/icons/Phone.png',
+                  width: 40,
+                  height: 40,
+                ),
               )
             ],
           )
@@ -176,7 +263,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
     );
   }
 
-  orderDetails() {
+  orderDetailsWidget(ViewOrderDetailsProvider provider) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
       decoration: BoxDecoration(
@@ -213,7 +300,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                         color: AppColor.lightTextColor),
                     children: [
                       TextSpan(
-                        text: '\$375',
+                        text: '\$${provider.model!.orderAmount.toString()}',
                         style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
@@ -229,66 +316,89 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
             height: 1,
             color: const Color(0xffD9D9D9),
           ),
-          ScreenSize.height(23),
-          orderWidget(),
-          ScreenSize.height(15),
           Container(
-            height: 1,
-            color: const Color(0xffD9D9D9),
+            // color: Colors.red,
+            alignment: Alignment.topCenter,
+            child: ListView.separated(
+                padding: EdgeInsets.zero,
+                separatorBuilder: (context, sp) {
+                  return Container(
+                    height: 1,
+                    color: const Color(0xffD9D9D9),
+                  );
+                },
+                itemCount: provider.model!.product!.length,
+                shrinkWrap: true,
+                physics: const ScrollPhysics(),
+                itemBuilder: (context, index) {
+                  var model = provider.model!.product![index];
+                  return orderWidget(model);
+                }),
           ),
-          ScreenSize.height(15),
-          orderWidget(),
-          ScreenSize.height(15),
         ],
       ),
     );
   }
 
-  orderWidget() {
+  orderWidget(model) {
     return Container(
+      margin: const EdgeInsets.only(top: 25, bottom: 24),
       padding: const EdgeInsets.only(left: 16, right: 15),
       child: Row(
         children: [
-          Image.asset(
-            'assets/images/order1.png',
-            height: 50,
-            width: 56,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: model.image.isEmpty
+                ? Container()
+                : Image.network(
+                    model.image,
+                    height: 60,
+                    width: 66,
+                    fit: BoxFit.fill,
+                  ),
           ),
           ScreenSize.width(12),
-          Column(
-            children: [
-              const getText(
-                  title: 'New Mini Mart',
-                  size: 16,
-                  fontFamily: FontFamily.poppinsSemiBold,
-                  color: Color(0xff2F2E36),
-                  fontWeight: FontWeight.w600),
-              ScreenSize.height(2),
-              const Text.rich(TextSpan(
-                  text: 'Value : ',
-                  style: TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: FontFamily.poppinsRegular,
-                      color: AppColor.lightTextColor),
-                  children: [
-                    TextSpan(
-                      text: '375 USD',
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: FontFamily.poppinsSemiBold,
-                          color: Color(0xff0790FF)),
-                    )
-                  ]))
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  model.title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontFamily: FontFamily.poppinsSemiBold,
+                      color: Color(0xff2F2E36),
+                      fontWeight: FontWeight.w600),
+                ),
+                ScreenSize.height(2),
+                Text.rich(TextSpan(
+                    text: 'Value : ',
+                    style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: FontFamily.poppinsRegular,
+                        color: AppColor.lightTextColor),
+                    children: [
+                      TextSpan(
+                        text: '${model.price} USD',
+                        style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: FontFamily.poppinsSemiBold,
+                            color: Color(0xff0790FF)),
+                      )
+                    ]))
+              ],
+            ),
           )
         ],
       ),
     );
   }
 
-  locationWidget() {
+  locationWidget(ViewOrderDetailsProvider provider) {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -312,7 +422,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
               ),
               Container(
                   margin: const EdgeInsets.only(top: 2, bottom: 2),
-                  height: 40,
+                  height: 60,
                   child: const VerticalDivider()),
               Image.asset(
                 'assets/icons/location.png',
@@ -322,44 +432,58 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
             ],
           ),
           ScreenSize.width(7),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const getText(
-                  title: '88 Zurab Gorgiladze St',
-                  size: 15,
-                  fontFamily: FontFamily.poppinsRegular,
-                  color: Color(0xff2F2E36),
-                  fontWeight: FontWeight.w400),
-              ScreenSize.height(0),
-              const getText(
-                  title: 'Georgia, Batumi',
-                  size: 13,
-                  fontFamily: FontFamily.poppinsRegular,
-                  color: Color(0xffB8B8B8),
-                  fontWeight: FontWeight.w400),
-              ScreenSize.height(8),
-              const getText(
-                  title: '5 Noe Zhordania St',
-                  size: 15,
-                  fontFamily: FontFamily.poppinsRegular,
-                  color: Color(0xff2F2E36),
-                  fontWeight: FontWeight.w400),
-              ScreenSize.height(0),
-              const getText(
-                  title: 'Georgia, Batumi',
-                  size: 13,
-                  fontFamily: FontFamily.poppinsRegular,
-                  color: Color(0xffB8B8B8),
-                  fontWeight: FontWeight.w400),
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  provider.model!.pickUp!.address.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 15,
+                      fontFamily: FontFamily.poppinsRegular,
+                      color: Color(0xff2F2E36),
+                      fontWeight: FontWeight.w400),
+                ),
+                ScreenSize.height(0),
+                getText(
+                    title:
+                        "${provider.model!.pickUp!.city}, ${provider.model!.pickUp!.country}",
+                    size: 13,
+                    fontFamily: FontFamily.poppinsRegular,
+                    color: const Color(0xffB8B8B8),
+                    fontWeight: FontWeight.w400),
+                ScreenSize.height(30),
+                Text(
+                  provider.model!.shippingAddress!.address.toString(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                      fontSize: 15,
+                      fontFamily: FontFamily.poppinsRegular,
+                      color: Color(0xff2F2E36),
+                      fontWeight: FontWeight.w400),
+                ),
+                ScreenSize.height(0),
+                getText(
+                    title:
+                        "${provider.model!.shippingAddress!.city}, ${provider.model!.shippingAddress!.country}",
+                    size: 13,
+                    fontFamily: FontFamily.poppinsRegular,
+                    color: const Color(0xffB8B8B8),
+                    fontWeight: FontWeight.w400),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
 
-  customBtn(String title) {
+  customBtn(
+    String title,
+  ) {
     return Container(
       padding: const EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 12),
       decoration: BoxDecoration(
