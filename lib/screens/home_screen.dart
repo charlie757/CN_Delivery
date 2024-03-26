@@ -2,6 +2,7 @@ import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
+import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/provider/home_provider.dart';
 import 'package:cn_delivery/widget/appBar.dart';
@@ -232,14 +233,14 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: Image.network(
-                  model.product![0].image,
-                  height: 60,
-                  width: 66,
-                  fit: BoxFit.fill,
-                ),
-              ),
+                  borderRadius: BorderRadius.circular(6),
+                  child: model.product![0].image.isEmpty
+                      ? Container()
+                      : NetworkImagehelper(
+                          img: model.product![0].image,
+                          height: 60.0,
+                          width: 66.0,
+                        )),
               ScreenSize.width(12),
               Expanded(
                   child: Column(
@@ -299,7 +300,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: AppColor.blackColor.withOpacity(.5),
                   fontWeight: FontWeight.w400),
               getText(
-                  title: '${model.orderAmount.toString()} USD',
+                  title: '${model.orderAmount.toString()} COP',
                   size: 14,
                   fontFamily: FontFamily.poppinsSemiBold,
                   color: AppColor.blackColor,

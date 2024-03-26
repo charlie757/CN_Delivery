@@ -1,10 +1,15 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:cn_delivery/api/api_url.dart';
+import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appbutton.dart';
+import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/model/view_order_model.dart';
 import 'package:cn_delivery/provider/view_order_details_provider.dart';
+import 'package:cn_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-
+import 'package:geocoding/geocoding.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
@@ -25,14 +30,11 @@ class ViewOrderDetailsScreen extends StatefulWidget {
 }
 
 class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
-  final Completer<GoogleMapController> _controller =
-      Completer<GoogleMapController>();
-
-  static const LatLng _center = const LatLng(45.521563, -122.677433);
-
-  void _onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
-  }
+  // GoogleMapController? myMapController;
+  // void _onMapCreated(GoogleMapController controller) {
+  //   // _controller.complete(controller);
+  //   myMapController = controller;
+  // }
 
   @override
   void initState() {
@@ -52,45 +54,84 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
   Widget build(BuildContext context) {
     return Consumer<ViewOrderDetailsProvider>(
         builder: (context, myProvider, child) {
+      print(myProvider.lat);
+      // myProvider.pickupLatLong('address');
       return Scaffold(
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              GestureDetector(
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      // Navigator.push(
+                      //     context,
+                      //     CupertinoPageRoute(
+                      //         builder: (context) => TrackOrderScreen(
+                      //               model: myProvider.model,
+                      //             )));
+                    },
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height / 2.4,
+                      child: GoogleMap(
+                        liteModeEnabled: true,
+                        mapType: MapType.normal,
+                        scrollGesturesEnabled: true,
+                        myLocationEnabled: true,
+                        zoomGesturesEnabled: true,
+                        zoomControlsEnabled: true,
+                        circles: {
+                          Circle(
+                              circleId: CircleId('shipping'),
+                              center: LatLng(myProvider.lat, myProvider.lng),
+                              radius: 2000,
+                              fillColor: AppColor.blueColor.withOpacity(.3),
+                              strokeWidth: 1,
+                              consumeTapEvents: true,
+                              strokeColor: AppColor.blueColor.withOpacity(.3))
+                        },
+                        onMapCreated: myProvider.onMapCreated,
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(myProvider.lat, myProvider.lng),
+                          zoom: 12.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                  myProvider.model != null
+                      ? pickAndDeliveryInfo(myProvider)
+                      : Container(),
+                  ScreenSize.height(15),
+                  myProvider.model != null
+                      ? shopDetailsWidget(myProvider)
+                      : Container(),
+                  ScreenSize.height(15),
+                  myProvider.model != null
+                      ? orderDetailsWidget(myProvider)
+                      : Container(),
+                  ScreenSize.height(50),
+                ],
+              ),
+            ),
+            Positioned(
+              top: 0 + 40,
+              left: 0 + 10,
+              child: GestureDetector(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      CupertinoPageRoute(
-                          builder: (context) => const TrackOrderScreen()));
+                  Navigator.pop(navigatorKey.currentContext!);
                 },
                 child: Container(
-                  height: 300,
-                  child:
-                      // GoogleMap(
-                      //   onMapCreated: _onMapCreated,
-                      //   initialCameraPosition: CameraPosition(
-                      //     target: _center,
-                      //     zoom: 11.0,
-                      //   ),
-                      // ),
-                      Image.asset(
-                    'assets/images/mapImg.png',
-                    height: MediaQuery.of(context).size.height / 2.5,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.only(left: 3),
+                  child: Image.asset(
+                    AppImages.arrowBackIcon,
+                    width: 30,
+                    height: 30,
                   ),
                 ),
               ),
-              myProvider.model != null
-                  ? pickAndDeliveryInfo(myProvider)
-                  : Container(),
-              ScreenSize.height(15),
-              myProvider.model != null
-                  ? orderDetailsWidget(myProvider)
-                  : Container(),
-              ScreenSize.height(50),
-            ],
-          ),
+            ),
+          ],
         ),
         bottomNavigationBar: myProvider.model != null &&
                 (myProvider.model!.orderStatus == 'pending' ||
@@ -125,11 +166,17 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                     buttonColor: AppColor.appTheme,
                     onTap: () {
                       myProvider.model!.orderStatus == 'pending'
-                          ? myProvider.updateStatusApiFunction(
-                              widget.orderId, 'out_for_delivery')
+                          ? openDialogBox(() {
+                              Navigator.pop(context);
+                              myProvider.updateStatusApiFunction(
+                                  widget.orderId, 'out_for_delivery');
+                            })
                           : myProvider.model!.orderStatus == 'out_for_delivery'
-                              ? myProvider.updateStatusApiFunction(
-                                  widget.orderId, 'delivered')
+                              ? openDialogBox(() {
+                                  Navigator.pop(context);
+                                  myProvider.updateStatusApiFunction(
+                                      widget.orderId, 'delivered');
+                                })
                               : null;
                     }),
               )
@@ -207,11 +254,10 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
               provider.model!.customer!.image.isNotEmpty
                   ? ClipRRect(
                       borderRadius: BorderRadius.circular(100),
-                      child: Image.network(
-                        provider.model!.customer!.image,
-                        height: 40,
-                        width: 40,
-                        fit: BoxFit.fill,
+                      child: NetworkImagehelper(
+                        img: provider.model!.customer!.image,
+                        height: 40.0,
+                        width: 40.0,
                       ))
                   : Image.asset(
                       'assets/images/profileImg.png',
@@ -257,6 +303,158 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                 ),
               )
             ],
+          )
+        ],
+      ),
+    );
+  }
+
+  shopDetailsWidget(ViewOrderDetailsProvider provider) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 15),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: AppColor.whiteColor,
+          border: Border.all(color: const Color(0xffF5F5F5)),
+          boxShadow: [
+            BoxShadow(
+                offset: const Offset(0, 2),
+                color: AppColor.blackColor.withOpacity(.2),
+                blurRadius: 3)
+          ]),
+      padding: const EdgeInsets.only(top: 17, bottom: 15, left: 15, right: 15),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              provider.model!.shop!.image.isNotEmpty
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: NetworkImagehelper(
+                        img: provider.model!.shop!.image,
+                        height: 60.0,
+                        width: 60.0,
+                      ))
+                  : Image.asset(
+                      'assets/images/profileImg.png',
+                      height: 60,
+                      width: 60,
+                    ),
+              ScreenSize.width(15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      provider.model!.shop != null
+                          ? "${provider.model!.shop!.name ?? ""}"
+                          : '',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: FontFamily.poppinsMedium,
+                          color: AppColor.blackColor,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    Row(
+                      children: [
+                        Image.asset(
+                          AppImages.locationIcon,
+                          height: 12,
+                          width: 9,
+                        ),
+                        ScreenSize.width(5),
+                        Flexible(
+                          child: Text(
+                            provider.model!.shop != null
+                                ? "${provider.model!.shop!.address ?? ""}, ${provider.model!.shop!.city ?? ""}, ${provider.model!.shop!.country ?? ""}"
+                                : '',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 13,
+                                fontFamily: FontFamily.poppinsRegular,
+                                color: Color(0xffB8B8B8),
+                                fontWeight: FontWeight.w400),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+          ScreenSize.height(12),
+          Container(
+            height: 1,
+            color: const Color(0xffD9D9D9).withOpacity(.4),
+          ),
+          ScreenSize.height(20),
+          getText(
+              title: 'Mobile Number',
+              size: 15,
+              fontFamily: FontFamily.poppinsMedium,
+              color: AppColor.blackColor,
+              fontWeight: FontWeight.w500),
+          ScreenSize.height(6),
+          GestureDetector(
+            onTap: () {
+              provider.callNumber(
+                  '+1${provider.model!.shop != null ? provider.model!.shop!.phone.toString() : ''}');
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  'assets/icons/Phone.png',
+                  width: 26,
+                  height: 26,
+                ),
+                ScreenSize.width(10),
+                getText(
+                    title:
+                        '+1 - ${provider.model!.shop != null ? provider.model!.shop!.phone.toString() : ''}',
+                    size: 14,
+                    fontFamily: FontFamily.poppinsRegular,
+                    color: Color(0xffB8B8B8),
+                    fontWeight: FontWeight.w400)
+              ],
+            ),
+          ),
+          ScreenSize.height(20),
+          getText(
+              title: 'Email Address',
+              size: 15,
+              fontFamily: FontFamily.poppinsMedium,
+              color: AppColor.blackColor,
+              fontWeight: FontWeight.w500),
+          ScreenSize.height(6),
+          GestureDetector(
+            onTap: () {
+              provider.model!.shop != null
+                  ? provider.openMail(provider.model!.shop!.email.toString())
+                  : null;
+            },
+            child: Row(
+              children: [
+                Image.asset(
+                  AppImages.emailWithBackgroundIcon,
+                  height: 26,
+                  width: 26,
+                ),
+                ScreenSize.width(10),
+                getText(
+                    title: provider.model!.shop != null
+                        ? provider.model!.shop!.email.toString()
+                        : '',
+                    size: 14,
+                    fontFamily: FontFamily.poppinsRegular,
+                    color: Color(0xffB8B8B8),
+                    fontWeight: FontWeight.w400)
+              ],
+            ),
           )
         ],
       ),
@@ -347,16 +545,14 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(6),
-            child: model.image.isEmpty
-                ? Container()
-                : Image.network(
-                    model.image,
-                    height: 60,
-                    width: 66,
-                    fit: BoxFit.fill,
-                  ),
-          ),
+              borderRadius: BorderRadius.circular(6),
+              child: model.image.isEmpty
+                  ? Container()
+                  : NetworkImagehelper(
+                      img: model.image,
+                      height: 60.0,
+                      width: 66.0,
+                    )),
           ScreenSize.width(12),
           Expanded(
             child: Column(
@@ -382,7 +578,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                         color: AppColor.lightTextColor),
                     children: [
                       TextSpan(
-                        text: '${model.price} USD',
+                        text: '${model.price} COP',
                         style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w400,
@@ -488,14 +684,103 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
       padding: const EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 12),
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
-          color: const Color(0xffC4D9ED)),
+          color: title.toUpperCase() == 'DELIVERED'
+              ? AppColor.greenColor.withOpacity(.2)
+              : const Color(0xffC4D9ED)),
       alignment: Alignment.center,
       child: getText(
           title: title,
           size: 12,
           fontFamily: FontFamily.poppinsRegular,
-          color: const Color(0xff0790FF),
+          color: title.toUpperCase() == 'DELIVERED'
+              ? AppColor.greenColor
+              : const Color(0xff0790FF),
           fontWeight: FontWeight.w400),
+    );
+  }
+
+  void openDialogBox(Function() yesTap) {
+    showGeneralDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 400),
+      pageBuilder: (_, __, ___) {
+        return Stack(
+          children: [
+            Center(
+              child: Container(
+                // height: 394,
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 35, left: 20, right: 20, bottom: 33),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Are you sure you want to change the status?',
+                        style: TextStyle(
+                            decoration: TextDecoration.none,
+                            fontSize: 14,
+                            fontFamily: FontFamily.poppinsSemiBold,
+                            color: AppColor.textBlackColor,
+                            fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.center,
+                      ),
+                      ScreenSize.height(47),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: AppButton(
+                                title: 'No',
+                                height: 50,
+                                width: double.infinity,
+                                buttonColor: AppColor.whiteColor,
+                                textColor: AppColor.textBlackColor,
+                                onTap: () {
+                                  Navigator.pop(context);
+                                }),
+                          ),
+                          ScreenSize.width(20),
+                          Flexible(
+                            child: AppButton(
+                                title: 'Yes',
+                                height: 50,
+                                width: double.infinity,
+                                buttonColor: AppColor.appTheme,
+                                onTap: yesTap),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+      transitionBuilder: (_, anim, __, child) {
+        Tween<Offset> tween;
+        if (anim.status == AnimationStatus.reverse) {
+          tween = Tween(begin: const Offset(0, 1), end: Offset.zero);
+        } else {
+          tween = Tween(begin: const Offset(0, 1), end: Offset.zero);
+        }
+
+        return SlideTransition(
+          position: tween.animate(anim),
+          child: FadeTransition(
+            opacity: anim,
+            child: child,
+          ),
+        );
+      },
     );
   }
 }

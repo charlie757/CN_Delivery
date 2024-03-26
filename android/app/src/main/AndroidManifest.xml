@@ -1,5 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 <uses-permission android:name="android.permission.INTERNET"/>
+<queries>
+<intent>
+  <action android:name="android.intent.action.VIEW" />
+  <data android:scheme="https" />
+</intent>
+<intent>
+  <action android:name="android.intent.action.DIAL" />
+  <data android:scheme="tel" />
+</intent>
+<intent>
+  <action android:name="android.intent.action.SEND" />
+  <data android:mimeType="*/*" />
+</intent>
+</queries>
 
     <application
         android:label="CN Delivery"
@@ -21,8 +35,6 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
-               <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyD_TkchnNl5WIeVRU2FnqZy-vLvd5LkOpM"/>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -33,5 +45,9 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+               <meta-data 
+               android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyD_TkchnNl5WIeVRU2FnqZy-vLvd5LkOpM"
+               />
     </application>
 </manifest>

@@ -2,6 +2,7 @@ import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
+import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/model/current_order_model.dart';
 import 'package:cn_delivery/provider/current_order_provider.dart';
@@ -9,7 +10,6 @@ import 'package:cn_delivery/screens/view_order_details_screen.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:provider/provider.dart';
 
 class CurrentOrderScreen extends StatefulWidget {
@@ -93,14 +93,14 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
           Row(
             children: [
               ClipRRect(
-                borderRadius: BorderRadius.circular(6),
-                child: Image.network(
-                  model.product![0].image,
-                  height: 60,
-                  width: 66,
-                  fit: BoxFit.fill,
-                ),
-              ),
+                  borderRadius: BorderRadius.circular(6),
+                  child: model.product![0].image.isEmpty
+                      ? Container()
+                      : NetworkImagehelper(
+                          img: model.product![0].image,
+                          height: 60.0,
+                          width: 66.0,
+                        )),
               ScreenSize.width(12),
               Expanded(
                 child: Column(
@@ -190,7 +190,7 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
                   color: AppColor.blackColor.withOpacity(.5),
                   fontWeight: FontWeight.w400),
               getText(
-                  title: '${model.orderAmount.toString()} USD',
+                  title: '${model.orderAmount.toString()} COP',
                   size: 14,
                   fontFamily: FontFamily.poppinsSemiBold,
                   color: AppColor.blackColor,

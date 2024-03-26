@@ -3,11 +3,13 @@ import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
+import 'package:cn_delivery/model/view_order_model.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
 
 class TrackOrderScreen extends StatefulWidget {
-  const TrackOrderScreen({super.key});
+  final model;
+  const TrackOrderScreen({super.key, this.model});
 
   @override
   State<TrackOrderScreen> createState() => _TrackOrderScreenState();
@@ -68,7 +70,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                   fontFamily: FontFamily.poppinsRegular,
                   color: Color(0xff868686)),
               getText(
-                  title: '135876',
+                  title: widget.model.id.toString(),
                   size: 18,
                   fontWeight: FontWeight.w400,
                   fontFamily: FontFamily.poppinsSemiBold,
@@ -112,7 +114,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                       height: 40,
                       child: VerticalDivider(
                         thickness: 4,
-                        color: Color(0xffDADADA),
+                        color: Color(0xff1455AC),
                       )),
                   Container(
                     height: 25,
@@ -120,33 +122,53 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                     decoration: const BoxDecoration(
                         shape: BoxShape.circle, color: Color(0xff1455AC)),
                   ),
-                  const SizedBox(
+                  SizedBox(
                       height: 80,
                       child: VerticalDivider(
                         thickness: 4,
-                        color: Color(0xffDADADA),
+                        color: widget.model.orderStatus == 'out_for_delivery' ||
+                                widget.model.orderStatus == 'delivered'
+                            ? const Color(0xff1455AC)
+                            : const Color(0xffDADADA),
                       )),
                   Container(
                     height: 25,
                     width: 25,
                     decoration: BoxDecoration(
+                        color: widget.model.orderStatus == 'out_for_delivery' ||
+                                widget.model.orderStatus == 'delivered'
+                            ? const Color(0xff1455AC)
+                            : AppColor.whiteColor,
                         shape: BoxShape.circle,
                         border: Border.all(
-                            color: const Color(0xffDADADA), width: 3)),
+                            color: widget.model.orderStatus ==
+                                        'out_for_delivery' ||
+                                    widget.model.orderStatus == 'delivered'
+                                ? const Color(0xff1455AC)
+                                : const Color(0xffDADADA),
+                            width: 3)),
                   ),
-                  const SizedBox(
+                  SizedBox(
                       height: 80,
                       child: VerticalDivider(
                         thickness: 4,
-                        color: Color(0xffDADADA),
+                        color: widget.model.orderStatus == 'delivered'
+                            ? const Color(0xff1455AC)
+                            : const Color(0xffDADADA),
                       )),
                   Container(
                     height: 25,
                     width: 25,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
+                        color: widget.model.orderStatus == 'delivered'
+                            ? const Color(0xff1455AC)
+                            : AppColor.whiteColor,
                         border: Border.all(
-                            color: const Color(0xffDADADA), width: 3)),
+                            color: widget.model.orderStatus == 'delivered'
+                                ? const Color(0xff1455AC)
+                                : const Color(0xffDADADA),
+                            width: 3)),
                   )
                 ],
               ),
@@ -163,22 +185,27 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                         color: AppColor.blackColor,
                         fontWeight: FontWeight.w300),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 80),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 80),
                     child: getText(
                         title: 'Delivery',
                         size: 18,
                         fontFamily: FontFamily.nunitoRegular,
-                        color: Color(0xff868686),
+                        color: widget.model.orderStatus == 'out_for_delivery' ||
+                                widget.model.orderStatus == 'delivered'
+                            ? AppColor.blackColor
+                            : const Color(0xff868686),
                         fontWeight: FontWeight.w300),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.only(top: 68),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 68),
                     child: getText(
                         title: 'Completed\n& Payment Received',
                         size: 18,
                         fontFamily: FontFamily.nunitoRegular,
-                        color: Color(0xff868686),
+                        color: widget.model.orderStatus == 'delivered'
+                            ? AppColor.blackColor
+                            : const Color(0xff868686),
                         fontWeight: FontWeight.w300),
                   ),
                 ],

@@ -4,6 +4,7 @@ class ViewOrderModel {
   Customer? customer;
   ShippingAddress? shippingAddress;
   PickUp? pickUp;
+  Shop? shop;
   dynamic paymentMethod;
   dynamic orderAmount;
   dynamic orderDate;
@@ -17,6 +18,7 @@ class ViewOrderModel {
       this.customer,
       this.shippingAddress,
       this.pickUp,
+      this.shop,
       this.paymentMethod,
       this.orderAmount,
       this.orderDate,
@@ -33,6 +35,7 @@ class ViewOrderModel {
         ? ShippingAddress.fromJson(json['shipping_address'])
         : null;
     pickUp = json['pick_up'] != null ? PickUp.fromJson(json['pick_up']) : null;
+    shop = json['shop'] != null ? Shop.fromJson(json['shop']) : null;
     paymentMethod = json['payment_method'];
     orderAmount = json['order_amount'] ?? "";
     orderDate = json['order_date'];
@@ -172,6 +175,51 @@ class PickUp {
     data['contact'] = contact;
     data['city'] = city;
     data['country'] = country;
+    return data;
+  }
+}
+
+class Shop {
+  dynamic name;
+  dynamic email;
+  dynamic phone;
+  dynamic address;
+  dynamic contact;
+  dynamic city;
+  dynamic country;
+  dynamic image;
+
+  Shop(
+      {this.name,
+      this.email,
+      this.phone,
+      this.address,
+      this.contact,
+      this.city,
+      this.country,
+      this.image});
+
+  Shop.fromJson(Map<String, dynamic> json) {
+    name = json['name'] ?? "";
+    email = json['email'] ?? "";
+    phone = json['phone'] ?? "";
+    address = json['address'];
+    contact = json['contact'] ?? "";
+    city = json['city'];
+    country = json['country'];
+    image = json['image'] ?? "";
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = Map<String, dynamic>();
+    data['name'] = name;
+    data['email'] = email;
+    data['phone'] = phone;
+    data['address'] = address;
+    data['contact'] = contact;
+    data['city'] = city;
+    data['country'] = country;
+    data['image'] = image;
     return data;
   }
 }
