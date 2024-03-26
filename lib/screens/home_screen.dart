@@ -1,3 +1,4 @@
+import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
@@ -5,6 +6,7 @@ import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/provider/home_provider.dart';
+import 'package:cn_delivery/screens/view_order_details_screen.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -192,7 +194,7 @@ class _HomeScreenState extends State<HomeScreen> {
             itemCount: provider.homeModel!.data!.currentOrdersList!.length,
             itemBuilder: (context, index) {
               var model = provider.homeModel!.data!.currentOrdersList![index];
-              return orderUi(model);
+              return orderUi(model, provider);
             })
         : Container();
     // Center(
@@ -205,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //   );
   }
 
-  orderUi(model) {
+  orderUi(model, HomeProvider provider) {
     return Container(
       decoration: BoxDecoration(
           color: AppColor.whiteColor,
@@ -290,7 +292,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ))
             ],
           ),
-          ScreenSize.height(12),
+          ScreenSize.height(2),
+          Align(
+            alignment: Alignment.centerRight,
+            child: viewOrderDetailsButton(model.id.toString(), provider),
+          ),
+          ScreenSize.height(8),
           Row(
             children: [
               getText(
@@ -331,6 +338,32 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  viewOrderDetailsButton(String id, HomeProvider provider) {
+    return GestureDetector(
+      onTap: () {
+        AppRoutes.pushCupertinoNavigation(ViewOrderDetailsScreen(
+          orderId: id.toString(),
+        )).then((value) {});
+      },
+      child: Container(
+        height: 32,
+        width: 143,
+        // padding: const EdgeInsets.only(left: 16, right: 16),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: const Color(0xff5DBCF2),
+          borderRadius: BorderRadius.circular(16.5),
+        ),
+        child: getText(
+            title: 'View Order Details',
+            size: 13,
+            fontFamily: FontFamily.poppinsRegular,
+            color: AppColor.whiteColor,
+            fontWeight: FontWeight.w400),
       ),
     );
   }
