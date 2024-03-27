@@ -6,10 +6,10 @@ import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/customtextfield.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
+import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/provider/profile_provider.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
-import 'package:cn_delivery/utils/utils.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -158,11 +158,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       : profileProvider.profileImgUrl.isNotEmpty
                           ? ClipRRect(
                               borderRadius: BorderRadius.circular(100),
-                              child: Image.network(
-                                profileProvider.profileImgUrl,
-                                fit: BoxFit.cover,
-                                cacheHeight: 600,
-                                cacheWidth: 600,
+                              child: NetworkImagehelper(
+                                img: profileProvider.profileImgUrl,
                               ))
                           : Image.asset(
                               'assets/images/profileImg.png',

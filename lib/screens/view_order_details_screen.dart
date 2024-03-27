@@ -1,24 +1,19 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:cn_delivery/api/api_url.dart';
 import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/network_image_helper.dart';
-import 'package:cn_delivery/model/view_order_model.dart';
 import 'package:cn_delivery/provider/view_order_details_provider.dart';
+import 'package:cn_delivery/utils/map_utils.dart';
 import 'package:cn_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
-import 'package:geocoding/geocoding.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
-import 'package:cn_delivery/provider/current_order_provider.dart';
-import 'package:cn_delivery/screens/track_order_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
 import 'package:provider/provider.dart';
 
 class ViewOrderDetailsScreen extends StatefulWidget {
@@ -30,88 +25,100 @@ class ViewOrderDetailsScreen extends StatefulWidget {
 }
 
 class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
-  // GoogleMapController? myMapController;
-  // void _onMapCreated(GoogleMapController controller) {
-  //   // _controller.complete(controller);
-  //   myMapController = controller;
-  // }
-
   @override
   void initState() {
     callInitFunction();
+
     super.initState();
   }
 
   callInitFunction() {
     final provider =
         Provider.of<ViewOrderDetailsProvider>(context, listen: false);
+    provider.clearValues();
     Future.delayed(Duration.zero, () {
       provider.callApiFunction(widget.orderId);
+
+      // provider.getPolyPoints();
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ViewOrderDetailsProvider>(
         builder: (context, myProvider, child) {
-      print(myProvider.lat);
-      // myProvider.pickupLatLong('address');
+      // print(myProvider.lat);
       return Scaffold(
         body: Stack(
           children: [
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      // Navigator.push(
-                      //     context,
-                      //     CupertinoPageRoute(
-                      //         builder: (context) => TrackOrderScreen(
-                      //               model: myProvider.model,
-                      //             )));
-                    },
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height / 2.4,
-                      child: GoogleMap(
-                        liteModeEnabled: true,
-                        mapType: MapType.normal,
-                        scrollGesturesEnabled: true,
-                        myLocationEnabled: true,
-                        zoomGesturesEnabled: true,
-                        zoomControlsEnabled: true,
-                        circles: {
-                          Circle(
-                              circleId: CircleId('shipping'),
-                              center: LatLng(myProvider.lat, myProvider.lng),
-                              radius: 2000,
-                              fillColor: AppColor.blueColor.withOpacity(.3),
-                              strokeWidth: 1,
-                              consumeTapEvents: true,
-                              strokeColor: AppColor.blueColor.withOpacity(.3))
-                        },
-                        onMapCreated: myProvider.onMapCreated,
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(myProvider.lat, myProvider.lng),
-                          zoom: 12.0,
-                        ),
-                      ),
+            Column(
+              children: [
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 2.4,
+                  child: myProvider.sourceLocation != null
+                      ? GoogleMap(
+                          initialCameraPosition: CameraPosition(
+                            target: myProvider.sourceLocation!,
+                            zoom: 13.5,
+                          ),
+                          scrollGesturesEnabled: true, // Enable scrolling
+                          zoomGesturesEnabled: true, // Enable zooming
+                          markers: {
+                            Marker(
+                              markerId: MarkerId("pickup"),
+                              infoWindow: InfoWindow(
+                                title: 'Pickup Location',
+                              ),
+                              position: myProvider.sourceLocation!,
+                            ),
+                            Marker(
+                              markerId: MarkerId("delivery"),
+                              infoWindow: InfoWindow(
+                                title: 'Delivery Location',
+                              ),
+                              position: myProvider.destination!,
+                            ),
+                          },
+                          onMapCreated: (mapController) {
+                            myProvider.controller.complete(mapController);
+                          },
+                          polylines: {
+                            Polyline(
+                              polylineId: const PolylineId("route"),
+                              points: myProvider.polylineCoordinates,
+                              color: const Color(0xFF7B61FF),
+                              width: 6,
+                            ),
+                          },
+                        )
+                      : Container(),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        myProvider.model != null
+                            ? pickAndDeliveryInfo(myProvider)
+                            : Container(),
+                        ScreenSize.height(15),
+                        myProvider.model != null
+                            ? shopDetailsWidget(myProvider)
+                            : Container(),
+                        ScreenSize.height(15),
+                        myProvider.model != null
+                            ? orderDetailsWidget(myProvider)
+                            : Container(),
+                        ScreenSize.height(50),
+                      ],
                     ),
                   ),
-                  myProvider.model != null
-                      ? pickAndDeliveryInfo(myProvider)
-                      : Container(),
-                  ScreenSize.height(15),
-                  myProvider.model != null
-                      ? shopDetailsWidget(myProvider)
-                      : Container(),
-                  ScreenSize.height(15),
-                  myProvider.model != null
-                      ? orderDetailsWidget(myProvider)
-                      : Container(),
-                  ScreenSize.height(50),
-                ],
-              ),
+                )
+              ],
             ),
             Positioned(
               top: 0 + 40,
@@ -231,8 +238,8 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              customBtn(provider.model!.orderStatus.toString()),
-              customBtn(provider.model!.paymentMethod.toString()),
+              customBtn(provider.model!.orderStatus.toString(), () {}),
+              customBtn(provider.model!.paymentMethod.toString(), () {}),
             ],
           ),
           ScreenSize.height(16),
@@ -643,13 +650,27 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                       fontWeight: FontWeight.w400),
                 ),
                 ScreenSize.height(0),
-                getText(
-                    title:
-                        "${provider.model!.pickUp!.city}, ${provider.model!.pickUp!.country}",
-                    size: 13,
-                    fontFamily: FontFamily.poppinsRegular,
-                    color: const Color(0xffB8B8B8),
-                    fontWeight: FontWeight.w400),
+                Row(
+                  children: [
+                    Expanded(
+                        child: Text(
+                      "${provider.model!.pickUp!.city}, ${provider.model!.pickUp!.country}",
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 13,
+                          fontFamily: FontFamily.poppinsRegular,
+                          color: const Color(0xffB8B8B8),
+                          fontWeight: FontWeight.w400),
+                    )),
+                    provider.pickupLat != 0.0
+                        ? customBtn('Open Map', () {
+                            MapUtils.openMap(
+                                provider.pickupLat, provider.pickupLng);
+                          })
+                        : Container(),
+                  ],
+                ),
                 ScreenSize.height(30),
                 Text(
                   provider.model!.shippingAddress!.address.toString(),
@@ -662,13 +683,28 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                       fontWeight: FontWeight.w400),
                 ),
                 ScreenSize.height(0),
-                getText(
-                    title:
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
                         "${provider.model!.shippingAddress!.city}, ${provider.model!.shippingAddress!.country}",
-                    size: 13,
-                    fontFamily: FontFamily.poppinsRegular,
-                    color: const Color(0xffB8B8B8),
-                    fontWeight: FontWeight.w400),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 13,
+                            fontFamily: FontFamily.poppinsRegular,
+                            color: const Color(0xffB8B8B8),
+                            fontWeight: FontWeight.w400),
+                      ),
+                    ),
+                    provider.shippingLat != 0.0
+                        ? customBtn('Open Map', () {
+                            MapUtils.openMap(
+                                provider.shippingLat, provider.shippingLng);
+                          })
+                        : Container()
+                  ],
+                )
               ],
             ),
           ),
@@ -677,25 +713,26 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
     );
   }
 
-  customBtn(
-    String title,
-  ) {
-    return Container(
-      padding: const EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 12),
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(4),
-          color: title.toUpperCase() == 'DELIVERED'
-              ? AppColor.greenColor.withOpacity(.2)
-              : const Color(0xffC4D9ED)),
-      alignment: Alignment.center,
-      child: getText(
-          title: title,
-          size: 12,
-          fontFamily: FontFamily.poppinsRegular,
-          color: title.toUpperCase() == 'DELIVERED'
-              ? AppColor.greenColor
-              : const Color(0xff0790FF),
-          fontWeight: FontWeight.w400),
+  customBtn(String title, Function() onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 12),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(4),
+            color: title.toUpperCase() == 'DELIVERED' || title == "Open Map"
+                ? AppColor.greenColor.withOpacity(.3)
+                : const Color(0xffC4D9ED)),
+        alignment: Alignment.center,
+        child: getText(
+            title: title,
+            size: 12,
+            fontFamily: FontFamily.poppinsRegular,
+            color: title.toUpperCase() == 'DELIVERED' || title == "Open Map"
+                ? AppColor.greenColor
+                : const Color(0xff0790FF),
+            fontWeight: FontWeight.w400),
+      ),
     );
   }
 

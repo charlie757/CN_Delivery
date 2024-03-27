@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cn_delivery/api/api_service.dart';
 import 'package:cn_delivery/api/api_url.dart';
 import 'package:cn_delivery/model/view_order_model.dart';
 import 'package:cn_delivery/utils/showcircleprogressdialog.dart';
+
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:cn_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
@@ -11,16 +14,45 @@ import 'package:geocoding/geocoding.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ViewOrderDetailsProvider extends ChangeNotifier {
-  GoogleMapController? myMapController;
-  double lat = 45.521563;
-  double lng = -122.677433;
+  ViewOrderModel? model;
+  final Completer<GoogleMapController> controller = Completer();
+  LatLng? sourceLocation;
+  LatLng? destination;
+
+  double pickupLat = 0.0;
+  double pickupLng = 0.0;
+  double shippingLat = 0.0;
+  double shippingLng = 0.0;
   // LatLng? center;
 
-  void onMapCreated(GoogleMapController controller) {
-    myMapController = controller;
+  List<LatLng> polylineCoordinates = [];
+  void getPolyPoints() async {
+    PolylinePoints polylinePoints = PolylinePoints();
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      'AIzaSyD_TkchnNl5WIeVRU2FnqZy-vLvd5LkOpM', // Your Google Map Key
+      PointLatLng(sourceLocation!.latitude, sourceLocation!.longitude),
+      PointLatLng(destination!.latitude, destination!.longitude),
+    );
+    if (result.points.isNotEmpty) {
+      result.points.forEach(
+        (PointLatLng point) => polylineCoordinates.add(
+          LatLng(point.latitude, point.longitude),
+        ),
+      );
+      notifyListeners();
+    }
   }
 
-  ViewOrderModel? model;
+  clearValues() {
+    pickupLat = 0.0;
+    pickupLng = 0.0;
+    shippingLat = 0.0;
+    shippingLng = 0.0;
+    sourceLocation = null;
+    destination = null;
+    polylineCoordinates = [];
+  }
+
   callApiFunction(id) {
     showCircleProgressDialog(navigatorKey.currentContext!);
     var body = json.encode({});
@@ -32,31 +64,40 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
       Navigator.pop(navigatorKey.currentContext!);
       if (value != null) {
         model = ViewOrderModel.fromJson(value[0]);
-        // pickupLatLong(
-        //     "${model!.pickUp!.address}, ${model!.pickUp!.city}, ${model!.pickUp!.country}");
-        shippingLatLong("${model!.shippingAddress!.city}");
+        pickupLatLong(
+            "${model!.pickUp!.address}, ${model!.pickUp!.city}, ${model!.pickUp!.country}");
+        shippingLatLong(
+            "${model!.shippingAddress!.address}, ${model!.shippingAddress!.city}, ${model!.shippingAddress!.country}");
       }
       notifyListeners();
     });
   }
 
-  // String lat = '';
+  // String lat = ''
   pickupLatLong(String address) async {
-    List<Location> locations = await locationFromAddress(address);
-    print("pickup${locations[0]}");
-    Location location = locations[0]; // Assuming you want the first location
-    // lat = location.latitude.toString();
+    try {
+      List<Location> locations = await locationFromAddress(address);
+      print("pickup${locations[0]}");
+      Location location = locations[0];
+      pickupLat = location.latitude;
+      pickupLng = location.longitude;
+      notifyListeners();
+    } catch (e) {}
   }
 
   shippingLatLong(String address) async {
     try {
-      List<Location> locations = await locationFromAddress('jaipur');
+      List<Location> locations = await locationFromAddress(address);
       print("shipping${locations[0]}");
       Location location = locations[0]; // Assuming you want the first location
-      // LatLng newCenter = LatLng(location.latitude, location.longitude);
-      // center = newCenter;
-      lat = location.latitude;
-      lng = location.longitude;
+      shippingLat = location.latitude;
+      shippingLng = location.longitude;
+      sourceLocation = LatLng(pickupLat, pickupLng);
+      destination = LatLng(location.latitude, location.longitude);
+      Future.delayed(Duration(seconds: 3), () {
+        getPolyPoints();
+      });
+
       notifyListeners();
     } catch (e) {
       print("e..$e");
