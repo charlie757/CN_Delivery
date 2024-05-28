@@ -58,6 +58,7 @@ class LoginProvider extends ChangeNotifier {
       "email": emailController.text,
       "password": passwordController.text,
     });
+    print(body);
     ApiService.apiMethod(
       url: ApiUrl.loginUrl,
       body: body,

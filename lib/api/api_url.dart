@@ -1,6 +1,6 @@
 class ApiUrl {
-  static String baseUrl = 'https://www.consumersnetworks.com/testing/api/v1/';
-  static String loginUrl = '${baseUrl}auth/login';
+  static String baseUrl = 'https://www.consumersnetworks.com/api/v1/';
+  static String loginUrl = '${baseUrl}auth/driverLogin';
   static String getProfileUrl = '${baseUrl}delivery-man/info';
   static String updateProfileUrl = '${baseUrl}delivery-man/update-info';
   static String updatePasswordUrl = '${baseUrl}delivery-man/update-password';

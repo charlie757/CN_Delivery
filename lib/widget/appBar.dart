@@ -78,6 +78,7 @@ AppBar profileAppBar(bool value, Function(bool) onChanged) {
   return AppBar(
     scrolledUnderElevation: 0.0,
     backgroundColor: AppColor.whiteColor,
+    automaticallyImplyLeading: false,
     title: getText(
         title: 'Profile',
         size: 20,

@@ -15,6 +15,7 @@ import 'package:image_picker/image_picker.dart';
 class ProfileProvider extends ChangeNotifier {
   ProfileModel? profileModel;
   int tabBarIndex = 0;
+  int selectedLangIndex = 0;
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final mobileController = TextEditingController();
@@ -63,6 +64,11 @@ class ProfileProvider extends ChangeNotifier {
     oldPasswordErrorMsg = '';
     newPasswordErrorMsg = '';
     confirmNewPasswordErrorMsg = '';
+  }
+
+  updateLangIndex(val) {
+    selectedLangIndex = val;
+    notifyListeners();
   }
 
   updateTabBarIndex(value) {

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "77524171318",
-    "project_id": "consumer-network",
-    "storage_bucket": "consumer-network.appspot.com"
+    "project_number": "569589536113",
+    "project_id": "consumer-networks",
+    "storage_bucket": "consumer-networks.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:77524171318:android:d00bb96a142bf0dd62f697",
+        "mobilesdk_app_id": "1:569589536113:android:f7e032f1cb31bc56a5d2d0",
         "android_client_info": {
           "package_name": "com.cn.delivery"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD_TkchnNl5WIeVRU2FnqZy-vLvd5LkOpM"
+          "current_key": "AIzaSyAFg444yhMDNO_8DG9qMFFlPJOr3LlQ5dE"
         }
       ],
       "services": {

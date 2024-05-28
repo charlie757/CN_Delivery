@@ -57,6 +57,7 @@ dev_dependencies:
   cached_network_image: ^3.3.1
   geocoding: ^3.0.0
   url_launcher: ^6.2.5
+  flutter_localization: ^0.2.0
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -80,6 +81,7 @@ flutter:
   assets:
       - assets/images/
       - assets/icons/
+      - assets/language/
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

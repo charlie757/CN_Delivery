@@ -699,7 +699,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                     ),
                     provider.shippingLat != 0.0
                         ? customBtn('Open Map', () {
-                            MapUtils.openMap(
+                             MapUtils.openMap(
                                 provider.shippingLat, provider.shippingLng);
                           })
                         : Container()
