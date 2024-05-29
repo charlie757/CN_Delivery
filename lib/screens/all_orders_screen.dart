@@ -4,12 +4,15 @@ import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/helper/screensize.dart';
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/model/all_order_model.dart';
 import 'package:cn_delivery/provider/all_order_provider.dart';
 import 'package:cn_delivery/screens/view_order_details_screen.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../utils/utils.dart';
 
 class AllOrderScreen extends StatefulWidget {
   const AllOrderScreen({super.key});
@@ -22,19 +25,19 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
   List orderList = [
     {
       'img': 'assets/images/order1.png',
-      'progress': 'In Progress',
+      'progress': getTranslated('in_progress', navigatorKey.currentContext!)!,
     },
     {
       'img': 'assets/images/order2.png',
-      'progress': 'Canceled',
+      'progress': getTranslated('cancelled', navigatorKey.currentContext!)!,
     },
     {
       'img': 'assets/images/order3.png',
-      'progress': 'Completed',
+      'progress': getTranslated('completed', navigatorKey.currentContext!)!,
     },
     {
       'img': 'assets/images/order4.png',
-      'progress': 'In Progress',
+      'progress': getTranslated('in_progress', navigatorKey.currentContext!)!,
     }
   ];
 
@@ -55,12 +58,12 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.whiteColor,
-      appBar: appBar(title: 'All Orders'),
+      appBar: appBar(title: getTranslated('all_orders', context)!),
       body: Consumer<AllOrderProvider>(builder: (context, myProvider, child) {
         return myProvider.allOrderList.isEmpty
             ? Center(
                 child: getText(
-                    title: 'No orders found',
+                    title: getTranslated('no_order_found', context)!,
                     size: 16,
                     fontFamily: FontFamily.poppinsRegular,
                     color: AppColor.blackColor,
@@ -141,7 +144,7 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text.rich(TextSpan(
-                                  text: 'Qty: ',
+                                  text: '${getTranslated('qty', context)!}: ',
                                   style: TextStyle(
                                       color: AppColor.blackColor,
                                       fontSize: 13,
@@ -157,7 +160,7 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                                                 FontFamily.poppinsRegular))
                                   ])),
                               Text.rich(TextSpan(
-                                  text: 'Price: ',
+                                  text: '${getTranslated('price', context)!}: ',
                                   style: TextStyle(
                                       color: AppColor.blackColor,
                                       fontSize: 13,
@@ -180,10 +183,12 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
                         orderButton(
                             model.orderStatus,
                             model.orderStatus.toString().toUpperCase() ==
-                                    'CANCELED'
+                          getTranslated('cancelled', context)!.toUpperCase()
+                                    // 'CANCELED'
                                 ? const Color(0xff6E6E96)
                                 : model.orderStatus.toString().toUpperCase() ==
-                                        'DELIVERED'
+                                getTranslated('delivered', context)!.toUpperCase()
+                                        // 'DELIVERED'
                                     ? AppColor.greenColor
                                     : const Color(0xffFE70D8)),
                       ],
@@ -202,7 +207,7 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
           Row(
             children: [
               getText(
-                  title: 'Total Order Value: ',
+                  title: '${getTranslated('total_order_values', context)!}: ',
                   size: 13,
                   fontFamily: FontFamily.poppinsRegular,
                   color: AppColor.blackColor.withOpacity(.5),
@@ -219,7 +224,7 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
           Row(
             children: [
               getText(
-                  title: 'Payment Method: ',
+                  title: '${getTranslated('payment_method', context)!}: ',
                   size: 13,
                   fontFamily: FontFamily.poppinsRegular,
                   color: AppColor.blackColor.withOpacity(.5),
@@ -280,7 +285,7 @@ class _AllOrderScreenState extends State<AllOrderScreen> {
           borderRadius: BorderRadius.circular(16.5),
         ),
         child: getText(
-            title: 'View Order Details',
+            title: getTranslated('view_order_details', context)!,
             size: 13,
             fontFamily: FontFamily.poppinsRegular,
             color: AppColor.whiteColor,

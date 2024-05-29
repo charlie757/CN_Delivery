@@ -3,6 +3,7 @@ import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/dashboard_provider.dart';
 import 'package:cn_delivery/provider/profile_provider.dart';
 import 'package:cn_delivery/screens/all_orders_screen.dart';
@@ -68,24 +69,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               customBottomNavigationBar(
-                  AppImages.homeIcon, 'Home', 0, myProvider, () {
+                  AppImages.homeIcon, getTranslated('home', context)!, 0, myProvider, () {
                 myProvider.updateIndex(0);
               }),
               customBottomNavigationBar(
-                  AppImages.currentOrderIcon, 'Current Orders', 1, myProvider,
+                  AppImages.currentOrderIcon, getTranslated('current_orders', context)!, 1, myProvider,
                   () {
                 myProvider.updateIndex(1);
               }),
               customBottomNavigationBar(
-                  AppImages.allOrderIcon, 'All Orders', 2, myProvider, () {
+                  AppImages.allOrderIcon, getTranslated('all_orders', context)!, 2, myProvider, () {
                 myProvider.updateIndex(2);
               }),
               customBottomNavigationBar(
-                  AppImages.earningIcon, 'Earning', 3, myProvider, () {
+                  AppImages.earningIcon, getTranslated('earning', context)!, 3, myProvider, () {
                 myProvider.updateIndex(3);
               }),
               customBottomNavigationBar(
-                  AppImages.profileIcon, 'Profile', 4, myProvider, () {
+                  AppImages.profileIcon, getTranslated('profile', context)!, 4, myProvider, () {
                 myProvider.updateIndex(4);
               }),
             ],

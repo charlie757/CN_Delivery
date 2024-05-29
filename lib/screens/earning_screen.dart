@@ -3,6 +3,7 @@ import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/earn_provider.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +33,7 @@ class _EarningScreenState extends State<EarningScreen> {
     return Consumer<EarnProvider>(builder: (context, myProvider, child) {
       return Scaffold(
           backgroundColor: AppColor.whiteColor,
-          appBar: appBar(title: 'Earnings'),
+          appBar: appBar(title: getTranslated('earnings', context)!),
           body: Container(
             margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
             decoration: BoxDecoration(
@@ -58,7 +59,7 @@ class _EarningScreenState extends State<EarningScreen> {
                     ),
                     ScreenSize.width(16),
                     getText(
-                        title: 'Total Earnings',
+                        title: getTranslated('total_earnings', context)!,
                         size: 16,
                         fontFamily: FontFamily.poppinsRegular,
                         color: AppColor.blackColor,

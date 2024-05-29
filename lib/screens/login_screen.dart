@@ -5,6 +5,7 @@ import 'package:cn_delivery/helper/customtextfield.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/login_provider.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     children: [
                       getText(
-                          title: 'Welcome Back',
+                          title: getTranslated('welcome_back', context)!,
                           size: 23,
                           fontFamily: FontFamily.poppinsSemiBold,
                           color: AppColor.blackColor,
@@ -66,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Row(
                     children: [
                       AutoSizeText(
-                        'To',
+                        getTranslated('to', context)!,
                         style: TextStyle(
                             fontSize: 23,
                             fontFamily: FontFamily.poppinsSemiBold,
@@ -77,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       Flexible(
                         child: AutoSizeText(
-                          ' Consumers Networks',
+                          getTranslated('cnsumers_Networks', context)!,
                           style: TextStyle(
                               fontSize: 23,
                               fontFamily: FontFamily.poppinsSemiBold,
@@ -92,7 +93,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ScreenSize.height(20),
                   CustomTextfield(
                     controller: myProvider.emailController,
-                    hintText: 'Enter Your Email',
+                    hintText: getTranslated('enter_your_email', context)!,
                     isReadOnly: myProvider.isLoading,
                     errorMsg: myProvider.emailValidationMsg,
                     onChanged: (val) {
@@ -116,7 +117,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ScreenSize.height(25),
                   CustomTextfield(
                     controller: myProvider.passwordController,
-                    hintText: 'Enter Your Password',
+                    hintText: getTranslated('enter_your_password', context)!,
                     isReadOnly: myProvider.isLoading,
                     errorMsg: myProvider.passwordValidationMsg,
                     onChanged: (val) {
@@ -139,7 +140,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   ScreenSize.height(40),
                   AppButton(
-                      title: 'SIGN IN',
+                      title: getTranslated('sign_in', context)!,
                       height: 56,
                       width: double.infinity,
                       buttonColor: AppColor.appTheme,

@@ -3,6 +3,7 @@ import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/model/view_order_model.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.whiteColor,
-      appBar: appbarWithLeading('Track Order'),
+      appBar: appbarWithLeading(getTranslated('track_order', context)!),
       body: SingleChildScrollView(
         child: Padding(
           padding:
@@ -32,7 +33,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
               trackWidget(),
               ScreenSize.height(50),
               AppButton(
-                  title: 'TRACK DRIVER',
+                  title: getTranslated('track_deliver', context)!,
                   height: 49,
                   width: double.infinity,
                   buttonColor: AppColor.appTheme,
@@ -63,8 +64,8 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const getText(
-                  title: 'Order number',
+               getText(
+                  title: getTranslated('order_number', context)!,
                   size: 16,
                   fontWeight: FontWeight.w400,
                   fontFamily: FontFamily.poppinsRegular,
@@ -81,8 +82,8 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const getText(
-                  title: 'Estimate time of arrival',
+               getText(
+                  title: getTranslated('estimate_time', context)!,
                   size: 16,
                   fontWeight: FontWeight.w400,
                   fontFamily: FontFamily.poppinsRegular,
@@ -126,8 +127,8 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                       height: 80,
                       child: VerticalDivider(
                         thickness: 4,
-                        color: widget.model.orderStatus == 'out_for_delivery' ||
-                                widget.model.orderStatus == 'delivered'
+                        color: widget.model.orderStatus == getTranslated('out_for_delivery', context)! ||
+                                widget.model.orderStatus == getTranslated('delivered', context)!
                             ? const Color(0xff1455AC)
                             : const Color(0xffDADADA),
                       )),
@@ -135,15 +136,15 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                     height: 25,
                     width: 25,
                     decoration: BoxDecoration(
-                        color: widget.model.orderStatus == 'out_for_delivery' ||
-                                widget.model.orderStatus == 'delivered'
+                        color: widget.model.orderStatus == getTranslated('out_for_delivery', context)!  ||
+                                widget.model.orderStatus == getTranslated('delivered', context)!
                             ? const Color(0xff1455AC)
                             : AppColor.whiteColor,
                         shape: BoxShape.circle,
                         border: Border.all(
                             color: widget.model.orderStatus ==
-                                        'out_for_delivery' ||
-                                    widget.model.orderStatus == 'delivered'
+                                getTranslated('out_for_delivery', context)!  ||
+                                    widget.model.orderStatus == getTranslated('delivered', context)!
                                 ? const Color(0xff1455AC)
                                 : const Color(0xffDADADA),
                             width: 3)),
@@ -152,7 +153,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                       height: 80,
                       child: VerticalDivider(
                         thickness: 4,
-                        color: widget.model.orderStatus == 'delivered'
+                        color: widget.model.orderStatus == getTranslated('delivered', context)!
                             ? const Color(0xff1455AC)
                             : const Color(0xffDADADA),
                       )),
@@ -161,11 +162,11 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                     width: 25,
                     decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: widget.model.orderStatus == 'delivered'
+                        color: widget.model.orderStatus == getTranslated('delivered', context)!
                             ? const Color(0xff1455AC)
                             : AppColor.whiteColor,
                         border: Border.all(
-                            color: widget.model.orderStatus == 'delivered'
+                            color: widget.model.orderStatus == getTranslated('delivered', context)!
                                 ? const Color(0xff1455AC)
                                 : const Color(0xffDADADA),
                             width: 3)),
@@ -179,7 +180,7 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 40),
                     child: getText(
-                        title: 'Going to delivery',
+                        title: getTranslated('going_to_delivery', context)!,
                         size: 18,
                         fontFamily: FontFamily.nunitoRegular,
                         color: AppColor.blackColor,
@@ -188,11 +189,11 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 80),
                     child: getText(
-                        title: 'Delivery',
+                        title: getTranslated('delivery', context)!,
                         size: 18,
                         fontFamily: FontFamily.nunitoRegular,
-                        color: widget.model.orderStatus == 'out_for_delivery' ||
-                                widget.model.orderStatus == 'delivered'
+                        color: widget.model.orderStatus == getTranslated('out_for_delivery', context)!  ||
+                                widget.model.orderStatus == getTranslated('delivered', context)!
                             ? AppColor.blackColor
                             : const Color(0xff868686),
                         fontWeight: FontWeight.w300),
@@ -200,10 +201,10 @@ class _TrackOrderScreenState extends State<TrackOrderScreen> {
                   Padding(
                     padding: const EdgeInsets.only(top: 68),
                     child: getText(
-                        title: 'Completed\n& Payment Received',
+                        title: '${getTranslated('completed', context)!}\n& ${getTranslated('payment_received', context)!}',
                         size: 18,
                         fontFamily: FontFamily.nunitoRegular,
-                        color: widget.model.orderStatus == 'delivered'
+                        color: widget.model.orderStatus == getTranslated('delivered', context)!
                             ? AppColor.blackColor
                             : const Color(0xff868686),
                         fontWeight: FontWeight.w300),

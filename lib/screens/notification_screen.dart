@@ -1,4 +1,5 @@
 import 'package:cn_delivery/helper/appcolor.dart';
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/notification_provider.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         builder: (context, myProvider, child) {
       return Scaffold(
         backgroundColor: AppColor.whiteColor,
-        appBar: appbarWithLeading('Notification'),
+        appBar: appbarWithLeading(getTranslated('notification', context)!),
       );
     });
   }

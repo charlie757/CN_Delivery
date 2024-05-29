@@ -4,6 +4,7 @@ import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/helper/screensize.dart';
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/model/current_order_model.dart';
 import 'package:cn_delivery/provider/current_order_provider.dart';
 import 'package:cn_delivery/screens/view_order_details_screen.dart';
@@ -39,11 +40,11 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
     return Consumer<CurrentOrderProvider>(
         builder: (context, myProvider, child) {
       return Scaffold(
-          appBar: appBar(title: 'Current Order'),
+          appBar: appBar(title: getTranslated('current_order', context)!),
           body: myProvider.currentOrderList.isEmpty
               ? Center(
                   child: getText(
-                      title: 'No orders found',
+                      title: getTranslated('no_order_found', context)!,
                       size: 16,
                       fontFamily: FontFamily.poppinsRegular,
                       color: AppColor.blackColor,
@@ -123,7 +124,7 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text.rich(TextSpan(
-                                  text: 'Qty: ',
+                                  text: '${getTranslated('qty', context)!}: ',
                                   style: TextStyle(
                                       color: AppColor.blackColor,
                                       fontSize: 13,
@@ -139,7 +140,7 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
                                                 FontFamily.poppinsRegular))
                                   ])),
                               Text.rich(TextSpan(
-                                  text: 'Price: ',
+                                  text: '${getTranslated('price', context)!}: ',
                                   style: TextStyle(
                                       color: AppColor.blackColor,
                                       fontSize: 13,
@@ -162,10 +163,10 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
                         orderButton(
                             model.orderStatus,
                             model.orderStatus.toString().toUpperCase() ==
-                                    'CANCELED'
+                                getTranslated('cancelled', context)!.toUpperCase()
                                 ? const Color(0xff6E6E96)
                                 : model.orderStatus.toString().toUpperCase() ==
-                                        'COMPLETED'
+                                       getTranslated('completed', context)!.toUpperCase()
                                     ? Colors.green
                                     : const Color(0xffFE70D8)),
                       ],
@@ -184,7 +185,7 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
           Row(
             children: [
               getText(
-                  title: 'Total Order Value: ',
+                  title: '${getTranslated('total_order_values', context)!}: ',
                   size: 13,
                   fontFamily: FontFamily.poppinsRegular,
                   color: AppColor.blackColor.withOpacity(.5),
@@ -201,7 +202,7 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
           Row(
             children: [
               getText(
-                  title: 'Payment Method: ',
+                  title: '${getTranslated('payment_method', context)!}: ',
                   size: 13,
                   fontFamily: FontFamily.poppinsRegular,
                   color: AppColor.blackColor.withOpacity(.5),
@@ -262,7 +263,7 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
           borderRadius: BorderRadius.circular(16.5),
         ),
         child: getText(
-            title: 'View Order Details',
+            title: getTranslated('view_order_details', context)!,
             size: 13,
             fontFamily: FontFamily.poppinsRegular,
             color: AppColor.whiteColor,

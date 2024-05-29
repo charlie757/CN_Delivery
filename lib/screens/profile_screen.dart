@@ -9,8 +9,11 @@ import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
+import 'package:cn_delivery/provider/localization_provider.dart';
 import 'package:cn_delivery/provider/profile_provider.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
+import 'package:cn_delivery/utils/constants.dart';
+import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
@@ -106,14 +109,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 50,
                 child: Column(
                   children: [
-                    getText(
-                        title: getTranslated('change_password', context)!,
-                        size: 16,
-                        fontFamily: FontFamily.poppinsSemiBold,
-                        color: profileProvider.tabBarIndex == 1
-                            ? AppColor.blueColor
-                            : AppColor.blackColor,
-                        fontWeight: FontWeight.w600),
+                    Text(
+                      getTranslated('change_password', context)!,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                          fontSize: 16,
+                          fontFamily: FontFamily.poppinsSemiBold,
+                          color: profileProvider.tabBarIndex == 1
+                              ? AppColor.blueColor
+                              : AppColor.blackColor,
+                          fontWeight: FontWeight.w600),
+                    ),
                     ScreenSize.height(15),
                     Container(
                       height: profileProvider.tabBarIndex == 1 ? 4 : 1,
@@ -446,6 +453,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(40))),
       onPressed: () {
+        SessionManager.languageCode == 'es'
+            ? profileProvider.selectedLangIndex = 1
+            : 0;
         openLanguageBox(profileProvider);
       },
       child: Container(
@@ -646,6 +656,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   GestureDetector(
                     onTap: () {
                       profileProvider.updateLangIndex(0);
+
                       state(() {});
                     },
                     child: Container(
@@ -694,7 +705,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: 45,
                       width: 150,
                       buttonColor: AppColor.appTheme,
-                      onTap: () {})
+                      onTap: () {
+                        Provider.of<LocalizationProvider>(context,
+                                listen: false)
+                            .setLanguage(Locale(
+                          Constants.languages[profileProvider.selectedLangIndex]
+                              .languageCode!,
+                          Constants.languages[profileProvider.selectedLangIndex]
+                              .countryCode,
+                        ));
+
+                        Provider.of<LocalizationProvider>(context,
+                                listen: false)
+                            .loadCurrentLanguage();
+                        Navigator.pop(context);
+                      })
                 ],
               ),
             ),

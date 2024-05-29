@@ -3,6 +3,7 @@
 import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/network_image_helper.dart';
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/view_order_details_provider.dart';
 import 'package:cn_delivery/utils/map_utils.dart';
 import 'package:cn_delivery/utils/utils.dart';
@@ -72,14 +73,14 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                             Marker(
                               markerId: MarkerId("pickup"),
                               infoWindow: InfoWindow(
-                                title: 'Pickup Location',
+                                title: getTranslated('pickup_location', context)!,
                               ),
                               position: myProvider.sourceLocation!,
                             ),
                             Marker(
                               markerId: MarkerId("delivery"),
                               infoWindow: InfoWindow(
-                                title: 'Delivery Location',
+                                title: getTranslated('delivery_location', context)!,
                               ),
                               position: myProvider.destination!,
                             ),
@@ -141,8 +142,8 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
           ],
         ),
         bottomNavigationBar: myProvider.model != null &&
-                (myProvider.model!.orderStatus == 'pending' ||
-                    myProvider.model!.orderStatus == 'out_for_delivery')
+                (myProvider.model!.orderStatus == getTranslated('pending', context)! ||
+                    myProvider.model!.orderStatus == getTranslated('out_for_delivery', context)! )
             ? Container(
                 height: 70,
                 padding: const EdgeInsets.only(
@@ -163,26 +164,26 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                     ]),
                 width: double.infinity,
                 child: AppButton(
-                    title: myProvider.model!.orderStatus == 'pending'
-                        ? 'Out for delivery'
-                        : myProvider.model!.orderStatus == 'out_for_delivery'
-                            ? 'Delivered'
+                    title: myProvider.model!.orderStatus == getTranslated('pending', context)!
+                        ? getTranslated('outForDelivery', context)!
+                        : myProvider.model!.orderStatus == getTranslated('out_for_delivery', context)!
+                        ? 'Delivered'
                             : '',
                     height: 50,
                     width: double.infinity,
                     buttonColor: AppColor.appTheme,
                     onTap: () {
-                      myProvider.model!.orderStatus == 'pending'
+                      myProvider.model!.orderStatus == getTranslated('pending', context)!
                           ? openDialogBox(() {
                               Navigator.pop(context);
                               myProvider.updateStatusApiFunction(
-                                  widget.orderId, 'out_for_delivery');
+                                  widget.orderId, getTranslated('out_for_delivery', context)! );
                             })
-                          : myProvider.model!.orderStatus == 'out_for_delivery'
-                              ? openDialogBox(() {
+                          : myProvider.model!.orderStatus == getTranslated('out_for_delivery', context)!
+                          ? openDialogBox(() {
                                   Navigator.pop(context);
                                   myProvider.updateStatusApiFunction(
-                                      widget.orderId, 'delivered');
+                                      widget.orderId, getTranslated('delivered', context)!);
                                 })
                               : null;
                     }),
@@ -212,7 +213,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           getText(
-              title: 'Pickup and Deliver Info',
+              title: getTranslated('pickup_delivery_info', context)!,
               size: 16,
               fontFamily: FontFamily.poppinsRegular,
               color: AppColor.blackColor,
@@ -221,7 +222,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
             children: [
               const Spacer(),
               getText(
-                  title: 'Order No. ${provider.model!.id.toString()}',
+                  title: '${getTranslated('order_no', context)!}. ${provider.model!.id.toString()}',
                   size: 13,
                   fontFamily: FontFamily.poppinsRegular,
                   color: const Color(0xffB8B8B8),
@@ -401,7 +402,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
           ),
           ScreenSize.height(20),
           getText(
-              title: 'Mobile Number',
+              title: getTranslated('mobile_number', context)!,
               size: 15,
               fontFamily: FontFamily.poppinsMedium,
               color: AppColor.blackColor,
@@ -432,7 +433,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
           ),
           ScreenSize.height(20),
           getText(
-              title: 'Email Address',
+              title: getTranslated('email_address', context)!,
               size: 15,
               fontFamily: FontFamily.poppinsMedium,
               color: AppColor.blackColor,
@@ -489,15 +490,15 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
             padding: const EdgeInsets.only(left: 16, right: 15),
             child: Row(
               children: [
-                const getText(
-                    title: 'Order Details',
+                 getText(
+                    title: getTranslated('order_details', context)!,
                     size: 16,
                     fontFamily: FontFamily.poppinsSemiBold,
                     color: Color(0xff2F2E36),
                     fontWeight: FontWeight.w600),
                 const Spacer(),
                 Text.rich(TextSpan(
-                    text: 'Total Amount : ',
+                    text: '${getTranslated('total_amount', context)!} : ',
                     style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -577,7 +578,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                 ),
                 ScreenSize.height(2),
                 Text.rich(TextSpan(
-                    text: 'Value : ',
+                    text: '${getTranslated('value', context)!} : ',
                     style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -664,7 +665,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                           fontWeight: FontWeight.w400),
                     )),
                     provider.pickupLat != 0.0
-                        ? customBtn('Open Map', () {
+                        ? customBtn(getTranslated('open_map', context)!, () {
                             MapUtils.openMap(
                                 provider.pickupLat, provider.pickupLng);
                           })
@@ -698,7 +699,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                       ),
                     ),
                     provider.shippingLat != 0.0
-                        ? customBtn('Open Map', () {
+                        ? customBtn(getTranslated('open_map', context)!, () {
                              MapUtils.openMap(
                                 provider.shippingLat, provider.shippingLng);
                           })
@@ -720,7 +721,8 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
         padding: const EdgeInsets.only(top: 4, bottom: 4, left: 12, right: 12),
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(4),
-            color: title.toUpperCase() == 'DELIVERED' || title == "Open Map"
+            color: title.toUpperCase() == getTranslated('delivered', context)!.toUpperCase() ||
+                title == getTranslated('open_map', context)!
                 ? AppColor.greenColor.withOpacity(.3)
                 : const Color(0xffC4D9ED)),
         alignment: Alignment.center,
@@ -728,7 +730,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
             title: title,
             size: 12,
             fontFamily: FontFamily.poppinsRegular,
-            color: title.toUpperCase() == 'DELIVERED' || title == "Open Map"
+            color: title.toUpperCase() == getTranslated('delivered', context)!.toUpperCase()  || title == getTranslated('open_map', context)!
                 ? AppColor.greenColor
                 : const Color(0xff0790FF),
             fontWeight: FontWeight.w400),
@@ -760,7 +762,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Are you sure you want to change the status?',
+                        getTranslated('are_you_sure_change_status', context)!,
                         style: TextStyle(
                             decoration: TextDecoration.none,
                             fontSize: 14,
@@ -774,7 +776,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                         children: [
                           Flexible(
                             child: AppButton(
-                                title: 'No',
+                                title: getTranslated('no', context)!,
                                 height: 50,
                                 width: double.infinity,
                                 buttonColor: AppColor.whiteColor,
@@ -786,7 +788,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                           ScreenSize.width(20),
                           Flexible(
                             child: AppButton(
-                                title: 'Yes',
+                                title: getTranslated('yes', context)!,
                                 height: 50,
                                 width: double.infinity,
                                 buttonColor: AppColor.appTheme,

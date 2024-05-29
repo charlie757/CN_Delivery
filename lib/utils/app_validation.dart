@@ -1,9 +1,10 @@
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/utils/utils.dart';
 
 class AppValidation {
   static String? firstNameValidator(val) {
     if (val.isEmpty) {
-      return 'Enter your first name';
+      return getTranslated( 'enter_first_name', navigatorKey.currentContext!)!;
     } else {
       return null;
 
@@ -13,7 +14,7 @@ class AppValidation {
 
   static String? lastNameValidator(val) {
     if (val.isEmpty) {
-      return 'Enter your last name';
+      return getTranslated( 'enter_last_name', navigatorKey.currentContext!)!;
     } else {
       return null;
 
@@ -23,9 +24,9 @@ class AppValidation {
 
   static String? phoneNumberValidator(val) {
     if (val.isEmpty) {
-      return 'Enter your phone number';
+      return getTranslated( 'enter_phone_number', navigatorKey.currentContext!)!;
     } else if (val.length < 10) {
-      return 'Enter valid phone number';
+      return getTranslated( 'enter_valid_phone_number', navigatorKey.currentContext!)!;
     } else {
       return null;
 
@@ -36,9 +37,9 @@ class AppValidation {
   static String? emailValidator(val) {
     RegExp regExp = RegExp(Utils.emailPattern.trim());
     if (val.isEmpty) {
-      return 'Enter your email';
+      return getTranslated( 'enter_email', navigatorKey.currentContext!)!;
     } else if (!regExp.hasMatch(val)) {
-      return 'Enter valid email';
+      return getTranslated( 'enter_valid_email', navigatorKey.currentContext!)!;
     } else {
       return null;
 
@@ -49,9 +50,9 @@ class AppValidation {
   static String? passwordValidator(val) {
     RegExp regExp = RegExp(Utils.passwordPattern.trim());
     if (val.isEmpty) {
-      return 'Enter your password';
+      return getTranslated( 'enter_password', navigatorKey.currentContext!)!;
     } else if (!regExp.hasMatch(val)) {
-      return 'Password should contain at least one upper case, one lower case, one digit, one Special character';
+      return getTranslated( 'password_validation', navigatorKey.currentContext!)!;
     } else {
       return null;
 
@@ -62,12 +63,12 @@ class AppValidation {
   static String? reEnterpasswordValidator(currentValue, previousValue) {
     RegExp regExp = RegExp(Utils.passwordPattern.trim());
     if (currentValue.isEmpty) {
-      return 'Enter your password';
+      return getTranslated( 'enter_password', navigatorKey.currentContext!)!;
     } else if (!regExp.hasMatch(currentValue)) {
-      return 'Password should contain at least one upper case, one lower case, one digit, one Special character';
+      return getTranslated( 'password_validation', navigatorKey.currentContext!)!;
     } else if (previousValue.isNotEmpty) {
       if (currentValue != previousValue) {
-        return 'Password should be same';
+        return getTranslated( 'password_same', navigatorKey.currentContext!)!;
       }
       return null;
     } else {
@@ -79,7 +80,7 @@ class AppValidation {
 
   static String? addressValidator(val) {
     if (val.isEmpty) {
-      return 'Enter your address';
+      return getTranslated( 'enter_address', navigatorKey.currentContext!)!;
     } else {
       return null;
 
@@ -89,7 +90,7 @@ class AppValidation {
 
   static String? cityValidator(val) {
     if (val.isEmpty) {
-      return 'Enter your city';
+      return getTranslated( 'enter_city', navigatorKey.currentContext!)!;
     } else {
       return null;
 
@@ -99,7 +100,7 @@ class AppValidation {
 
   static String? stateValidator(val) {
     if (val.isEmpty) {
-      return 'Enter your state';
+      return getTranslated( 'enter_state', navigatorKey.currentContext!)!;
     } else {
       return null;
 
@@ -109,7 +110,7 @@ class AppValidation {
 
   static String? countryValidator(val) {
     if (val.isEmpty) {
-      return 'Enter your country';
+      return getTranslated( 'enter_country', navigatorKey.currentContext!)!;
     } else {
       return null;
 
@@ -119,7 +120,7 @@ class AppValidation {
 
   static String? stateIdValidator(val) {
     if (val.isEmpty) {
-      return 'Enter your state id';
+      return getTranslated( 'enter_state_id', navigatorKey.currentContext!)!;
     } else {
       return null;
 

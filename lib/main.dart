@@ -93,6 +93,8 @@ class _MyAppState extends State<MyApp> {
     for (var language in Constants.languages) {
       locals.add(Locale(language.languageCode!, language.countryCode));
     }
+    // Provider.of<LocalizationProvider>(context).loadCurrentLanguage();
+    print("object${Provider.of<LocalizationProvider>(context).locale}");
     notificationService.initialize();
     return GetMaterialApp(
       title: 'Consumers Networks',
@@ -107,8 +109,10 @@ class _MyAppState extends State<MyApp> {
         GlobalCupertinoLocalizations.delegate,
         FallbackLocalizationDelegate()
       ],
-      supportedLocales: locals,
-      fallbackLocale: const Locale('en'),
+      supportedLocales: [
+        Locale(Provider.of<LocalizationProvider>(context).locale.languageCode)
+      ],
+      // fallbackLocale: const Locale('en'),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

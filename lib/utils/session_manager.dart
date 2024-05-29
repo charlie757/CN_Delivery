@@ -21,4 +21,16 @@ class SessionManager {
   static set setFcmToken(String value) {
     sharedPrefs.setString(Constants.FCM_TOKEN, value);
   }
+
+  static String get languageCode =>
+      sharedPrefs.getString(Constants.languageCode) ?? "";
+  static set setLanguageCode(String value) {
+    sharedPrefs.setString(Constants.languageCode, value);
+  }
+
+  static String get countryCode =>
+      sharedPrefs.getString(Constants.countryCode) ?? "";
+  static set setCountryCode(String value) {
+    sharedPrefs.setString(Constants.countryCode, value);
+  }
 }

@@ -3,6 +3,7 @@ import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/screens/notification_screen.dart';
 import 'package:cn_delivery/utils/utils.dart';
 import 'package:flutter/cupertino.dart';
@@ -80,7 +81,7 @@ AppBar profileAppBar(bool value, Function(bool) onChanged) {
     backgroundColor: AppColor.whiteColor,
     automaticallyImplyLeading: false,
     title: getText(
-        title: 'Profile',
+        title: getTranslated('profile', navigatorKey.currentContext!)!,
         size: 20,
         fontFamily: FontFamily.poppinsRegular,
         color: AppColor.blackColor,

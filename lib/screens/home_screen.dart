@@ -5,7 +5,9 @@ import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/helper/screensize.dart';
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/home_provider.dart';
+import 'package:cn_delivery/provider/localization_provider.dart';
 import 'package:cn_delivery/screens/view_order_details_screen.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
@@ -35,10 +37,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print(Provider.of<LocalizationProvider>(context).locale);
     return Consumer<HomeProvider>(builder: (context, myProvider, child) {
       return Scaffold(
         backgroundColor: AppColor.whiteColor,
-        appBar: appBar(title: 'Dashboard', isNotification: true),
+        appBar: appBar(
+            title: getTranslated('dashboard', context)!, isNotification: true),
         body: SingleChildScrollView(
           child: Padding(
             padding:
@@ -51,7 +55,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onGoingCompletedWidget(
                         AppColor.blueColor,
                         AppImages.onGoingIcon,
-                        'On Going',
+                        getTranslated('on_going', context)!,
                         myProvider.homeModel != null &&
                                 myProvider.homeModel!.data != null
                             ? myProvider.homeModel!.data!.totalCurrentOrders
@@ -61,7 +65,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     onGoingCompletedWidget(
                         AppColor.lightPinkColor,
                         AppImages.completedIcon,
-                        'Completed',
+                        getTranslated('completed', context)!,
                         myProvider.homeModel != null &&
                                 myProvider.homeModel!.data != null
                             ? myProvider.homeModel!.data!.totalDeliveredOrders
@@ -73,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 totalOrdersWidget(myProvider),
                 ScreenSize.height(23),
                 getText(
-                    title: 'Upcoming Orders',
+                    title: getTranslated('upcoming_orders', context)!,
                     size: 22,
                     fontFamily: FontFamily.poppinsRegular,
                     color: AppColor.blackColor,
@@ -159,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               ScreenSize.width(16),
               getText(
-                  title: 'Total Orders',
+                  title: getTranslated('total_orders', context)!,
                   size: 16,
                   fontFamily: FontFamily.poppinsMedium,
                   color: AppColor.whiteColor,
@@ -259,7 +263,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         fontWeight: FontWeight.w500),
                   ),
                   Text.rich(TextSpan(
-                      text: 'Qty: ',
+                      text: '${getTranslated('qty', context)!}: ',
                       style: TextStyle(
                           color: AppColor.blackColor,
                           fontSize: 13,
@@ -274,7 +278,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fontFamily: FontFamily.poppinsRegular))
                       ])),
                   Text.rich(TextSpan(
-                      text: 'Price: ',
+                      text: '${getTranslated('price', context)!}: ',
                       style: TextStyle(
                           color: AppColor.blackColor,
                           fontSize: 13,
@@ -301,7 +305,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             children: [
               getText(
-                  title: 'Total Order Value: ',
+                  title: '${getTranslated('total_order_values', context)!}: ',
                   size: 13,
                   fontFamily: FontFamily.poppinsRegular,
                   color: AppColor.blackColor.withOpacity(.5),
@@ -318,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(
             children: [
               getText(
-                  title: 'Payment Method: ',
+                  title: '${getTranslated('payment_method', context)!}: ',
                   size: 13,
                   fontFamily: FontFamily.poppinsRegular,
                   color: AppColor.blackColor.withOpacity(.5),
@@ -359,7 +363,7 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(16.5),
         ),
         child: getText(
-            title: 'View Order Details',
+            title: getTranslated('view_order_details', context)!,
             size: 13,
             fontFamily: FontFamily.poppinsRegular,
             color: AppColor.whiteColor,
