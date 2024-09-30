@@ -10,15 +10,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 
-AppBar appBar({required String title, bool isNotification = false}) {
+AppBar appBar({required String title, bool isNotification = false, bool isLeading=false}) {
   return AppBar(
     backgroundColor: AppColor.whiteColor,
     scrolledUnderElevation: 0.0,
-    automaticallyImplyLeading: false,
+    automaticallyImplyLeading: isLeading,
     title: getText(
         title: title,
-        size: 20,
-        fontFamily: FontFamily.poppinsRegular,
+        size: 18,
+        fontFamily: FontFamily.poppinsMedium,
         color: AppColor.blackColor,
         fontWeight: FontWeight.w600),
     actions: [
@@ -75,7 +75,7 @@ AppBar appbarWithLeading(String title) {
   );
 }
 
-AppBar profileAppBar(bool value, Function(bool) onChanged) {
+AppBar profileAppBar({required bool value,required Function(bool) onChanged,required Function() onTap}) {
   return AppBar(
     scrolledUnderElevation: 0.0,
     backgroundColor: AppColor.whiteColor,
@@ -102,6 +102,13 @@ AppBar profileAppBar(bool value, Function(bool) onChanged) {
             // padding: 8.0,
             showOnOff: true,
             onToggle: onChanged),
+      ),
+      GestureDetector(
+        onTap: onTap,
+        child: Container(
+          margin:const EdgeInsets.only(right: 10),
+          child:const Icon(Icons.more_vert),
+        ),
       )
     ],
   );

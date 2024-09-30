@@ -13,6 +13,19 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
+
+  @override
+  void initState() {
+    callInitFunction();
+    super.initState();
+  }
+
+  callInitFunction()async{
+    final provider  = Provider.of<NotificationProvider>(context,listen: false);
+    Future.delayed(Duration.zero,(){
+      provider.callApiFunction();
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Consumer<NotificationProvider>(
@@ -20,6 +33,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       return Scaffold(
         backgroundColor: AppColor.whiteColor,
         appBar: appbarWithLeading(getTranslated('notification', context)!),
+        // body: ,
       );
     });
   }

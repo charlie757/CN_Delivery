@@ -127,4 +127,72 @@ class AppValidation {
       /// should be return "null" value here in else condition
     }
   }
+
+
+  static String? vehicleNameValidator(val) {
+    if (val.isEmpty) {
+      return getTranslated( 'enter_vehicle_name', navigatorKey.currentContext!)!;
+    } else {
+      return null;
+
+      /// should be return "null" value here in else condition
+    }
+  }
+  static String? vehicleTypeValidator(val) {
+    if (val.isEmpty) {
+      return getTranslated( 'select_vehicle_type_validation', navigatorKey.currentContext!)!;
+    } else {
+      return null;
+
+      /// should be return "null" value here in else condition
+    }
+  }
+  static String? modelNumberValidator(val) {
+    if (val.isEmpty) {
+      return getTranslated( 'enter_model_number', navigatorKey.currentContext!)!;
+    } else {
+      return null;
+
+      /// should be return "null" value here in else condition
+    }
+  }static String? dateOfManufactureValidator(val) {
+    if (val.isEmpty) {
+      return getTranslated( 'select__manufacture_date', navigatorKey.currentContext!)!;
+    } else {
+      return null;
+
+      /// should be return "null" value here in else condition
+    }
+  }
+  static String? dateOfRegistrationValidator(val) {
+    if (val.isEmpty) {
+      return getTranslated( 'select_registration_date', navigatorKey.currentContext!)!;
+    } else {
+      return null;
+
+      /// should be return "null" value here in else condition
+    }
+  }
+
+  static String? fuelTypeValidator(val) {
+    if (val.isEmpty) {
+      return getTranslated( 'select_fuel_type_validation', navigatorKey.currentContext!)!;
+    } else {
+      return null;
+
+      /// should be return "null" value here in else condition
+    }
+  }
+
+
+  static String? vehicleRegistrationValidator(val) {
+    if (val.isEmpty) {
+      return getTranslated( 'enter_registration_number', navigatorKey.currentContext!)!;
+    } else {
+      return null;
+
+      /// should be return "null" value here in else condition
+    }
+  }
+
 }

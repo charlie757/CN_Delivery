@@ -16,6 +16,9 @@ class AppRoutes {
     Navigator.push(navigatorKey.currentContext!,
         MaterialPageRoute(builder: (context) => route));
   }
+  static Future pushReplacementAndRemoveNavigation(route){
+    return Navigator.pushAndRemoveUntil(navigatorKey.currentContext!, CupertinoPageRoute(builder: (context)=>route), (Route<dynamic> route) => false,);
+  }
 
   static pushReplacementNavigation(
     route,

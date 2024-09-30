@@ -14,7 +14,8 @@ class CustomTextfield extends StatelessWidget {
   final TextInputType? textInputType;
   final errorMsg;
   final ValueChanged<String>? onChanged;
-  const CustomTextfield(
+  Function()?onTap;
+   CustomTextfield(
       {super.key,
       this.hintText,
       required this.controller,
@@ -24,7 +25,7 @@ class CustomTextfield extends StatelessWidget {
       this.inputFormatters,
       this.textInputType,
       this.errorMsg,
-      this.onChanged});
+      this.onChanged,this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +50,7 @@ class CustomTextfield extends StatelessWidget {
           padding: const EdgeInsets.only(left: 10),
           child: TextFormField(
             controller: controller,
+            onTap: onTap,
             readOnly: isReadOnly,
             cursorColor: AppColor.appTheme,
             obscureText: isObscureText,

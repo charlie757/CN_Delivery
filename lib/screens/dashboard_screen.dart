@@ -11,8 +11,12 @@ import 'package:cn_delivery/screens/current_order_screen.dart';
 import 'package:cn_delivery/screens/earning_screen.dart';
 import 'package:cn_delivery/screens/home_screen.dart';
 import 'package:cn_delivery/screens/profile_screen.dart';
+import 'package:cn_delivery/utils/constants.dart';
+import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
+import '../utils/location_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -28,14 +32,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
   }
 
-  callInitFunction() {
+  callInitFunction() async{
     final dashboardProvider =
         Provider.of<DashboardProvider>(context, listen: false);
+    dashboardProvider.currentIndex=0;
     final profileProvider =
         Provider.of<ProfileProvider>(context, listen: false);
-    Future.delayed(Duration.zero, () {
+    Future.delayed(Duration.zero, () async{
       dashboardProvider.currentIndex = 0;
       profileProvider.getProfileApiFunction(true);
+       dashboardProvider.updateLastLocationApiFunction();
       dashboardProvider.updateFcmTokenApiFunction();
     });
   }
@@ -50,46 +56,54 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<DashboardProvider>(builder: (context, myProvider, child) {
-      return Scaffold(
-        body: screenList[myProvider.currentIndex],
-        bottomNavigationBar: Container(
-          height: 65,
-          decoration: BoxDecoration(
-              color: AppColor.blueColor,
-              borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-              boxShadow: [
-                BoxShadow(
-                    offset: const Offset(0, -1),
-                    blurRadius: 2,
-                    color: AppColor.blackColor.withOpacity(.1))
-              ]),
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              customBottomNavigationBar(
-                  AppImages.homeIcon, getTranslated('home', context)!, 0, myProvider, () {
-                myProvider.updateIndex(0);
-              }),
-              customBottomNavigationBar(
-                  AppImages.currentOrderIcon, getTranslated('current_orders', context)!, 1, myProvider,
-                  () {
-                myProvider.updateIndex(1);
-              }),
-              customBottomNavigationBar(
-                  AppImages.allOrderIcon, getTranslated('all_orders', context)!, 2, myProvider, () {
-                myProvider.updateIndex(2);
-              }),
-              customBottomNavigationBar(
-                  AppImages.earningIcon, getTranslated('earning', context)!, 3, myProvider, () {
-                myProvider.updateIndex(3);
-              }),
-              customBottomNavigationBar(
-                  AppImages.profileIcon, getTranslated('profile', context)!, 4, myProvider, () {
-                myProvider.updateIndex(4);
-              }),
-            ],
+      return PopScope(
+        canPop: false,
+        onPopInvoked: (val) {
+          myProvider.onWillPop();
+        },
+
+        child: Scaffold(
+          body: screenList[myProvider.currentIndex],
+          bottomNavigationBar: Container(
+            height: 65,
+            decoration: BoxDecoration(
+                color: AppColor.blueColor,
+                borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                boxShadow: [
+                  BoxShadow(
+                      offset: const Offset(0, -1),
+                      blurRadius: 2,
+                      color: AppColor.blackColor.withOpacity(.1))
+                ]),
+            alignment: Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                customBottomNavigationBar(
+                    AppImages.homeIcon, getTranslated('home', context)!, 0, myProvider, () {
+                      print('object');
+                  myProvider.updateIndex(0);
+                }),
+                customBottomNavigationBar(
+                    AppImages.currentOrderIcon, getTranslated('current_orders', context)!, 1, myProvider,
+                    () {
+                  myProvider.updateIndex(1);
+                }),
+                customBottomNavigationBar(
+                    AppImages.allOrderIcon, getTranslated('all_orders', context)!, 2, myProvider, () {
+                  myProvider.updateIndex(2);
+                }),
+                customBottomNavigationBar(
+                    AppImages.earningIcon, getTranslated('earning', context)!, 3, myProvider, () {
+                  myProvider.updateIndex(3);
+                }),
+                customBottomNavigationBar(
+                    AppImages.profileIcon, getTranslated('profile', context)!, 4, myProvider, () {
+                  myProvider.updateIndex(4);
+                }),
+              ],
+            ),
           ),
         ),
       );
@@ -98,31 +112,37 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   customBottomNavigationBar(String img, String title, int index,
       DashboardProvider provider, Function() onTap) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        color: AppColor.blueColor,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Image.asset(
-              img,
-              height: 20,
-              width: 20,
-              color: provider.currentIndex == index
-                  ? AppColor.whiteColor
-                  : const Color(0xffB8B8B8),
-            ),
-            ScreenSize.height(6),
-            getText(
-                title: title,
-                size: 11,
-                fontFamily: FontFamily.poppinsMedium,
+    return Flexible(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: double.infinity,
+          color: AppColor.blueColor,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                img,
+                height: 20,
+                width: 20,
                 color: provider.currentIndex == index
                     ? AppColor.whiteColor
                     : const Color(0xffB8B8B8),
-                fontWeight: FontWeight.w400)
-          ],
+              ),
+              ScreenSize.height(6),
+              Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                  fontSize: 11,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: provider.currentIndex == index
+                      ? AppColor.whiteColor
+                      : const Color(0xffB8B8B8),
+                  fontWeight: FontWeight.w400))
+            ],
+          ),
         ),
       ),
     );

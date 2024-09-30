@@ -1,6 +1,7 @@
 class LoginModel {
   dynamic status;
   dynamic message;
+  dynamic isOtpVerify;
   Data? data;
 
   LoginModel({this.status, this.message, this.data});
@@ -8,6 +9,7 @@ class LoginModel {
   LoginModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     message = json['message'];
+    isOtpVerify = json['is_otp_verify'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
@@ -15,6 +17,7 @@ class LoginModel {
     final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = status;
     data['message'] = message;
+    data['is_otp_verify'] = isOtpVerify;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }

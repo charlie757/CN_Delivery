@@ -19,7 +19,7 @@ class NotificationProvider extends ChangeNotifier {
     ).then((value) {
       Navigator.pop(navigatorKey.currentContext!);
       if (value != null) {
-        notificationList = value['data'];
+        notificationList = value['data']!=null? value['data']['notifications']:[];
         notifyListeners();
       }
     });

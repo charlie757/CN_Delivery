@@ -1,10 +1,14 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+import 'package:cn_delivery/api/api_url.dart';
 import 'package:cn_delivery/config/approutes.dart';
-import 'package:cn_delivery/screens/login_screen.dart';
+import 'package:cn_delivery/screens/auth/login_screen.dart';
+import 'package:cn_delivery/utils/constants.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:cn_delivery/utils/utils.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 enum httpMethod { post, get, delete, put }
@@ -51,7 +55,7 @@ class ApiService {
           print(response.request);
           log(response.body);
           print(response.statusCode);
-          return _handleResponse(response, isErrorMessageShow);
+          return _handleResponse(response, isErrorMessageShow, url);
         } on Exception catch (_) {
           rethrow;
         }
@@ -63,23 +67,27 @@ class ApiService {
   }
 
   // Helper method to handle API response
-  static _handleResponse(http.Response response, isErrorMessageShow) {
+  static _handleResponse(http.Response response, isErrorMessageShow, String url) {
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else if (response.statusCode == 401) {
-      var dataAll = json.decode(response.body);
-      // SessionManager.unauthorizedUser(navigatorKey.currentState!.context);
-      Utils.logOut();
-      isErrorMessageShow
-          ? Utils.errorSnackBar(dataAll['message'], navigatorKey.currentContext)
-          : null;
+      print(Constants.is401Error);
+      if(Constants.is401Error==false){
+        Future.delayed(const Duration(seconds: 1),(){
+          Constants.is401Error=true;
+          Utils.logOut();
+        });
+      }
+      else{
+        print('fgfdhfg');
+      }
       return null;
     } else {
       var dataAll = json.decode(response.body);
       isErrorMessageShow
           ? Utils.errorSnackBar(dataAll['message'], navigatorKey.currentContext)
           : null;
-      return null;
+      return url==ApiUrl.loginUrl? dataAll:null;
     }
   }
 }

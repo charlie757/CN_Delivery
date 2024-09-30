@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
@@ -11,14 +12,22 @@ import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/localization_provider.dart';
 import 'package:cn_delivery/provider/profile_provider.dart';
+import 'package:cn_delivery/screens/auth/login_screen.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
 import 'package:cn_delivery/utils/constants.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
+import 'package:cn_delivery/utils/utils.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../provider/signup_provider.dart';
+import '../widget/customradio.dart';
+import '../widget/image_bottom_sheet.dart';
+import '../widget/upload_image_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -38,18 +47,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final myProvider = Provider.of<ProfileProvider>(context, listen: false);
     myProvider.clearValues();
     Future.delayed(Duration.zero, () {
+      myProvider.getProfileApiFunction(false);
       myProvider.setValuesInController();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    print(SessionManager.token);
     return Consumer<ProfileProvider>(builder: (context, myProvider, child) {
       return Scaffold(
         backgroundColor: AppColor.whiteColor,
-        appBar: profileAppBar(myProvider.isOnline, (val) {
+        appBar: profileAppBar (value: myProvider.isOnline,
+               onChanged: (val) {
           myProvider.updateInOnline(val);
-        }),
+        },onTap: (){
+              openBottomSheetOptions();
+            }),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -57,7 +71,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Expanded(
                 child: myProvider.tabBarIndex == 0
                     ? userDetailsWidget(myProvider)
-                    : changePasswordWidget(myProvider))
+                    :myProvider.tabBarIndex == 1?
+                vehicleInfoWidget(myProvider):
+                changePasswordWidget(myProvider))
           ],
         ),
       );
@@ -65,28 +81,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   tabBar(ProfileProvider profileProvider) {
-    return Padding(
+    return Container(
+      height: 100,
       padding: const EdgeInsets.only(top: 20),
-      child: Row(
-        children: [
-          Flexible(
-            child: GestureDetector(
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          children: [
+            GestureDetector(
               onTap: () {
                 profileProvider.updateTabBarIndex(0);
               },
               child: Container(
                 height: 50,
+                width: 120,
                 color: Colors.white,
                 child: Column(
                   children: [
-                    getText(
-                        title: getTranslated('personal_info', context)!,
-                        size: 16,
+                    Text(
+                        getTranslated('personal_info', context)!,
+                       maxLines: 1,overflow: TextOverflow.ellipsis,
+                       style:TextStyle(
+                        fontSize: 16,
                         fontFamily: FontFamily.poppinsSemiBold,
                         color: profileProvider.tabBarIndex == 0
                             ? AppColor.blueColor
                             : AppColor.blackColor,
-                        fontWeight: FontWeight.w600),
+                        fontWeight: FontWeight.w600)),
                     ScreenSize.height(15),
                     Container(
                       height: profileProvider.tabBarIndex == 0 ? 4 : 1,
@@ -98,15 +119,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
-          ),
-          Flexible(
-            child: GestureDetector(
+            ScreenSize.width(10),
+            GestureDetector(
               onTap: () {
                 profileProvider.updateTabBarIndex(1);
               },
               child: Container(
+                height: 50,
+                width: 120,
+                color: Colors.white,
+                child: Column(
+                  children: [
+                    Text(
+                        getTranslated('vehicle_info', context)!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style:TextStyle(
+                        fontSize: 16,
+                        fontFamily: FontFamily.poppinsSemiBold,
+                        color: profileProvider.tabBarIndex == 1
+                            ? AppColor.blueColor
+                            : AppColor.blackColor,
+                        fontWeight: FontWeight.w600)),
+                    ScreenSize.height(15),
+                    Container(
+                      height: profileProvider.tabBarIndex ==1 ? 4 : 1,
+                      color: profileProvider.tabBarIndex == 1
+                          ? AppColor.blueColor
+                          : const Color(0xffD9D9D9),
+                    )
+                  ],
+                ),
+              ),
+            ),
+            ScreenSize.width(10),
+            GestureDetector(
+              onTap: () {
+                profileProvider.updateTabBarIndex(2);
+              },
+              child: Container(
                 color: Colors.white,
                 height: 50,
+                width: 180,
                 child: Column(
                   children: [
                     Text(
@@ -116,24 +170,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       style: TextStyle(
                           fontSize: 16,
                           fontFamily: FontFamily.poppinsSemiBold,
-                          color: profileProvider.tabBarIndex == 1
+                          color: profileProvider.tabBarIndex == 2
                               ? AppColor.blueColor
                               : AppColor.blackColor,
                           fontWeight: FontWeight.w600),
                     ),
                     ScreenSize.height(15),
                     Container(
-                      height: profileProvider.tabBarIndex == 1 ? 4 : 1,
-                      color: profileProvider.tabBarIndex == 1
+                      height: profileProvider.tabBarIndex == 2? 4 : 1,
+                      color: profileProvider.tabBarIndex == 2
                           ? AppColor.blueColor
                           : const Color(0xffD9D9D9),
                     )
                   ],
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -177,7 +231,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ScreenSize.width(30),
                 GestureDetector(
                   onTap: () {
-                    imagePickerBottomSheet(profileProvider);
+                    imageBottomSheet(context,
+                        cameraTap: (){
+                          Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                            if(val!=null){
+                              profileProvider.imgFile = val;
+                              setState(() {
+
+                              });
+                              Navigator.pop(context);
+                            }
+                          });
+                        },galleryTap: (){
+                          Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                            if(val!=null){
+                              profileProvider.imgFile = val;
+                              setState(() {
+                              });
+                              Navigator.pop(context);
+                            }
+                          });
+                        });
+                    // imagePickerBottomSheet(profileProvider);
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -232,7 +307,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ScreenSize.height(20),
             CustomTextfield(
               controller: profileProvider.lastNameController,
-              hintText: getTranslated('first_name', context)!,
+              hintText: getTranslated('last_name', context)!,
               errorMsg: profileProvider.lNameErrorMsg,
               isReadOnly: profileProvider.profileLoading,
               onChanged: (val) {
@@ -256,8 +331,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ScreenSize.height(20),
             CustomTextfield(
               controller: profileProvider.mobileController,
-              hintText: getTranslated('last_name', context)!,
-              isReadOnly: profileProvider.profileLoading,
+              hintText: getTranslated('mobile_number', context)!,
+              isReadOnly: true,
               textInputType: TextInputType.phone,
               inputFormatters: [
                 FilteringTextInputFormatter.digitsOnly,
@@ -287,7 +362,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               controller: profileProvider.emailController,
               hintText: getTranslated('email_address', context)!,
               errorMsg: profileProvider.emailErrorMsg,
-              isReadOnly: profileProvider.profileLoading,
+              isReadOnly: true,
               onChanged: (val) {
                 profileProvider.emailErrorMsg =
                     AppValidation.emailValidator(val);
@@ -332,76 +407,98 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ScreenSize.height(20),
             CustomTextfield(
-              controller: profileProvider.cityController,
-              hintText: getTranslated('city', context)!,
-              isReadOnly: profileProvider.profileLoading,
-              errorMsg: profileProvider.cityErrorMsg,
-              onChanged: (val) {
-                profileProvider.cityErrorMsg = AppValidation.cityValidator(val);
-                setState(() {});
-              },
+              controller: profileProvider.genderController,
+              hintText: getTranslated('gender', context)!,
+              isReadOnly: true,
+              errorMsg: profileProvider.genderErrorMsg,
               icon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
                 child: ImageIcon(
                   const AssetImage(
-                    AppImages.cityIcon,
+                    AppImages.profileIcon,
                   ),
                   size: 24,
                   color: AppColor.blueColor,
                 ),
               ),
-            ),
-            ScreenSize.height(20),
-            CustomTextfield(
-              controller: profileProvider.stateController,
-              hintText: getTranslated('state', context)!,
-              isReadOnly: profileProvider.profileLoading,
-              errorMsg: profileProvider.stateErrorMsg,
-              onChanged: (val) {
-                profileProvider.stateErrorMsg =
-                    AppValidation.stateValidator(val);
-                setState(() {});
+              onTap: (){
+                genderBottomSheet();
               },
-              icon: Container(
-                height: 30,
-                width: 30,
-                alignment: Alignment.center,
-                child: ImageIcon(
-                  const AssetImage(
-                    AppImages.stateIcon,
-                  ),
-                  size: 24,
-                  color: AppColor.blueColor,
-                ),
-              ),
             ),
             ScreenSize.height(20),
-            CustomTextfield(
-              controller: profileProvider.countryController,
-              hintText: getTranslated('country', context)!,
-              isReadOnly: profileProvider.profileLoading,
-              errorMsg: profileProvider.countyErrorMsg,
-              onChanged: (val) {
-                profileProvider.countyErrorMsg =
-                    AppValidation.countryValidator(val);
-                setState(() {});
-              },
-              icon: Container(
-                height: 30,
-                width: 30,
-                alignment: Alignment.center,
-                child: ImageIcon(
-                  const AssetImage(
-                    AppImages.countryIcon,
-                  ),
-                  size: 24,
-                  color: AppColor.blueColor,
-                ),
-              ),
-            ),
-            ScreenSize.height(20),
+            // CustomTextfield(
+            //   controller: profileProvider.cityController,
+            //   hintText: getTranslated('city', context)!,
+            //   isReadOnly: profileProvider.profileLoading,
+            //   errorMsg: profileProvider.cityErrorMsg,
+            //   onChanged: (val) {
+            //     profileProvider.cityErrorMsg = AppValidation.cityValidator(val);
+            //     setState(() {});
+            //   },
+            //   icon: Container(
+            //     height: 30,
+            //     width: 30,
+            //     alignment: Alignment.center,
+            //     child: ImageIcon(
+            //       const AssetImage(
+            //         AppImages.cityIcon,
+            //       ),
+            //       size: 24,
+            //       color: AppColor.blueColor,
+            //     ),
+            //   ),
+            // ),
+            // ScreenSize.height(20),
+            // CustomTextfield(
+            //   controller: profileProvider.stateController,
+            //   hintText: getTranslated('state', context)!,
+            //   isReadOnly: profileProvider.profileLoading,
+            //   errorMsg: profileProvider.stateErrorMsg,
+            //   onChanged: (val) {
+            //     profileProvider.stateErrorMsg =
+            //         AppValidation.stateValidator(val);
+            //     setState(() {});
+            //   },
+            //   icon: Container(
+            //     height: 30,
+            //     width: 30,
+            //     alignment: Alignment.center,
+            //     child: ImageIcon(
+            //       const AssetImage(
+            //         AppImages.stateIcon,
+            //       ),
+            //       size: 24,
+            //       color: AppColor.blueColor,
+            //     ),
+            //   ),
+            // ),
+            // ScreenSize.height(20),
+            // CustomTextfield(
+            //   controller: profileProvider.countryController,
+            //   hintText: getTranslated('country', context)!,
+            //   isReadOnly: profileProvider.profileLoading,
+            //   errorMsg: profileProvider.countyErrorMsg,
+            //   onChanged: (val) {
+            //     profileProvider.countyErrorMsg =
+            //         AppValidation.countryValidator(val);
+            //     setState(() {});
+            //   },
+            //   icon: Container(
+            //     height: 30,
+            //     width: 30,
+            //     alignment: Alignment.center,
+            //     child: ImageIcon(
+            //       const AssetImage(
+            //         AppImages.countryIcon,
+            //       ),
+            //       size: 24,
+            //       color: AppColor.blueColor,
+            //     ),
+            //   ),
+            // ),
+            // ScreenSize.height(20),
             CustomTextfield(
               controller: profileProvider.stateIdController,
               hintText: getTranslated('state_id', context)!,
@@ -425,6 +522,67 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
             ),
+            ScreenSize.height(20),
+            getText(title: getTranslated('passport_image', context)!,
+                size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+                fontWeight: FontWeight.w400),
+            ScreenSize.height(6),
+            uploadImageWidget(onTap: (){
+              imageBottomSheet(context,
+                  cameraTap: (){
+                Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                  if(val!=null){
+                    profileProvider.passportImage = val;
+                    setState(() {
+
+                    });
+                    Navigator.pop(context);
+                  }
+                });
+              },galleryTap: (){
+                Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                  if(val!=null){
+                    profileProvider.passportImage = val;
+                    setState(() {
+                    });
+                    Navigator.pop(context);
+                  }
+                });
+              });
+            },
+                imgPath:profileProvider.passportImage,imgUrl:
+                profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
+                profileProvider.profileModel!.data!.passportImage??"":""),
+            ScreenSize.height(20),
+            getText(title: getTranslated('identity_image', context)!,
+                size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+                fontWeight: FontWeight.w400),
+            ScreenSize.height(6),
+            uploadImageWidget(onTap: (){
+              imageBottomSheet(context,cameraTap: (){
+                Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                  if(val!=null){
+                    profileProvider.licenceImage = val;
+                    setState(() {
+
+                    });
+                    Navigator.pop(context);
+                  }
+                });
+              },galleryTap: (){
+                Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                  if(val!=null){
+                    profileProvider.licenceImage = val;
+                    setState(() {
+                    });
+                    Navigator.pop(context);
+                  }
+                });
+              });
+            },
+                imgPath:profileProvider.licenceImage,imgUrl:
+                profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
+                profileProvider.profileModel!.data!.drivingLicenseImage??"":""),
             ScreenSize.height(50),
             AppButton(
                 title: getTranslated('update_profile', context)!,
@@ -440,6 +598,364 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  vehicleInfoWidget(ProfileProvider profileProvider){
+    return SingleChildScrollView(
+      padding:
+      const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 50),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomTextfield(
+            controller: profileProvider.vehicleNameController,
+            hintText: getTranslated('vehicle_name', context)!,
+            isReadOnly: false,
+            errorMsg: profileProvider.vehicleNameErrorMsg,
+            onChanged: (val) {
+              profileProvider.vehicleNameErrorMsg =
+                  AppValidation.vehicleNameValidator(val);
+              setState(() {});
+            },
+            icon: Container(
+                height: 30,
+                width: 30,
+                alignment: Alignment.center,
+                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
+            ),
+          ),
+          ScreenSize.height(20),
+          CustomTextfield(
+            controller: profileProvider.vehicleTypeController,
+            hintText: getTranslated('vehicle_type', context)!,
+            isReadOnly: true,
+            errorMsg: profileProvider.vehicleTypeErrorMsg,
+            onTap: (){
+              vehicleTypeBottomSheet();
+            },
+            onChanged: (val) {
+              profileProvider.vehicleTypeErrorMsg =
+                  AppValidation.vehicleTypeValidator(val);
+              setState(() {});
+            },
+            icon: Container(
+                height: 30,
+                width: 30,
+                alignment: Alignment.center,
+                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
+            ),
+          ),
+          ScreenSize.height(20),
+          CustomTextfield(
+            controller: profileProvider.modelNumberController,
+            hintText: getTranslated('model_number', context)!,
+            isReadOnly: false,
+            errorMsg: profileProvider.modelNumberErrorMsg,
+            onChanged: (val) {
+              profileProvider.modelNumberErrorMsg =
+                  AppValidation.modelNumberValidator(val);
+              setState(() {});
+            },
+            icon: Container(
+                height: 30,
+                width: 30,
+                alignment: Alignment.center,
+                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
+            ),
+          ),
+          ScreenSize.height(20),
+          // CustomTextfield(
+          //   controller: profileProvider.domController,
+          //   hintText: getTranslated('date_of_manufacture', context)!,
+          //   isReadOnly: true,
+          //   errorMsg: profileProvider.domErrorMsg,
+          //   onTap: (){
+          //     Provider.of<SignupProvider>(context,listen: false).datePicker(profileProvider.selectedDOMDate).then((val){
+          //       print(val);
+          //       if(val!=null){
+          //         profileProvider.selectedDOMDate = val;
+          //         profileProvider.domController.text = "${val.day.toString().length==1?"0${val.day}":val.day}-${val.month.toString().length==1?"0${val.month}":val.month}-${val.year}";
+          //       }
+          //     });
+          //   },
+          //   onChanged: (val) {
+          //     profileProvider.domErrorMsg =
+          //         AppValidation.dateOfManufactureValidator(val);
+          //     setState(() {});
+          //
+          //   },
+          //   icon: Container(
+          //       height: 30,
+          //       width: 30,
+          //       alignment: Alignment.center,
+          //       child: Icon(Icons.date_range,color: AppColor.blueColor.withOpacity(.7),)
+          //   ),
+          // ),
+          // ScreenSize.height(20),
+          CustomTextfield(
+            controller: profileProvider.dorController,
+            hintText: getTranslated('date_of_registration', context)!,
+            isReadOnly: true,
+            errorMsg: profileProvider.dorErrorMsg,
+            onTap: (){
+              Provider.of<SignupProvider>(context,listen: false).datePicker(profileProvider.selectedDORDate).then((val){
+                if(val!=null){
+                  profileProvider.selectedDORDate = val;
+                  profileProvider.dorController.text = "${val.day.toString().length==1?"0${val.day}":val.day}-${val.month.toString().length==1?"0${val.month}":val.month}-${val.year}";
+                }
+              });
+            },
+            onChanged: (val) {
+              profileProvider.dorErrorMsg =
+                  AppValidation.dateOfRegistrationValidator(val);
+              setState(() {});
+            },
+            icon: Container(
+                height: 30,
+                width: 30,
+                alignment: Alignment.center,
+                child: Icon(Icons.date_range,color: AppColor.blueColor.withOpacity(.7),)
+            ),
+          ),
+          ScreenSize.height(20),
+          CustomTextfield(
+            controller: profileProvider.fuelController,
+            hintText: getTranslated('fuel_type', context)!,
+            isReadOnly: true,
+            errorMsg: profileProvider.fuelErrorMsg,
+            onTap: (){
+              fuelTypeBottomSheet();
+            },
+            onChanged: (val) {
+              profileProvider.fuelErrorMsg =
+                  AppValidation.fuelTypeValidator(val);
+              setState(() {});
+            },
+            icon: Container(
+                height: 30,
+                width: 30,
+                alignment: Alignment.center,
+                child: Icon(Icons.card_travel,color: AppColor.blueColor,)
+            ),
+          ),
+          ScreenSize.height(20),
+          CustomTextfield(
+            controller: profileProvider.vehicleRegistrationController,
+            hintText: getTranslated('registration_number', context)!,
+            isReadOnly: false,
+            errorMsg: profileProvider.vehicleRegistrationErrorMsg,
+            onChanged: (val) {
+              profileProvider.vehicleRegistrationErrorMsg =
+                  AppValidation.vehicleRegistrationValidator(val);
+              setState(() {});
+            },
+            icon: Container(
+                height: 30,
+                width: 30,
+                alignment: Alignment.center,
+                child: Icon(Icons.card_travel,color: AppColor.blueColor,)
+            ),
+          ),
+          ScreenSize.height(20),
+          getText(title: getTranslated('insurance_copy', context)!,
+              size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+              fontWeight: FontWeight.w400),
+          ScreenSize.height(6),
+
+          uploadImageWidget(onTap: (){
+            imageBottomSheet(context,cameraTap: (){
+              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                if(val!=null){
+                  profileProvider.insuranceCopyImage = val;
+                  setState(() {
+
+                  });
+                  Navigator.pop(context);
+                }
+              });
+            },galleryTap: (){
+              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                if(val!=null){
+                  profileProvider.insuranceCopyImage = val;
+                  setState(() {
+                  });
+                  Navigator.pop(context);
+                }
+              });
+            });
+          },
+              imgPath:profileProvider.insuranceCopyImage,imgUrl:
+              profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
+              profileProvider.profileModel!.data!.vehicleInsuranceImage??"":""),
+          ScreenSize.height(20),
+          getText(title: getTranslated('tourist_permit', context)!,
+              size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+              fontWeight: FontWeight.w400),
+          ScreenSize.height(6),
+          uploadImageWidget(onTap: (){
+            imageBottomSheet(context,cameraTap: (){
+              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                if(val!=null){
+                  profileProvider.touristPermitImage = val;
+                  setState(() {
+
+                  });
+                  Navigator.pop(context);
+                }
+              });
+            },galleryTap: (){
+              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                if(val!=null){
+                  profileProvider.touristPermitImage = val;
+                  setState(() {
+                  });
+                  Navigator.pop(context);
+                }
+              });
+            });
+          },
+              imgPath:profileProvider.touristPermitImage,imgUrl:
+              profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
+              profileProvider.profileModel!.data!.vehicleTouristPermitImage??"":""),
+          ScreenSize.height(20),
+          getText(title: getTranslated('vehicle_image', context)!,
+              size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+              fontWeight: FontWeight.w400),
+          ScreenSize.height(6),
+
+          uploadImageWidget(onTap: (){
+            imageBottomSheet(context,cameraTap: (){
+              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                if(val!=null){
+                  profileProvider.vehicleImage = val;
+                  setState(() {
+
+                  });
+                  Navigator.pop(context);
+                }
+              });
+            },galleryTap: (){
+              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                if(val!=null){
+                  profileProvider.vehicleImage = val;
+                  setState(() {
+                  });
+                  Navigator.pop(context);
+                }
+              });
+            });
+          },
+              imgPath:profileProvider.vehicleImage,imgUrl:
+              profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
+              profileProvider.profileModel!.data!.vehicleImage??"":""),
+          ScreenSize.height(50),
+          AppButton(
+              title: getTranslated('update_vehicle_info', context)!,
+              height: 49,
+              width: double.infinity,
+              buttonColor: AppColor.appTheme,
+              isLoading: profileProvider.profileLoading,
+              onTap: () {
+                profileProvider.checkVehicleInfoValidation();
+              }),
+
+        ],
+      ),
+    );
+  }
+
+  viewVehicleImagesWidget(ProfileProvider profileProvider){
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                 ],
+              ),
+            ),
+            ScreenSize.width(15),
+            Expanded(child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                getText(title: getTranslated('tourist_permit', context)!,
+                    size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+                    fontWeight: FontWeight.w400),
+                ScreenSize.height(6),
+
+                uploadImageWidget(onTap: (){
+                  imageBottomSheet(context,cameraTap: (){
+                    Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                      if(val!=null){
+                        profileProvider.touristPermitImage = val;
+                        setState(() {
+
+                        });
+                        Navigator.pop(context);
+                      }
+                    });
+                  },galleryTap: (){
+                    Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                      if(val!=null){
+                        profileProvider.touristPermitImage = val;
+                        setState(() {
+                        });
+                        Navigator.pop(context);
+                      }
+                    });
+                  });
+                },
+                    imgPath:profileProvider.touristPermitImage,imgUrl:
+                    profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
+                    profileProvider.profileModel!.data!.vehicleTouristPermitImage??"":"")
+              ],
+            ))
+          ],
+        ),
+        ScreenSize.height(20),
+        Row(
+          children: [
+            Expanded(child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                getText(title: getTranslated('vehicle_image', context)!,
+                    size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+                    fontWeight: FontWeight.w400),
+                ScreenSize.height(6),
+
+                uploadImageWidget(onTap: (){
+                  imageBottomSheet(context,cameraTap: (){
+                    Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                      if(val!=null){
+                        profileProvider.vehicleImage = val;
+                        setState(() {
+
+                        });
+                        Navigator.pop(context);
+                      }
+                    });
+                  },galleryTap: (){
+                    Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                      if(val!=null){
+                        profileProvider.vehicleImage = val;
+                        setState(() {
+                        });
+                        Navigator.pop(context);
+                      }
+                    });
+                  });
+                },
+                    imgPath:profileProvider.vehicleImage,imgUrl:
+                    profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
+                    profileProvider.profileModel!.data!.vehicleImage??"":"")
+              ],
+            ))
+          ],
+        ),
+      ],
     );
   }
 
@@ -794,4 +1310,463 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     );
   }
+
+  openBottomSheetOptions() {
+    showModalBottomSheet(
+        backgroundColor: AppColor.whiteColor,
+        shape: OutlineInputBorder(
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+            borderSide: BorderSide(color: AppColor.whiteColor)),
+        context: context,
+        builder: (context) {
+          return Container(
+            padding:
+            const EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 40),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    openDialogBox(
+                        isLogout: true,
+                        title: getTranslated("logout", context)!,
+                        subTitle:  getTranslated("want_to_logout", context)!,
+                        noTap: () {
+                          Navigator.pop(context);
+                        },
+                        yesTap: () async{
+                          Utils.logOut();
+                        });
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    color: Colors.transparent,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        getText(
+                            title: getTranslated('logout', context)!,
+                            size: 16,
+                            fontFamily: FontFamily.poppinsMedium,
+                            color: AppColor.textBlackColor,
+                            fontWeight: FontWeight.w400),
+                        Icon(
+                          Icons.arrow_forward_ios_outlined,
+                          color: AppColor.appTheme,
+                          size: 20,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                ScreenSize.height(13),
+                Container(
+                  height: 1,
+                  color: const Color(0xffDDE0E4),
+                ),
+                ScreenSize.height(13),
+                GestureDetector(
+                  onTap: () {
+                    openDialogBox(
+                        isLogout: false,
+                        title: getTranslated("delete_account", context)!,
+                        subTitle:  getTranslated("want_to_delete", context)!,
+                        noTap: () {
+                          Navigator.pop(context);
+                        },
+                        yesTap: () async{
+                         Provider.of<ProfileProvider>(context,listen: false).deleteAccountApiFunction();
+                          // Navigator.pop(context);
+                          // SharedPreferences prefs = await SharedPreferences.getInstance();
+                          // prefs.clear();
+                          // AppRoutes.pushReplacementAndRemoveNavigation(LoginScreen());
+                        });
+                  },
+                  child: Container(
+                    width: double.infinity,
+                    color: Colors.transparent,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        getText(
+                            title: getTranslated('delete_account', context)!,
+                            size: 16,
+                            fontFamily: FontFamily.poppinsMedium,
+                            color: AppColor.textBlackColor,
+                            fontWeight: FontWeight.w400),
+                        Icon(
+                          Icons.arrow_forward_ios_outlined,
+                          color: AppColor.appTheme,
+                          size: 20,
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                ScreenSize.height(13),
+              ],
+            ),
+          );
+        });
+  }
+
+  void openDialogBox(
+      {required bool isLogout,
+        required String title,
+        required String subTitle,
+        required Function() noTap,
+        required Function() yesTap}) {
+    showGeneralDialog(
+      context: context,
+      barrierLabel: "Barrier",
+      barrierDismissible: true,
+      barrierColor: Colors.black.withOpacity(0.5),
+      transitionDuration: const Duration(milliseconds: 400),
+      pageBuilder: (_, __, ___) {
+        return Stack(
+          children: [
+            Center(
+              child: Container(
+                // height: 394,
+                margin: const EdgeInsets.symmetric(horizontal: 40),
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12)),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      top: 35, left: 20, right: 20, bottom: 33),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: TextStyle(
+                            decoration: TextDecoration.none,
+                            fontSize: 20,
+                            fontFamily: FontFamily.poppinsSemiBold,
+                            color: AppColor.textBlackColor,
+                            fontWeight: FontWeight.w600),
+                        textAlign: TextAlign.center,
+                      ),
+                      ScreenSize.height(20),
+                      Align(
+                        alignment:Alignment.center,
+                          child : Text(
+  subTitle,
+  style: TextStyle(
+      decoration: TextDecoration.none,
+      fontSize: 14,
+      fontFamily: FontFamily.poppinsSemiBold,
+      color: AppColor.textBlackColor,
+      fontWeight: FontWeight.w600),
+  textAlign: TextAlign.center,
+)  ),
+                      ScreenSize.height(47),
+                      Row(
+                        children: [
+                          Flexible(
+                            child: AppButton(
+                                title: getTranslated('no', context)!,
+                                height: 50,
+                                width: double.infinity,
+                                buttonColor: AppColor.whiteColor,
+                                textColor: AppColor.textBlackColor,
+                                onTap: noTap),
+                          ),
+                          ScreenSize.width(20),
+                          Flexible(
+                            child: AppButton(
+                                title: getTranslated('yes', context)!,
+                                height: 50,
+                                width: double.infinity,
+                                buttonColor: AppColor.appTheme,
+                                onTap: yesTap),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            // Positioned(
+            //     right: 0 + 33,
+            //     top: isLogout
+            //         ? MediaQuery.of(context).size.height / 2.8
+            //         : MediaQuery.of(context).size.height / 2.9,
+            //     child: GestureDetector(
+            //       onTap: () {
+            //         Navigator.pop(context);
+            //       },
+            //       child: Image.asset(
+            //         AppImages.closeIcon,
+            //         height: 25,
+            //         width: 25,
+            //       ),
+            //     ))
+          ],
+        );
+      },
+      transitionBuilder: (_, anim, __, child) {
+        Tween<Offset> tween;
+        if (anim.status == AnimationStatus.reverse) {
+          tween = Tween(begin: const Offset(0, 1), end: Offset.zero);
+        } else {
+          tween = Tween(begin: const Offset(0, 1), end: Offset.zero);
+        }
+
+        return SlideTransition(
+          position: tween.animate(anim),
+          child: FadeTransition(
+            opacity: anim,
+            child: child,
+          ),
+        );
+      },
+    );
+  }
+
+  genderBottomSheet(){
+    showModalBottomSheet(
+        backgroundColor: AppColor.whiteColor,
+        shape: OutlineInputBorder(
+            borderSide: BorderSide(color: AppColor.whiteColor),
+            borderRadius:const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20)
+            )
+        ),
+        context: context,
+        builder: (context){
+          return StatefulBuilder(
+              builder: (context,state) {
+                return Container(
+                  padding:const EdgeInsets.only(top: 20,left: 15,right: 15,bottom: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          getText(title: getTranslated('select_gender', context)!, size: 18,
+                              fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500),
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.pop(context);
+                            },
+                            child:const Icon(Icons.close),)
+                        ],
+                      ),
+                      ScreenSize.height(20),
+                      GestureDetector(
+                        onTap: (){
+                          Provider.of<ProfileProvider>(context,listen: false).selectedGender =0;
+                          Provider.of<ProfileProvider>(context,listen: false).genderController.text = 'Male';
+                          Navigator.pop(context);
+                          state(() {
+
+                          });
+                        },
+                        child: Container(
+                          color: AppColor.whiteColor,
+                          height: 30,
+                          child: Row(
+                            children: [
+                              customRadio(0,Provider.of<ProfileProvider>(context,listen: false).selectedGender),
+                              ScreenSize.width(15),
+                              getText(title: getTranslated('male', context)!, size: 16,
+                                  fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
+                            ],
+                          ),
+                        ),
+                      ),
+                      ScreenSize.height(10),
+                      GestureDetector(
+                        onTap: (){
+                          Provider.of<ProfileProvider>(context,listen: false).selectedGender =1;
+                          Provider.of<ProfileProvider>(context,listen: false).genderController.text = 'Female';
+                          state(() {
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          color: AppColor.whiteColor,
+                          height: 30,
+                          child: Row(
+                            children: [
+                              customRadio(1,Provider.of<ProfileProvider>(context,listen: false).selectedGender),
+                              ScreenSize.width(15),
+                              getText(title: getTranslated('female', context)!, size: 16,
+                                  fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              }
+          );
+        });
+  }
+
+  fuelTypeBottomSheet(){
+    showModalBottomSheet(
+        backgroundColor: AppColor.whiteColor,
+        shape: OutlineInputBorder(
+            borderSide: BorderSide(color: AppColor.whiteColor),
+            borderRadius:const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20)
+            )
+        ),
+        context: context,
+        builder: (context){
+          return StatefulBuilder(
+              builder: (context,state) {
+                return Container(
+                  padding:const EdgeInsets.only(top: 20,left: 15,right: 15,bottom: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          getText(title: getTranslated('select_fuel_type', context)!, size: 18,
+                              fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500),
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.pop(context);
+                            },
+                            child:const Icon(Icons.close),)
+                        ],
+                      ),
+                      ScreenSize.height(20),
+                      GestureDetector(
+                        onTap: (){
+                          Provider.of<ProfileProvider>(context,listen:false).fuelType =0;
+                          Provider.of<ProfileProvider>(context,listen: false).fuelController.text = 'Petrol';
+                          Navigator.pop(context);
+                          state(() {
+
+                          });
+                        },
+                        child: Container(
+                          color: AppColor.whiteColor,
+                          height: 30,
+                          child: Row(
+                            children: [
+                              customRadio(0,Provider.of<ProfileProvider>(context,listen:false).fuelType),
+                              ScreenSize.width(15),
+                              getText(title: getTranslated('petrol', context)!, size: 16,
+                                  fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
+                            ],
+                          ),
+                        ),
+                      ),
+                      ScreenSize.height(10),
+                      GestureDetector(
+                        onTap: (){
+                          Provider.of<ProfileProvider>(context,listen:false).fuelType=1;
+                          Provider.of<ProfileProvider>(context,listen: false).fuelController.text = 'Diesel';
+                          state(() {
+                          });
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          color: AppColor.whiteColor,
+                          height: 30,
+                          child: Row(
+                            children: [
+                              customRadio(1,Provider.of<ProfileProvider>(context,listen:false).fuelType),
+                              ScreenSize.width(15),
+                              getText(title: getTranslated('diesel', context)!, size: 16,
+                                  fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
+                            ],
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              }
+          );
+        });
+  }
+
+  vehicleTypeBottomSheet(){
+    showModalBottomSheet(
+        backgroundColor: AppColor.whiteColor,
+        shape: OutlineInputBorder(
+            borderSide: BorderSide(color: AppColor.whiteColor),
+            borderRadius:const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20)
+            )
+        ),
+        context: context,
+        builder: (context){
+          return StatefulBuilder(
+              builder: (context,state) {
+                return Container(
+                  padding:const EdgeInsets.only(top: 20,left: 15,right: 15,bottom: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          getText(title: getTranslated('select_vehicle_type', context)!, size: 18,
+                              fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500),
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.pop(context);
+                            },
+                            child:const Icon(Icons.close),)
+                        ],
+                      ),
+                      ScreenSize.height(20),
+                      ListView.separated(
+                          separatorBuilder: (context,sp){
+                            return ScreenSize.height(10);
+                          },
+                          shrinkWrap: true,
+                          itemCount: Constants.vehicleTypeList.length,
+                          itemBuilder: (context,index){
+                            return GestureDetector(
+                              onTap: (){
+                               Provider.of<ProfileProvider>(context,listen:false).vehicleType =index;
+                                Provider.of<ProfileProvider>(context,listen: false).vehicleTypeController.text= Constants.vehicleTypeList[index];
+                                Navigator.pop(context);
+                                state(() {
+
+                                });
+                              },
+                              child: Container(
+                                color: AppColor.whiteColor,
+                                height: 30,
+                                child: Row(
+                                  children: [
+                                    customRadio(index,Provider.of<ProfileProvider>(context,listen:false).vehicleType),
+                                    ScreenSize.width(15),
+                                    getText(title: Constants.vehicleTypeList[index], size: 16,
+                                        fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
+                                  ],
+                                ),
+                              ),
+                            );
+                          }),
+                    ],
+                  ),
+                );
+              }
+          );
+        });
+  }
+
 }

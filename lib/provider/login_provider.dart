@@ -6,9 +6,12 @@ import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/model/login_model.dart';
 import 'package:cn_delivery/screens/dashboard_screen.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
+import 'package:cn_delivery/utils/constants.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:cn_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
+
+import '../screens/auth/otp_verify_screen.dart';
 
 class LoginProvider extends ChangeNotifier {
   LoginModel? loginModel;
@@ -53,6 +56,7 @@ class LoginProvider extends ChangeNotifier {
   }
 
   callApiFunction() {
+    Constants.is401Error=false;
     updateLoading(true);
     var body = json.encode({
       "email": emailController.text,
@@ -72,6 +76,15 @@ class LoginProvider extends ChangeNotifier {
               loginModel!.message.toString(), navigatorKey.currentContext!);
           SessionManager.setToken = loginModel!.data!.token;
           AppRoutes.pushReplacementNavigation(const DashboardScreen());
+          emailController.clear();
+          passwordController.clear();
+        }
+        else{
+          if(value['data']!=null&&value['data']['is_otp_verify']!=null&& value['data']['is_otp_verify']==false){
+            AppRoutes.pushCupertinoNavigation( OtpVerifyScreen(email: emailController.text,phone:value['data']['mobile_number'],
+            route: 'login',
+            ));
+          }
         }
       }
     });

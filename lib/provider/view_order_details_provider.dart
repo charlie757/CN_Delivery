@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cn_delivery/api/api_service.dart';
 import 'package:cn_delivery/api/api_url.dart';
 import 'package:cn_delivery/model/view_order_model.dart';
 import 'package:cn_delivery/utils/showcircleprogressdialog.dart';
-
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:cn_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -27,9 +27,11 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
 
   List<LatLng> polylineCoordinates = [];
   void getPolyPoints() async {
+
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      'AIzaSyD_TkchnNl5WIeVRU2FnqZy-vLvd5LkOpM', // Your Google Map Key
+      Platform.isAndroid?
+      'AIzaSyD_TkchnNl5WIeVRU2FnqZy-vLvd5LkOpM':"AIzaSyDuKSn9jBZ-2Qs6XD0VQNlxsIsAKjha0Yk", // Your Google Map Key
       PointLatLng(sourceLocation!.latitude, sourceLocation!.longitude),
       PointLatLng(destination!.latitude, destination!.longitude),
     );

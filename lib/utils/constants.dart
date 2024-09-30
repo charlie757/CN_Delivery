@@ -1,6 +1,8 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/model/language_model.dart';
+import 'package:cn_delivery/utils/utils.dart';
 
 class Constants {
   static String FIRST_TIME_OPEN_APP = 'FIRST_TIME_OPEN_APP';
@@ -11,7 +13,22 @@ class Constants {
   static String FCM_TOKEN = 'FCM_TOKEN';
   static const String countryCode = 'country_code';
   static const String languageCode = 'language_code';
+  static String FIRST_TIME_LANGUAGE_SCREEN = 'FIRST_TIME_LANGUAGE_SCREEN';
+  static String LAT = 'LAT';
+  static String LNG = 'LNG';
+  static String ADDRESS = 'ADDRESS';
 
+
+  ///
+  static bool is401Error = false; /// true if logout it and false if relogin
+
+ static List vehicleTypeList = [
+    getTranslated('biCycle', navigatorKey.currentContext!)!,
+    getTranslated('bike', navigatorKey.currentContext!)!,
+    getTranslated('car', navigatorKey.currentContext!)!,
+    // getTranslated('suv', navigatorKey.currentContext!)!,
+    // getTranslated('muv', navigatorKey.currentContext!)!,
+  ];
   static List<LanguageModel> languages = [
     LanguageModel(
         imageUrl: '',

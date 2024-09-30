@@ -1,6 +1,7 @@
 class AppImages {
   static const String splashImg = 'assets/images/splash.png';
   static const logo = 'assets/icons/logo.png';
+  static const appIcon = 'assets/icons/app_icon.png';
   static const backgroundImg = 'assets/images/backgroundImg.png';
   static const handEmoji = 'assets/icons/hand_emoji.png';
   static const callIcon = 'assets/icons/call_icon.png';
@@ -18,10 +19,13 @@ class AppImages {
   static const stateIcon = 'assets/icons/state.png';
   static const stateIdIcon = 'assets/icons/stateId.png';
   static const locationIcon = 'assets/icons/location.png';
-  static const onGoingIcon = 'assets/icons/onGoingIcon.png';
+  static const onGoingIcon = 'assets/icons/ongoingIcon.png';
   static const completedIcon = 'assets/icons/completedIcon.png';
   static const totalOrderIcon = 'assets/icons/totalOrder.png';
   static const editIcon = 'assets/icons/edit.png';
   static const emailWithBackgroundIcon =
       'assets/icons/email_with_background.png';
+  static const uploadImage = 'assets/icons/upload.png';
+  static const cameraIcon = 'assets/icons/camera1.png';
+  static const galleryIcon = 'assets/icons/gallery.png';
 }

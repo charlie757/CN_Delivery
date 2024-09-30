@@ -15,7 +15,24 @@ class SessionManager {
   static set setToken(String value) {
     sharedPrefs.setString(Constants.TOKEN, value);
   }
+  static String get lat => sharedPrefs.getString(Constants.LAT) ?? "";
+  static set setLat(String value) {
+    sharedPrefs.setString(Constants.LAT, value);
+  }
+  static String get lng => sharedPrefs.getString(Constants.LNG) ?? "";
+  static set setLng(String value) {
+    sharedPrefs.setString(Constants.LNG, value);
+  }static String get address => sharedPrefs.getString(Constants.ADDRESS) ?? "";
+  static set setAddress(String value) {
+    sharedPrefs.setString(Constants.ADDRESS, value);
+  }
 
+
+  static bool get firstTimeLanguageScreen =>
+      sharedPrefs.getBool(Constants.FIRST_TIME_LANGUAGE_SCREEN) ??false;
+  static set setFirstTimeLanguageScreen(bool value) {
+    sharedPrefs.setBool(Constants.FIRST_TIME_LANGUAGE_SCREEN, value);
+  }
   static String get fcmToken =>
       sharedPrefs.getString(Constants.FCM_TOKEN) ?? "";
   static set setFcmToken(String value) {

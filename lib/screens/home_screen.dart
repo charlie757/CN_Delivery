@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
       return Scaffold(
         backgroundColor: AppColor.whiteColor,
         appBar: appBar(
-            title: getTranslated('dashboard', context)!, isNotification: true),
+            title: getTranslated('dashboard', context)!, isNotification: false),
         body: SingleChildScrollView(
           child: Padding(
             padding:

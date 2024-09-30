@@ -1,8 +1,10 @@
 import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
-import 'package:cn_delivery/screens/login_screen.dart';
+import 'package:cn_delivery/screens/auth/login_screen.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:flutter/material.dart';
+
+import 'constants.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 MediaQueryData mediaQuery = MediaQuery.of(navigatorKey.currentState!.context)
@@ -15,7 +17,17 @@ extension StringExtension on String {
 }
 
 class Utils {
-  static hideTextField() {
+  static bool isValidEmail(String em) {
+    String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regExp = RegExp(p);
+    return regExp.hasMatch(em);
+  }
+  static bool passwordValidateRegExp(String value){
+    String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,16}$';
+    RegExp regExp =  RegExp(pattern);
+    return regExp.hasMatch(value);
+  }
+    static hideTextField() {
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
@@ -82,7 +94,9 @@ class Utils {
   }
 
   static logOut() {
-    SessionManager.sharedPrefs.clear();
-    AppRoutes.pushReplacementNavigation(const LoginScreen());
+    SessionManager.setToken='';
+    Constants.is401Error=true;
+    AppRoutes.pushReplacementAndRemoveNavigation(const LoginScreen());
+    print('lodfgdfg');
   }
 }
