@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
@@ -12,7 +11,6 @@ import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/localization_provider.dart';
 import 'package:cn_delivery/provider/profile_provider.dart';
-import 'package:cn_delivery/screens/auth/login_screen.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
 import 'package:cn_delivery/utils/constants.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
@@ -22,7 +20,6 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../provider/signup_provider.dart';
 import '../widget/customradio.dart';
@@ -58,10 +55,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Consumer<ProfileProvider>(builder: (context, myProvider, child) {
       return Scaffold(
         backgroundColor: AppColor.whiteColor,
-        appBar: profileAppBar (value: myProvider.isOnline,
-               onChanged: (val) {
-          myProvider.updateInOnline(val);
-        },onTap: (){
+        appBar: profileAppBar(
+            value: myProvider.isOnline,
+            onChanged: (val) {
+              myProvider.updateInOnline(val);
+            },
+            onTap: () {
               openBottomSheetOptions();
             }),
         body: Column(
@@ -71,9 +70,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Expanded(
                 child: myProvider.tabBarIndex == 0
                     ? userDetailsWidget(myProvider)
-                    :myProvider.tabBarIndex == 1?
-                vehicleInfoWidget(myProvider):
-                changePasswordWidget(myProvider))
+                    : myProvider.tabBarIndex == 1
+                        ? vehicleInfoWidget(myProvider)
+                        : changePasswordWidget(myProvider))
           ],
         ),
       );
@@ -98,16 +97,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.white,
                 child: Column(
                   children: [
-                    Text(
-                        getTranslated('personal_info', context)!,
-                       maxLines: 1,overflow: TextOverflow.ellipsis,
-                       style:TextStyle(
-                        fontSize: 16,
-                        fontFamily: FontFamily.poppinsSemiBold,
-                        color: profileProvider.tabBarIndex == 0
-                            ? AppColor.blueColor
-                            : AppColor.blackColor,
-                        fontWeight: FontWeight.w600)),
+                    Text(getTranslated('personal_info', context)!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: FontFamily.poppinsSemiBold,
+                            color: profileProvider.tabBarIndex == 0
+                                ? AppColor.blueColor
+                                : AppColor.blackColor,
+                            fontWeight: FontWeight.w600)),
                     ScreenSize.height(15),
                     Container(
                       height: profileProvider.tabBarIndex == 0 ? 4 : 1,
@@ -130,20 +129,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.white,
                 child: Column(
                   children: [
-                    Text(
-                        getTranslated('vehicle_info', context)!,
+                    Text(getTranslated('vehicle_info', context)!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style:TextStyle(
-                        fontSize: 16,
-                        fontFamily: FontFamily.poppinsSemiBold,
-                        color: profileProvider.tabBarIndex == 1
-                            ? AppColor.blueColor
-                            : AppColor.blackColor,
-                        fontWeight: FontWeight.w600)),
+                        style: TextStyle(
+                            fontSize: 16,
+                            fontFamily: FontFamily.poppinsSemiBold,
+                            color: profileProvider.tabBarIndex == 1
+                                ? AppColor.blueColor
+                                : AppColor.blackColor,
+                            fontWeight: FontWeight.w600)),
                     ScreenSize.height(15),
                     Container(
-                      height: profileProvider.tabBarIndex ==1 ? 4 : 1,
+                      height: profileProvider.tabBarIndex == 1 ? 4 : 1,
                       color: profileProvider.tabBarIndex == 1
                           ? AppColor.blueColor
                           : const Color(0xffD9D9D9),
@@ -177,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     ScreenSize.height(15),
                     Container(
-                      height: profileProvider.tabBarIndex == 2? 4 : 1,
+                      height: profileProvider.tabBarIndex == 2 ? 4 : 1,
                       color: profileProvider.tabBarIndex == 2
                           ? AppColor.blueColor
                           : const Color(0xffD9D9D9),
@@ -231,27 +229,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ScreenSize.width(30),
                 GestureDetector(
                   onTap: () {
-                    imageBottomSheet(context,
-                        cameraTap: (){
-                          Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
-                            if(val!=null){
-                              profileProvider.imgFile = val;
-                              setState(() {
-
-                              });
-                              Navigator.pop(context);
-                            }
-                          });
-                        },galleryTap: (){
-                          Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
-                            if(val!=null){
-                              profileProvider.imgFile = val;
-                              setState(() {
-                              });
-                              Navigator.pop(context);
-                            }
-                          });
-                        });
+                    imageBottomSheet(context, cameraTap: () {
+                      Provider.of<SignupProvider>(context, listen: false)
+                          .imagePicker(context, ImageSource.camera)
+                          .then((val) {
+                        if (val != null) {
+                          profileProvider.imgFile = val;
+                          setState(() {});
+                          Navigator.pop(context);
+                        }
+                      });
+                    }, galleryTap: () {
+                      Provider.of<SignupProvider>(context, listen: false)
+                          .imagePicker(context, ImageSource.gallery)
+                          .then((val) {
+                        if (val != null) {
+                          profileProvider.imgFile = val;
+                          setState(() {});
+                          Navigator.pop(context);
+                        }
+                      });
+                    });
                     // imagePickerBottomSheet(profileProvider);
                   },
                   child: Container(
@@ -423,7 +421,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   color: AppColor.blueColor,
                 ),
               ),
-              onTap: (){
+              onTap: () {
                 genderBottomSheet();
               },
             ),
@@ -523,66 +521,80 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             ScreenSize.height(20),
-            getText(title: getTranslated('passport_image', context)!,
-                size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+            getText(
+                title: getTranslated('passport_image', context)!,
+                size: 12,
+                fontFamily: FontFamily.poppinsMedium,
+                color: AppColor.blackColor,
                 fontWeight: FontWeight.w400),
             ScreenSize.height(6),
-            uploadImageWidget(onTap: (){
-              imageBottomSheet(context,
-                  cameraTap: (){
-                Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
-                  if(val!=null){
-                    profileProvider.passportImage = val;
-                    setState(() {
-
+            uploadImageWidget(
+                onTap: () {
+                  imageBottomSheet(context, cameraTap: () {
+                    Provider.of<SignupProvider>(context, listen: false)
+                        .imagePicker(context, ImageSource.camera)
+                        .then((val) {
+                      if (val != null) {
+                        profileProvider.passportImage = val;
+                        setState(() {});
+                        Navigator.pop(context);
+                      }
                     });
-                    Navigator.pop(context);
-                  }
-                });
-              },galleryTap: (){
-                Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
-                  if(val!=null){
-                    profileProvider.passportImage = val;
-                    setState(() {
+                  }, galleryTap: () {
+                    Provider.of<SignupProvider>(context, listen: false)
+                        .imagePicker(context, ImageSource.gallery)
+                        .then((val) {
+                      if (val != null) {
+                        profileProvider.passportImage = val;
+                        setState(() {});
+                        Navigator.pop(context);
+                      }
                     });
-                    Navigator.pop(context);
-                  }
-                });
-              });
-            },
-                imgPath:profileProvider.passportImage,imgUrl:
-                profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
-                profileProvider.profileModel!.data!.passportImage??"":""),
+                  });
+                },
+                imgPath: profileProvider.passportImage,
+                imgUrl: profileProvider.profileModel != null &&
+                        profileProvider.profileModel!.data != null
+                    ? profileProvider.profileModel!.data!.passportImage ?? ""
+                    : ""),
             ScreenSize.height(20),
-            getText(title: getTranslated('identity_image', context)!,
-                size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+            getText(
+                title: getTranslated('identity_image', context)!,
+                size: 12,
+                fontFamily: FontFamily.poppinsMedium,
+                color: AppColor.blackColor,
                 fontWeight: FontWeight.w400),
             ScreenSize.height(6),
-            uploadImageWidget(onTap: (){
-              imageBottomSheet(context,cameraTap: (){
-                Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
-                  if(val!=null){
-                    profileProvider.licenceImage = val;
-                    setState(() {
-
+            uploadImageWidget(
+                onTap: () {
+                  imageBottomSheet(context, cameraTap: () {
+                    Provider.of<SignupProvider>(context, listen: false)
+                        .imagePicker(context, ImageSource.camera)
+                        .then((val) {
+                      if (val != null) {
+                        profileProvider.licenceImage = val;
+                        setState(() {});
+                        Navigator.pop(context);
+                      }
                     });
-                    Navigator.pop(context);
-                  }
-                });
-              },galleryTap: (){
-                Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
-                  if(val!=null){
-                    profileProvider.licenceImage = val;
-                    setState(() {
+                  }, galleryTap: () {
+                    Provider.of<SignupProvider>(context, listen: false)
+                        .imagePicker(context, ImageSource.gallery)
+                        .then((val) {
+                      if (val != null) {
+                        profileProvider.licenceImage = val;
+                        setState(() {});
+                        Navigator.pop(context);
+                      }
                     });
-                    Navigator.pop(context);
-                  }
-                });
-              });
-            },
-                imgPath:profileProvider.licenceImage,imgUrl:
-                profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
-                profileProvider.profileModel!.data!.drivingLicenseImage??"":""),
+                  });
+                },
+                imgPath: profileProvider.licenceImage,
+                imgUrl: profileProvider.profileModel != null &&
+                        profileProvider.profileModel!.data != null
+                    ? profileProvider.profileModel!.data!.drivingLicenseImage ??
+                        ""
+                    : ""),
             ScreenSize.height(50),
             AppButton(
                 title: getTranslated('update_profile', context)!,
@@ -601,10 +613,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  vehicleInfoWidget(ProfileProvider profileProvider){
+  vehicleInfoWidget(ProfileProvider profileProvider) {
     return SingleChildScrollView(
-      padding:
-      const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 50),
+      padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 50),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -622,8 +633,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
-            ),
+                child: Icon(
+                  Icons.card_travel,
+                  color: AppColor.blueColor.withOpacity(.7),
+                )),
           ),
           ScreenSize.height(20),
           CustomTextfield(
@@ -631,7 +644,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             hintText: getTranslated('vehicle_type', context)!,
             isReadOnly: true,
             errorMsg: profileProvider.vehicleTypeErrorMsg,
-            onTap: (){
+            onTap: () {
               vehicleTypeBottomSheet();
             },
             onChanged: (val) {
@@ -643,8 +656,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
-            ),
+                child: Icon(
+                  Icons.card_travel,
+                  color: AppColor.blueColor.withOpacity(.7),
+                )),
           ),
           ScreenSize.height(20),
           CustomTextfield(
@@ -661,8 +676,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
-            ),
+                child: Icon(
+                  Icons.card_travel,
+                  color: AppColor.blueColor.withOpacity(.7),
+                )),
           ),
           ScreenSize.height(20),
           // CustomTextfield(
@@ -698,11 +715,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
             hintText: getTranslated('date_of_registration', context)!,
             isReadOnly: true,
             errorMsg: profileProvider.dorErrorMsg,
-            onTap: (){
-              Provider.of<SignupProvider>(context,listen: false).datePicker(profileProvider.selectedDORDate).then((val){
-                if(val!=null){
+            onTap: () {
+              Provider.of<SignupProvider>(context, listen: false)
+                  .datePicker(profileProvider.selectedDORDate)
+                  .then((val) {
+                if (val != null) {
                   profileProvider.selectedDORDate = val;
-                  profileProvider.dorController.text = "${val.day.toString().length==1?"0${val.day}":val.day}-${val.month.toString().length==1?"0${val.month}":val.month}-${val.year}";
+                  profileProvider.dorController.text =
+                      "${val.day.toString().length == 1 ? "0${val.day}" : val.day}-${val.month.toString().length == 1 ? "0${val.month}" : val.month}-${val.year}";
                 }
               });
             },
@@ -715,8 +735,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: Icon(Icons.date_range,color: AppColor.blueColor.withOpacity(.7),)
-            ),
+                child: Icon(
+                  Icons.date_range,
+                  color: AppColor.blueColor.withOpacity(.7),
+                )),
           ),
           ScreenSize.height(20),
           CustomTextfield(
@@ -724,7 +746,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             hintText: getTranslated('fuel_type', context)!,
             isReadOnly: true,
             errorMsg: profileProvider.fuelErrorMsg,
-            onTap: (){
+            onTap: () {
               fuelTypeBottomSheet();
             },
             onChanged: (val) {
@@ -736,8 +758,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor,)
-            ),
+                child: Icon(
+                  Icons.card_travel,
+                  color: AppColor.blueColor,
+                )),
           ),
           ScreenSize.height(20),
           CustomTextfield(
@@ -754,101 +778,127 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor,)
-            ),
+                child: Icon(
+                  Icons.card_travel,
+                  color: AppColor.blueColor,
+                )),
           ),
           ScreenSize.height(20),
-          getText(title: getTranslated('insurance_copy', context)!,
-              size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+          getText(
+              title: getTranslated('insurance_copy', context)!,
+              size: 12,
+              fontFamily: FontFamily.poppinsMedium,
+              color: AppColor.blackColor,
               fontWeight: FontWeight.w400),
           ScreenSize.height(6),
 
-          uploadImageWidget(onTap: (){
-            imageBottomSheet(context,cameraTap: (){
-              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
-                if(val!=null){
-                  profileProvider.insuranceCopyImage = val;
-                  setState(() {
-
+          uploadImageWidget(
+              onTap: () {
+                imageBottomSheet(context, cameraTap: () {
+                  Provider.of<SignupProvider>(context, listen: false)
+                      .imagePicker(context, ImageSource.camera)
+                      .then((val) {
+                    if (val != null) {
+                      profileProvider.insuranceCopyImage = val;
+                      setState(() {});
+                      Navigator.pop(context);
+                    }
                   });
-                  Navigator.pop(context);
-                }
-              });
-            },galleryTap: (){
-              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
-                if(val!=null){
-                  profileProvider.insuranceCopyImage = val;
-                  setState(() {
+                }, galleryTap: () {
+                  Provider.of<SignupProvider>(context, listen: false)
+                      .imagePicker(context, ImageSource.gallery)
+                      .then((val) {
+                    if (val != null) {
+                      profileProvider.insuranceCopyImage = val;
+                      setState(() {});
+                      Navigator.pop(context);
+                    }
                   });
-                  Navigator.pop(context);
-                }
-              });
-            });
-          },
-              imgPath:profileProvider.insuranceCopyImage,imgUrl:
-              profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
-              profileProvider.profileModel!.data!.vehicleInsuranceImage??"":""),
+                });
+              },
+              imgPath: profileProvider.insuranceCopyImage,
+              imgUrl: profileProvider.profileModel != null &&
+                      profileProvider.profileModel!.data != null
+                  ? profileProvider.profileModel!.data!.vehicleInsuranceImage ??
+                      ""
+                  : ""),
           ScreenSize.height(20),
-          getText(title: getTranslated('tourist_permit', context)!,
-              size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+          getText(
+              title: getTranslated('tourist_permit', context)!,
+              size: 12,
+              fontFamily: FontFamily.poppinsMedium,
+              color: AppColor.blackColor,
               fontWeight: FontWeight.w400),
           ScreenSize.height(6),
-          uploadImageWidget(onTap: (){
-            imageBottomSheet(context,cameraTap: (){
-              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
-                if(val!=null){
-                  profileProvider.touristPermitImage = val;
-                  setState(() {
-
+          uploadImageWidget(
+              onTap: () {
+                imageBottomSheet(context, cameraTap: () {
+                  Provider.of<SignupProvider>(context, listen: false)
+                      .imagePicker(context, ImageSource.camera)
+                      .then((val) {
+                    if (val != null) {
+                      profileProvider.touristPermitImage = val;
+                      setState(() {});
+                      Navigator.pop(context);
+                    }
                   });
-                  Navigator.pop(context);
-                }
-              });
-            },galleryTap: (){
-              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
-                if(val!=null){
-                  profileProvider.touristPermitImage = val;
-                  setState(() {
+                }, galleryTap: () {
+                  Provider.of<SignupProvider>(context, listen: false)
+                      .imagePicker(context, ImageSource.gallery)
+                      .then((val) {
+                    if (val != null) {
+                      profileProvider.touristPermitImage = val;
+                      setState(() {});
+                      Navigator.pop(context);
+                    }
                   });
-                  Navigator.pop(context);
-                }
-              });
-            });
-          },
-              imgPath:profileProvider.touristPermitImage,imgUrl:
-              profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
-              profileProvider.profileModel!.data!.vehicleTouristPermitImage??"":""),
+                });
+              },
+              imgPath: profileProvider.touristPermitImage,
+              imgUrl: profileProvider.profileModel != null &&
+                      profileProvider.profileModel!.data != null
+                  ? profileProvider
+                          .profileModel!.data!.vehicleTouristPermitImage ??
+                      ""
+                  : ""),
           ScreenSize.height(20),
-          getText(title: getTranslated('vehicle_image', context)!,
-              size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+          getText(
+              title: getTranslated('vehicle_image', context)!,
+              size: 12,
+              fontFamily: FontFamily.poppinsMedium,
+              color: AppColor.blackColor,
               fontWeight: FontWeight.w400),
           ScreenSize.height(6),
 
-          uploadImageWidget(onTap: (){
-            imageBottomSheet(context,cameraTap: (){
-              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
-                if(val!=null){
-                  profileProvider.vehicleImage = val;
-                  setState(() {
-
+          uploadImageWidget(
+              onTap: () {
+                imageBottomSheet(context, cameraTap: () {
+                  Provider.of<SignupProvider>(context, listen: false)
+                      .imagePicker(context, ImageSource.camera)
+                      .then((val) {
+                    if (val != null) {
+                      profileProvider.vehicleImage = val;
+                      setState(() {});
+                      Navigator.pop(context);
+                    }
                   });
-                  Navigator.pop(context);
-                }
-              });
-            },galleryTap: (){
-              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
-                if(val!=null){
-                  profileProvider.vehicleImage = val;
-                  setState(() {
+                }, galleryTap: () {
+                  Provider.of<SignupProvider>(context, listen: false)
+                      .imagePicker(context, ImageSource.gallery)
+                      .then((val) {
+                    if (val != null) {
+                      profileProvider.vehicleImage = val;
+                      setState(() {});
+                      Navigator.pop(context);
+                    }
                   });
-                  Navigator.pop(context);
-                }
-              });
-            });
-          },
-              imgPath:profileProvider.vehicleImage,imgUrl:
-              profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
-              profileProvider.profileModel!.data!.vehicleImage??"":""),
+                });
+              },
+              imgPath: profileProvider.vehicleImage,
+              imgUrl: profileProvider.profileModel != null &&
+                      profileProvider.profileModel!.data != null
+                  ? profileProvider.profileModel!.data!.vehicleImage ?? ""
+                  : ""),
           ScreenSize.height(50),
           AppButton(
               title: getTranslated('update_vehicle_info', context)!,
@@ -859,13 +909,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onTap: () {
                 profileProvider.checkVehicleInfoValidation();
               }),
-
         ],
       ),
     );
   }
 
-  viewVehicleImagesWidget(ProfileProvider profileProvider){
+  viewVehicleImagesWidget(ProfileProvider profileProvider) {
     return Column(
       children: [
         Row(
@@ -873,44 +922,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                 ],
+                children: [],
               ),
             ),
             ScreenSize.width(15),
-            Expanded(child: Column(
+            Expanded(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                getText(title: getTranslated('tourist_permit', context)!,
-                    size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+                getText(
+                    title: getTranslated('tourist_permit', context)!,
+                    size: 12,
+                    fontFamily: FontFamily.poppinsMedium,
+                    color: AppColor.blackColor,
                     fontWeight: FontWeight.w400),
                 ScreenSize.height(6),
-
-                uploadImageWidget(onTap: (){
-                  imageBottomSheet(context,cameraTap: (){
-                    Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
-                      if(val!=null){
-                        profileProvider.touristPermitImage = val;
-                        setState(() {
-
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        Provider.of<SignupProvider>(context, listen: false)
+                            .imagePicker(context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.touristPermitImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
                         });
-                        Navigator.pop(context);
-                      }
-                    });
-                  },galleryTap: (){
-                    Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
-                      if(val!=null){
-                        profileProvider.touristPermitImage = val;
-                        setState(() {
+                      }, galleryTap: () {
+                        Provider.of<SignupProvider>(context, listen: false)
+                            .imagePicker(context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.touristPermitImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
                         });
-                        Navigator.pop(context);
-                      }
-                    });
-                  });
-                },
-                    imgPath:profileProvider.touristPermitImage,imgUrl:
-                    profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
-                    profileProvider.profileModel!.data!.vehicleTouristPermitImage??"":"")
+                      });
+                    },
+                    imgPath: profileProvider.touristPermitImage,
+                    imgUrl: profileProvider.profileModel != null &&
+                            profileProvider.profileModel!.data != null
+                        ? profileProvider.profileModel!.data!
+                                .vehicleTouristPermitImage ??
+                            ""
+                        : "")
               ],
             ))
           ],
@@ -918,39 +975,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ScreenSize.height(20),
         Row(
           children: [
-            Expanded(child: Column(
+            Expanded(
+                child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                getText(title: getTranslated('vehicle_image', context)!,
-                    size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+                getText(
+                    title: getTranslated('vehicle_image', context)!,
+                    size: 12,
+                    fontFamily: FontFamily.poppinsMedium,
+                    color: AppColor.blackColor,
                     fontWeight: FontWeight.w400),
                 ScreenSize.height(6),
-
-                uploadImageWidget(onTap: (){
-                  imageBottomSheet(context,cameraTap: (){
-                    Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
-                      if(val!=null){
-                        profileProvider.vehicleImage = val;
-                        setState(() {
-
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        Provider.of<SignupProvider>(context, listen: false)
+                            .imagePicker(context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.vehicleImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
                         });
-                        Navigator.pop(context);
-                      }
-                    });
-                  },galleryTap: (){
-                    Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
-                      if(val!=null){
-                        profileProvider.vehicleImage = val;
-                        setState(() {
+                      }, galleryTap: () {
+                        Provider.of<SignupProvider>(context, listen: false)
+                            .imagePicker(context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.vehicleImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
                         });
-                        Navigator.pop(context);
-                      }
-                    });
-                  });
-                },
-                    imgPath:profileProvider.vehicleImage,imgUrl:
-                    profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
-                    profileProvider.profileModel!.data!.vehicleImage??"":"")
+                      });
+                    },
+                    imgPath: profileProvider.vehicleImage,
+                    imgUrl: profileProvider.profileModel != null &&
+                            profileProvider.profileModel!.data != null
+                        ? profileProvider.profileModel!.data!.vehicleImage ?? ""
+                        : "")
               ],
             ))
           ],
@@ -1322,7 +1386,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         builder: (context) {
           return Container(
             padding:
-            const EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 40),
+                const EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 40),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -1331,11 +1395,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     openDialogBox(
                         isLogout: true,
                         title: getTranslated("logout", context)!,
-                        subTitle:  getTranslated("want_to_logout", context)!,
+                        subTitle: getTranslated("want_to_logout", context)!,
                         noTap: () {
                           Navigator.pop(context);
                         },
-                        yesTap: () async{
+                        yesTap: () async {
                           Utils.logOut();
                         });
                   },
@@ -1371,12 +1435,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     openDialogBox(
                         isLogout: false,
                         title: getTranslated("delete_account", context)!,
-                        subTitle:  getTranslated("want_to_delete", context)!,
+                        subTitle: getTranslated("want_to_delete", context)!,
                         noTap: () {
                           Navigator.pop(context);
                         },
-                        yesTap: () async{
-                         Provider.of<ProfileProvider>(context,listen: false).deleteAccountApiFunction();
+                        yesTap: () async {
+                          Provider.of<ProfileProvider>(context, listen: false)
+                              .deleteAccountApiFunction();
                           // Navigator.pop(context);
                           // SharedPreferences prefs = await SharedPreferences.getInstance();
                           // prefs.clear();
@@ -1413,10 +1478,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void openDialogBox(
       {required bool isLogout,
-        required String title,
-        required String subTitle,
-        required Function() noTap,
-        required Function() yesTap}) {
+      required String title,
+      required String subTitle,
+      required Function() noTap,
+      required Function() yesTap}) {
     showGeneralDialog(
       context: context,
       barrierLabel: "Barrier",
@@ -1452,17 +1517,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       ScreenSize.height(20),
                       Align(
-                        alignment:Alignment.center,
-                          child : Text(
-  subTitle,
-  style: TextStyle(
-      decoration: TextDecoration.none,
-      fontSize: 14,
-      fontFamily: FontFamily.poppinsSemiBold,
-      color: AppColor.textBlackColor,
-      fontWeight: FontWeight.w600),
-  textAlign: TextAlign.center,
-)  ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            subTitle,
+                            style: TextStyle(
+                                decoration: TextDecoration.none,
+                                fontSize: 14,
+                                fontFamily: FontFamily.poppinsSemiBold,
+                                color: AppColor.textBlackColor,
+                                fontWeight: FontWeight.w600),
+                            textAlign: TextAlign.center,
+                          )),
                       ScreenSize.height(47),
                       Row(
                         children: [
@@ -1528,245 +1593,294 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  genderBottomSheet(){
+  genderBottomSheet() {
     showModalBottomSheet(
         backgroundColor: AppColor.whiteColor,
         shape: OutlineInputBorder(
             borderSide: BorderSide(color: AppColor.whiteColor),
-            borderRadius:const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20)
-            )
-        ),
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: context,
-        builder: (context){
-          return StatefulBuilder(
-              builder: (context,state) {
-                return Container(
-                  padding:const EdgeInsets.only(top: 20,left: 15,right: 15,bottom: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, state) {
+            return Container(
+              padding: const EdgeInsets.only(
+                  top: 20, left: 15, right: 15, bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          getText(title: getTranslated('select_gender', context)!, size: 18,
-                              fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500),
-                          GestureDetector(
-                            onTap: (){
-                              Navigator.pop(context);
-                            },
-                            child:const Icon(Icons.close),)
-                        ],
-                      ),
-                      ScreenSize.height(20),
+                      getText(
+                          title: getTranslated('select_gender', context)!,
+                          size: 18,
+                          fontFamily: FontFamily.poppinsMedium,
+                          color: AppColor.blackColor,
+                          fontWeight: FontWeight.w500),
                       GestureDetector(
-                        onTap: (){
-                          Provider.of<ProfileProvider>(context,listen: false).selectedGender =0;
-                          Provider.of<ProfileProvider>(context,listen: false).genderController.text = 'Male';
-                          Navigator.pop(context);
-                          state(() {
-
-                          });
-                        },
-                        child: Container(
-                          color: AppColor.whiteColor,
-                          height: 30,
-                          child: Row(
-                            children: [
-                              customRadio(0,Provider.of<ProfileProvider>(context,listen: false).selectedGender),
-                              ScreenSize.width(15),
-                              getText(title: getTranslated('male', context)!, size: 16,
-                                  fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
-                            ],
-                          ),
-                        ),
-                      ),
-                      ScreenSize.height(10),
-                      GestureDetector(
-                        onTap: (){
-                          Provider.of<ProfileProvider>(context,listen: false).selectedGender =1;
-                          Provider.of<ProfileProvider>(context,listen: false).genderController.text = 'Female';
-                          state(() {
-                          });
+                        onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Container(
-                          color: AppColor.whiteColor,
-                          height: 30,
-                          child: Row(
-                            children: [
-                              customRadio(1,Provider.of<ProfileProvider>(context,listen: false).selectedGender),
-                              ScreenSize.width(15),
-                              getText(title: getTranslated('female', context)!, size: 16,
-                                  fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
-                            ],
-                          ),
-                        ),
+                        child: const Icon(Icons.close),
                       )
                     ],
                   ),
-                );
-              }
-          );
+                  ScreenSize.height(20),
+                  GestureDetector(
+                    onTap: () {
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .selectedGender = 0;
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .genderController
+                          .text = 'Male';
+                      Navigator.pop(context);
+                      state(() {});
+                    },
+                    child: Container(
+                      color: AppColor.whiteColor,
+                      height: 30,
+                      child: Row(
+                        children: [
+                          customRadio(
+                              0,
+                              Provider.of<ProfileProvider>(context,
+                                      listen: false)
+                                  .selectedGender),
+                          ScreenSize.width(15),
+                          getText(
+                              title: getTranslated('male', context)!,
+                              size: 16,
+                              fontFamily: FontFamily.nunitoMedium,
+                              color: AppColor.blackColor,
+                              fontWeight: FontWeight.w500)
+                        ],
+                      ),
+                    ),
+                  ),
+                  ScreenSize.height(10),
+                  GestureDetector(
+                    onTap: () {
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .selectedGender = 1;
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .genderController
+                          .text = 'Female';
+                      state(() {});
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      color: AppColor.whiteColor,
+                      height: 30,
+                      child: Row(
+                        children: [
+                          customRadio(
+                              1,
+                              Provider.of<ProfileProvider>(context,
+                                      listen: false)
+                                  .selectedGender),
+                          ScreenSize.width(15),
+                          getText(
+                              title: getTranslated('female', context)!,
+                              size: 16,
+                              fontFamily: FontFamily.nunitoMedium,
+                              color: AppColor.blackColor,
+                              fontWeight: FontWeight.w500)
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            );
+          });
         });
   }
 
-  fuelTypeBottomSheet(){
+  fuelTypeBottomSheet() {
     showModalBottomSheet(
         backgroundColor: AppColor.whiteColor,
         shape: OutlineInputBorder(
             borderSide: BorderSide(color: AppColor.whiteColor),
-            borderRadius:const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20)
-            )
-        ),
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: context,
-        builder: (context){
-          return StatefulBuilder(
-              builder: (context,state) {
-                return Container(
-                  padding:const EdgeInsets.only(top: 20,left: 15,right: 15,bottom: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, state) {
+            return Container(
+              padding: const EdgeInsets.only(
+                  top: 20, left: 15, right: 15, bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          getText(title: getTranslated('select_fuel_type', context)!, size: 18,
-                              fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500),
-                          GestureDetector(
-                            onTap: (){
-                              Navigator.pop(context);
-                            },
-                            child:const Icon(Icons.close),)
-                        ],
-                      ),
-                      ScreenSize.height(20),
+                      getText(
+                          title: getTranslated('select_fuel_type', context)!,
+                          size: 18,
+                          fontFamily: FontFamily.poppinsMedium,
+                          color: AppColor.blackColor,
+                          fontWeight: FontWeight.w500),
                       GestureDetector(
-                        onTap: (){
-                          Provider.of<ProfileProvider>(context,listen:false).fuelType =0;
-                          Provider.of<ProfileProvider>(context,listen: false).fuelController.text = 'Petrol';
-                          Navigator.pop(context);
-                          state(() {
-
-                          });
-                        },
-                        child: Container(
-                          color: AppColor.whiteColor,
-                          height: 30,
-                          child: Row(
-                            children: [
-                              customRadio(0,Provider.of<ProfileProvider>(context,listen:false).fuelType),
-                              ScreenSize.width(15),
-                              getText(title: getTranslated('petrol', context)!, size: 16,
-                                  fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
-                            ],
-                          ),
-                        ),
-                      ),
-                      ScreenSize.height(10),
-                      GestureDetector(
-                        onTap: (){
-                          Provider.of<ProfileProvider>(context,listen:false).fuelType=1;
-                          Provider.of<ProfileProvider>(context,listen: false).fuelController.text = 'Diesel';
-                          state(() {
-                          });
+                        onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Container(
-                          color: AppColor.whiteColor,
-                          height: 30,
-                          child: Row(
-                            children: [
-                              customRadio(1,Provider.of<ProfileProvider>(context,listen:false).fuelType),
-                              ScreenSize.width(15),
-                              getText(title: getTranslated('diesel', context)!, size: 16,
-                                  fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
-                            ],
-                          ),
-                        ),
+                        child: const Icon(Icons.close),
                       )
                     ],
                   ),
-                );
-              }
-          );
+                  ScreenSize.height(20),
+                  GestureDetector(
+                    onTap: () {
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .fuelType = 0;
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .fuelController
+                          .text = 'Petrol';
+                      Navigator.pop(context);
+                      state(() {});
+                    },
+                    child: Container(
+                      color: AppColor.whiteColor,
+                      height: 30,
+                      child: Row(
+                        children: [
+                          customRadio(
+                              0,
+                              Provider.of<ProfileProvider>(context,
+                                      listen: false)
+                                  .fuelType),
+                          ScreenSize.width(15),
+                          getText(
+                              title: getTranslated('petrol', context)!,
+                              size: 16,
+                              fontFamily: FontFamily.nunitoMedium,
+                              color: AppColor.blackColor,
+                              fontWeight: FontWeight.w500)
+                        ],
+                      ),
+                    ),
+                  ),
+                  ScreenSize.height(10),
+                  GestureDetector(
+                    onTap: () {
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .fuelType = 1;
+                      Provider.of<ProfileProvider>(context, listen: false)
+                          .fuelController
+                          .text = 'Diesel';
+                      state(() {});
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      color: AppColor.whiteColor,
+                      height: 30,
+                      child: Row(
+                        children: [
+                          customRadio(
+                              1,
+                              Provider.of<ProfileProvider>(context,
+                                      listen: false)
+                                  .fuelType),
+                          ScreenSize.width(15),
+                          getText(
+                              title: getTranslated('diesel', context)!,
+                              size: 16,
+                              fontFamily: FontFamily.nunitoMedium,
+                              color: AppColor.blackColor,
+                              fontWeight: FontWeight.w500)
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            );
+          });
         });
   }
 
-  vehicleTypeBottomSheet(){
+  vehicleTypeBottomSheet() {
     showModalBottomSheet(
         backgroundColor: AppColor.whiteColor,
         shape: OutlineInputBorder(
             borderSide: BorderSide(color: AppColor.whiteColor),
-            borderRadius:const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20)
-            )
-        ),
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: context,
-        builder: (context){
-          return StatefulBuilder(
-              builder: (context,state) {
-                return Container(
-                  padding:const EdgeInsets.only(top: 20,left: 15,right: 15,bottom: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, state) {
+            return Container(
+              padding: const EdgeInsets.only(
+                  top: 20, left: 15, right: 15, bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          getText(title: getTranslated('select_vehicle_type', context)!, size: 18,
-                              fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500),
-                          GestureDetector(
-                            onTap: (){
-                              Navigator.pop(context);
-                            },
-                            child:const Icon(Icons.close),)
-                        ],
-                      ),
-                      ScreenSize.height(20),
-                      ListView.separated(
-                          separatorBuilder: (context,sp){
-                            return ScreenSize.height(10);
+                      getText(
+                          title: getTranslated('select_vehicle_type', context)!,
+                          size: 18,
+                          fontFamily: FontFamily.poppinsMedium,
+                          color: AppColor.blackColor,
+                          fontWeight: FontWeight.w500),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: const Icon(Icons.close),
+                      )
+                    ],
+                  ),
+                  ScreenSize.height(20),
+                  ListView.separated(
+                      separatorBuilder: (context, sp) {
+                        return ScreenSize.height(10);
+                      },
+                      shrinkWrap: true,
+                      itemCount: Constants.vehicleTypeList.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            Provider.of<ProfileProvider>(context, listen: false)
+                                .vehicleType = index;
+                            Provider.of<ProfileProvider>(context, listen: false)
+                                .vehicleTypeController
+                                .text = Constants.vehicleTypeList[index];
+                            Navigator.pop(context);
+                            state(() {});
                           },
-                          shrinkWrap: true,
-                          itemCount: Constants.vehicleTypeList.length,
-                          itemBuilder: (context,index){
-                            return GestureDetector(
-                              onTap: (){
-                               Provider.of<ProfileProvider>(context,listen:false).vehicleType =index;
-                                Provider.of<ProfileProvider>(context,listen: false).vehicleTypeController.text= Constants.vehicleTypeList[index];
-                                Navigator.pop(context);
-                                state(() {
-
-                                });
-                              },
-                              child: Container(
-                                color: AppColor.whiteColor,
-                                height: 30,
-                                child: Row(
-                                  children: [
-                                    customRadio(index,Provider.of<ProfileProvider>(context,listen:false).vehicleType),
-                                    ScreenSize.width(15),
-                                    getText(title: Constants.vehicleTypeList[index], size: 16,
-                                        fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
-                                  ],
-                                ),
-                              ),
-                            );
-                          }),
-                    ],
-                  ),
-                );
-              }
-          );
+                          child: Container(
+                            color: AppColor.whiteColor,
+                            height: 30,
+                            child: Row(
+                              children: [
+                                customRadio(
+                                    index,
+                                    Provider.of<ProfileProvider>(context,
+                                            listen: false)
+                                        .vehicleType),
+                                ScreenSize.width(15),
+                                getText(
+                                    title: Constants.vehicleTypeList[index],
+                                    size: 16,
+                                    fontFamily: FontFamily.nunitoMedium,
+                                    color: AppColor.blackColor,
+                                    fontWeight: FontWeight.w500)
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                ],
+              ),
+            );
+          });
         });
   }
-
 }

@@ -3,7 +3,7 @@ import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/screens/auth/login_screen.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:flutter/material.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'constants.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
@@ -18,16 +18,20 @@ extension StringExtension on String {
 
 class Utils {
   static bool isValidEmail(String em) {
-    String p = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
     RegExp regExp = RegExp(p);
     return regExp.hasMatch(em);
   }
-  static bool passwordValidateRegExp(String value){
-    String  pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,16}$';
-    RegExp regExp =  RegExp(pattern);
+
+  static bool passwordValidateRegExp(String value) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,16}$';
+    RegExp regExp = RegExp(pattern);
     return regExp.hasMatch(value);
   }
-    static hideTextField() {
+
+  static hideTextField() {
     FocusManager.instance.primaryFocus?.unfocus();
   }
 
@@ -36,6 +40,16 @@ class Utils {
 
   static const passwordPattern =
       r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+
+  static showToast(String title, {Color color = Colors.black}) {
+    Fluttertoast.showToast(
+        msg: title,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: color,
+        textColor: AppColor.whiteColor);
+  }
 
   static successSnackBar(
     String title,
@@ -94,8 +108,8 @@ class Utils {
   }
 
   static logOut() {
-    SessionManager.setToken='';
-    Constants.is401Error=true;
+    SessionManager.setToken = '';
+    Constants.is401Error = true;
     AppRoutes.pushReplacementAndRemoveNavigation(const LoginScreen());
     print('lodfgdfg');
   }
