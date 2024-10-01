@@ -40,7 +40,10 @@ final confirmPasswordController = TextEditingController();
 
 File? profileImage;
 File? passportImage;
+File? stateIdentityImage;
 File? licenceImage;
+File? inspectionImage;
+File? criminalRecordImage;
 File? insuranceCopyImage;
 File?  touristPermitImage;
 File? vehicleImage;

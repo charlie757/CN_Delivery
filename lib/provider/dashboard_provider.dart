@@ -8,7 +8,6 @@ import 'package:cn_delivery/utils/notification_service.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:cn_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 
 class DashboardProvider extends ChangeNotifier {
   int currentIndex = 0;
@@ -45,7 +44,7 @@ class DashboardProvider extends ChangeNotifier {
 
   updateLastLocationApiFunction()async{
     LocationService.getCurrentLocation().then((val){
-      Position position = val;
+      // Position position = val;
     });
     var body = json.encode({
       "longitude": SessionManager.lat,

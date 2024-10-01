@@ -1,7 +1,6 @@
 import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
-import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/dashboard_provider.dart';
@@ -11,12 +10,8 @@ import 'package:cn_delivery/screens/current_order_screen.dart';
 import 'package:cn_delivery/screens/earning_screen.dart';
 import 'package:cn_delivery/screens/home_screen.dart';
 import 'package:cn_delivery/screens/profile_screen.dart';
-import 'package:cn_delivery/utils/constants.dart';
-import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:geolocator/geolocator.dart';
-import '../utils/location_service.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});

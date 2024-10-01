@@ -1,6 +1,4 @@
-import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/provider/forgot_password_provider.dart';
-import 'package:cn_delivery/screens/auth/otp_verify_screen.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

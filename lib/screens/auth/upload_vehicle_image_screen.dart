@@ -1,8 +1,6 @@
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../helper/appImages.dart';
-import '../../helper/appbutton.dart';
 import '../../helper/appcolor.dart';
 import '../../helper/fontfamily.dart';
 import '../../helper/getText.dart';
@@ -14,7 +12,6 @@ import '../../widget/appBar.dart';
 import '../../widget/image_bottom_sheet.dart';
 import '../../widget/upload_image_widget.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
 class UploadVehicleImageScreen extends StatefulWidget {
   const UploadVehicleImageScreen({super.key});

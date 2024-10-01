@@ -9,6 +9,7 @@ class getText extends StatefulWidget {
   final TextAlign textAlign;
   final double letterSpacing;
   final double lineHeight;
+  final int? maxLies;
   const getText(
       {required this.title,
       required this.size,
@@ -17,7 +18,7 @@ class getText extends StatefulWidget {
       required this.fontWeight,
       this.textAlign = TextAlign.start,
       this.letterSpacing = 0,
-      this.lineHeight = 0});
+      this.lineHeight = 0,this.maxLies});
   @override
   State<getText> createState() => _getTextState();
 }
@@ -27,6 +28,8 @@ class _getTextState extends State<getText> {
   Widget build(BuildContext context) {
     return Text(widget.title,
         textAlign: widget.textAlign,
+        maxLines: widget.maxLies,
+        overflow: widget.maxLies==null?null:TextOverflow.ellipsis,
         style: TextStyle(
           height: widget.lineHeight,
           color: widget.color,

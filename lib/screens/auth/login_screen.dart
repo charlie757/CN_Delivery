@@ -9,7 +9,6 @@ import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/login_provider.dart';
 import 'package:cn_delivery/screens/auth/forgot_password_screen.dart';
-import 'package:cn_delivery/screens/auth/otp_verify_screen.dart';
 import 'package:cn_delivery/screens/auth/singup_screen.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
 import 'package:cn_delivery/utils/location_service.dart';

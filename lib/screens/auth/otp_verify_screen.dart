@@ -3,6 +3,7 @@ import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/getText.dart';
 import 'package:cn_delivery/provider/otp_verify_provider.dart';
+import 'package:cn_delivery/screens/auth/choose_vehicle_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -10,7 +11,6 @@ import '../../helper/appImages.dart';
 import '../../helper/appcolor.dart';
 import '../../helper/screensize.dart';
 import '../../localization/language_constrants.dart';
-import '../../utils/constants.dart';
 import 'package:provider/provider.dart';
 
 class OtpVerifyScreen extends StatefulWidget {
@@ -128,9 +128,10 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     width: double.infinity,
                     buttonColor: AppColor.appTheme,
                       onTap: () {
-                        if(formKey.currentState!.validate()){
-                         myProvider.isLoading?null: myProvider.verifyApiFunction(widget.email, otpController.text);
-                        }
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>ChooseVehicleScreen()));
+                        // if(formKey.currentState!.validate()){
+                        //  myProvider.isLoading?null: myProvider.verifyApiFunction(widget.email, otpController.text);
+                        // }
                       },)
 
                 ],
@@ -185,6 +186,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
           } else if (val.length < 4) {
             return 'Enter otp should be valid';
           }
+          return null;
         },
       ),
     );

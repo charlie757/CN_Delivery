@@ -66,9 +66,8 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
             width: double.infinity,
             buttonColor: AppColor.blueColor,
             onTap: () {
-              AppRoutes.pushCupertinoNavigation(const ChooseVehicleScreen());
-              // SessionManager.setFirstTimeLanguageScreen=true;
-              // AppRoutes.pushCupertinoNavigation(const LoginScreen());
+              SessionManager.setFirstTimeLanguageScreen=true;
+              AppRoutes.pushCupertinoNavigation(const LoginScreen());
             }),
       ),
     );
