@@ -1,3 +1,4 @@
+import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/custom_button.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/signup_provider.dart';
@@ -72,11 +73,11 @@ class _VechileInfoScreenState extends State<VechileInfoScreen> {
                 widget.route==VehicleType.bicycle.name?
                 biCycleWidget(myProvider):carAndBikeWidget(myProvider),
                 ScreenSize.height(30),
-                CustomButton(
+                AppButton(
                     title: getTranslated('continue', context)!,
-                    height: 50,
+                    height: 56,
                     width: double.infinity,
-                    buttonColor: AppColor.blueColor,
+                    buttonColor: AppColor.appTheme,
                     onTap: () {
                       checkValidation();
                     })
@@ -365,6 +366,23 @@ biCycleWidget(SignupProvider myProvider){
           },
         ),
         ScreenSize.height(15),
+       const getText(
+            title: 'Vehicle brand name',
+            size: 12,
+            fontFamily: FontFamily.poppinsMedium,
+            color: AppColor.lightTextColor,
+            fontWeight: FontWeight.w400),
+        ScreenSize.height(6),
+        SignUpTextField(
+          hintText: "Enter vehicle brand name",
+          controller: myProvider.vehicleNameController,
+          validator: (val) {
+            if (val.isEmpty) {
+              return getTranslated('enter_vehicle_name', context)!;
+            }
+          },
+        ),
+        ScreenSize.height(15),
         getText(
             title: getTranslated('model_number', context)!,
             size: 12,
@@ -496,8 +514,8 @@ biCycleWidget(SignupProvider myProvider){
           Expanded(child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                getText(
-            title: "Vehicle Image-1",
+               const getText(
+            title: "Vehicle Image-2",
             size: 12,
             fontFamily: FontFamily.poppinsMedium,
             color: AppColor.lightTextColor,

@@ -1,5 +1,6 @@
 import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appImages.dart';
+import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/custom_button.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
@@ -31,11 +32,14 @@ class _ChooseVehicleScreenState extends State<ChooseVehicleScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.asset(
-                AppImages.appIcon,
-                // height: 80,
-                width: 165,
-                fit: BoxFit.cover,
+              Align(
+                alignment: Alignment.center,
+                child: Image.asset(
+                  AppImages.appIcon,
+                  // height: 80,
+                  width: 165,
+                  fit: BoxFit.cover,
+                ),
               ),
               ScreenSize.height(30),
               getText(
@@ -56,11 +60,11 @@ class _ChooseVehicleScreenState extends State<ChooseVehicleScreen> {
       ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 15, right: 15, bottom: 30),
-        child: CustomButton(
+        child: AppButton(
             title: getTranslated('continue', context)!,
-            height: 50,
+            height: 56,
             width: double.infinity,
-            buttonColor: AppColor.blueColor,
+            buttonColor: AppColor.appTheme,
             onTap: () {
               if (selectedIndex != -1) {
                 AppRoutes.pushCupertinoNavigation(VechileInfoScreen(

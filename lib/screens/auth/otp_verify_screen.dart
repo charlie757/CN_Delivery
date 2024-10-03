@@ -54,7 +54,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.center,
                     child: Image.asset(
                       AppImages.appIcon,
                       // height: 80,
@@ -104,7 +104,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                         },
                         child: getText(
                             title:
-                            "${getTranslated('resendOtp', context)!} ${myProvider.counter <= 0 ? '' : "${getTranslated('in', context)!}"}",
+                            "${getTranslated('resendOtp', context)!} ${myProvider.counter <= 0 ? '' : getTranslated('in', context)!}",
                             size: 14,
                             fontFamily: FontFamily.poppinsMedium,
                             color: AppColor.blackColor,
@@ -113,7 +113,7 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                       myProvider.counter <= 0
                           ? Container()
                           : getText(
-                          title: "  0:${myProvider.counter}",
+                          title: "  ${myProvider.counter}",
                           size: 14,
                           fontFamily: FontFamily.poppinsBold,
                           color: AppColor.blackColor,

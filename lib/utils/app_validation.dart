@@ -80,7 +80,7 @@ class AppValidation {
 
   static String? addressValidator(val) {
     if (val.isEmpty) {
-      return getTranslated( 'enter_address', navigatorKey.currentContext!)!;
+      return getTranslated( 'enter_your_address', navigatorKey.currentContext!)!;
     } else {
       return null;
 

@@ -47,11 +47,14 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Image.asset(
-                  AppImages.appIcon,
-                  // height: 80,
-                  width: 165,
-                  fit: BoxFit.cover,
+                Align(
+                  alignment: Alignment.center,
+                  child: Image.asset(
+                    AppImages.appIcon,
+                    // height: 80,
+                    width: 165,
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 ScreenSize.height(40),
                 Row(
@@ -182,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                      onTap: (){
                        AppRoutes.pushCupertinoNavigation(const SingUpScreen());
                      },
-                     child: getText(title: getTranslated('signup', context)!, size: 14, fontFamily: FontFamily.nunitoMedium,
+                     child: getText(title: getTranslated('register', context)!, size: 14, fontFamily: FontFamily.nunitoMedium,
                          color: AppColor.blueColor, fontWeight: FontWeight.w500),
                    ),
                  ],

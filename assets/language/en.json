@@ -7,6 +7,7 @@
     "enter_your_password":"Enter Your Password",
     "sign_in":"SIGN IN",
     "signup": "Sign Up",
+    "register":"Register",
     "EnterThe4DigitOtp": "Enter the 4 digit otp",
     "sendTo": "Sent to",
     "resendOtp": "Resend OTP",
@@ -29,7 +30,6 @@
     "enter_confirm_password": "Enter confirm password",
     "passport_image": "Passport Image",
     "next": "Next",
-    "select_gender": "Select Gender",
     "male": "Male",
     "female": "Female",
     "enter_mobile_number": "Enter mobile number",
@@ -85,9 +85,6 @@
     "your_language": "Your Language",
     "delete_account": "Delete Account",
     "want_to_delete": "Are You Sure you want to Delete Your Account?",
-
-
-
     "in_progress":"In Progress",
     "cancelled":"Canceled",
     "completed":"Completed",
@@ -153,8 +150,6 @@
     "value":"Value",
     "open_map":"Open Map",
     "are_you_sure_change_status":"Are you sure you want to change the status?",
-    "no":"No",
-    "yes":"Yes",
     "enter_first_name":"Enter your first name",
     "enter_last_name":"Enter your last name",
     "enter_phone_number":"Enter your phone number",
@@ -164,7 +159,7 @@
     "enter_password":"Enter your password",
     "password_validation":"Password should contain at least one upper case, one lower case, one digit, one Special character",
     "password_same":"Password should be same",
-    "enter_address":"Enter your address",
+    "enter_your_address":"Enter your address",
     "enter_city":"Enter your city",
     "enter_state":"Enter your state",
     "enter_country":"Enter your country",

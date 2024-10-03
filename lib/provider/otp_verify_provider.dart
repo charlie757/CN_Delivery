@@ -14,7 +14,7 @@ import '../utils/utils.dart';
 
 class OtpVerifyProvider extends ChangeNotifier{
 
-int counter = 30;
+int counter = 120;
 Timer? timer;
 bool resend = false;
 bool isLoading = false;
@@ -26,7 +26,7 @@ updateLoading(bool value) {
 
 startTimer() {
   //shows timer
-  counter = 30; //time counter
+  counter = 120; //time counter
   timer = Timer.periodic(const Duration(seconds: 1), (timer) {
     counter > 0 ? counter-- : timer.cancel();
     notifyListeners();

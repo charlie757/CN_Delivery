@@ -257,7 +257,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                     textInputAction: TextInputAction.next,
                     controller: myProvider.addressController,validator: (val){
                       if(val.isEmpty){
-                        return getTranslated('enter_address', context)!;
+                        return getTranslated('enter_your_address', context)!;
                       }
                     },),
                   ScreenSize.height(15),

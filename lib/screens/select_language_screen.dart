@@ -54,7 +54,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
             ScreenSize.height(25),
             chooseLanguageWidget('Hi', 'Are You Ok?', 'English', 0),
             ScreenSize.height(20),
-            chooseLanguageWidget('Hola', '¿Estás bien?', 'Española', 1),
+            chooseLanguageWidget('Hola', '¿Estás bien?', 'Español', 1),
           ],
         ),
       )),
