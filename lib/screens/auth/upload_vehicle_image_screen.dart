@@ -1,3 +1,4 @@
+import 'package:cn_delivery/helper/image_picker_service.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -56,7 +57,7 @@ class _UploadVehicleImageScreenState extends State<UploadVehicleImageScreen> {
                 ScreenSize.height(6),
                 uploadImageWidget(onTap: (){
                   imageBottomSheet(context,cameraTap: (){
-                    myProvider.imagePicker(context, ImageSource.camera).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                       if(val!=null){
                         myProvider.insuranceCopyImage = val;
                         setState(() {
@@ -66,7 +67,7 @@ class _UploadVehicleImageScreenState extends State<UploadVehicleImageScreen> {
                       }
                     });
                   },galleryTap: (){
-                    myProvider.imagePicker(context, ImageSource.gallery).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                       if(val!=null){
                         myProvider.insuranceCopyImage = val;
                         setState(() {
@@ -84,7 +85,7 @@ class _UploadVehicleImageScreenState extends State<UploadVehicleImageScreen> {
                 ScreenSize.height(6),
                 uploadImageWidget(onTap: (){
                   imageBottomSheet(context,cameraTap: (){
-                    myProvider.imagePicker(context, ImageSource.camera).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                       if(val!=null){
                         myProvider.touristPermitImage = val;
                         setState(() {
@@ -94,7 +95,7 @@ class _UploadVehicleImageScreenState extends State<UploadVehicleImageScreen> {
                       }
                     });
                   },galleryTap: (){
-                    myProvider.imagePicker(context, ImageSource.gallery).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                       if(val!=null){
                         myProvider.touristPermitImage = val;
                         setState(() {
@@ -113,7 +114,7 @@ class _UploadVehicleImageScreenState extends State<UploadVehicleImageScreen> {
                 ScreenSize.height(6),
                 uploadImageWidget(onTap: (){
                   imageBottomSheet(context,cameraTap: (){
-                    myProvider.imagePicker(context, ImageSource.camera).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                       if(val!=null){
                         myProvider.vehicleImage = val;
                         setState(() {
@@ -123,7 +124,7 @@ class _UploadVehicleImageScreenState extends State<UploadVehicleImageScreen> {
                       }
                     });
                   },galleryTap: (){
-                    myProvider.imagePicker(context, ImageSource.gallery).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                       if(val!=null){
                         myProvider.vehicleImage = val;
                         setState(() {

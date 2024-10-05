@@ -3,8 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:mime/mime.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:country_calling_code_picker/picker.dart';
@@ -24,6 +22,8 @@ final lNameController = TextEditingController();
 final mobileController = TextEditingController();
 final emailController = TextEditingController();
 final addressController =TextEditingController();
+final cityController = TextEditingController();
+final countryController =TextEditingController();
 final genderController =TextEditingController();
 final passwordController = TextEditingController();
 final confirmPasswordController = TextEditingController();
@@ -89,42 +89,63 @@ Future datePicker(selectedDate) async {
   }
 }
 
-Future imagePicker(BuildContext context,ImageSource source) async {
-  try {
-    // final image = await ImagePicker().pickImage(source: source);
-    PickedFile ?pickedFile = await ImagePicker().getImage(source: source);
-    if (pickedFile == null) return;
-    bool size = checkFileSize(pickedFile.path, context);
-    return size? File(pickedFile.path):null;
-  } on PlatformException catch (e) {
-    print('Failed to pick image$e');
+
+
+driverRegisterApiFunction()async{
+  showCircleProgressDialog(navigatorKey.currentContext!);
+  Map<String, String> headers = {"Authorization": SessionManager.token,'language':
+  SessionManager.languageCode == 'es' ? 'es' : 'en'};
+ var request =
+  http.MultipartRequest('POST', Uri.parse(ApiUrl.driverRegisterUrl));
+  request.headers.addAll(headers);
+ request.headers.addAll(headers);
+  request.fields['f_name'] = fNameController.text;
+  request.fields['l_name'] = lNameController.text;
+  request.fields['email'] = emailController.text;
+  // ignore: unnecessary_null_comparison
+  request.fields['country_code'] = selectedCountry!.callingCode!=null? selectedCountry!.callingCode.split('+')[1].toString():'';
+  request.fields['phone'] = mobileController.text;
+  request.fields['password'] = passwordController.text;
+  request.fields['con_password'] = confirmPasswordController.text;
+  request.fields['address'] = addressController.text;
+  request.fields['city'] = cityController.text;
+  request.fields['country'] = countryController.text;
+  request.fields['gender'] = genderController.text;
+   if(profileImage!=null){
+    final file = await http.MultipartFile.fromPath(
+      'image', profileImage!.path,
+    );
+    request.files.add(file);
   }
+   if(stateIdentityImage!=null){
+    final file = await http.MultipartFile.fromPath(
+      'identity_image', stateIdentityImage!.path,
+    );
+    request.files.add(file);
+  }
+  var res = await request.send();
+  var vb = await http.Response.fromStream(res);
+  log(vb.body);
+  print(vb.request);
+  Navigator.pop(navigatorKey.currentContext!);
+  if (vb.statusCode == 200) {
+    var dataAll = json.decode(vb.body);
+    if(dataAll['data']!=null&& !dataAll['data']['is_otp_verify']){
+      AppRoutes.pushReplacementAndRemoveNavigation( OtpVerifyScreen(email: emailController.text,phone: mobileController.text,
+      route: 'signup',));
+    }
+    Utils.successSnackBar(dataAll['message'], navigatorKey.currentContext!);
+  } else {
+    var dataAll = json.decode(vb.body);
+    Utils.errorSnackBar(dataAll['message'], navigatorKey.currentContext!);
+  }
+
 }
-
-
-  bool checkFileSize(path, context) {
-    // file = null;
-    var fileSizeLimit = 2;
-    File f = new File(path);
-    var s = f.lengthSync();
-    print(s); // returns in bytes
-    var fileSizeInKB = s / 1024;
-    var fileSizeInMB = fileSizeInKB / 1024;
-    print("size..$fileSizeInMB");
-    if (fileSizeInMB > fileSizeLimit) {
-      EasyLoading.showToast('File size less than 2MB');
-      return false;
-    } else {}
-    print("file can be selected");
-    return true;
-  }
-
 
 callApiFunction()async{
   showCircleProgressDialog(navigatorKey.currentContext!);
   Map<String, String> headers = {"Authorization": SessionManager.token,'language':
   SessionManager.languageCode == 'es' ? 'es' : 'en'};
-
   var request =
   http.MultipartRequest('POST', Uri.parse(ApiUrl.driverRegisterUrl));
   request.headers.addAll(headers);

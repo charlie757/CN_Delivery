@@ -1,15 +1,14 @@
 import 'package:cn_delivery/helper/appbutton.dart';
-import 'package:cn_delivery/helper/custom_button.dart';
+import 'package:cn_delivery/helper/image_picker_service.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/signup_provider.dart';
-import 'package:cn_delivery/screens/auth/upload_vehicle_image_screen.dart';
+import 'package:cn_delivery/provider/vehicle_info_provider.dart';
 import 'package:cn_delivery/utils/constants.dart';
 import 'package:cn_delivery/utils/enum.dart';
 import 'package:cn_delivery/utils/upper_case.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../config/approutes.dart';
 import '../../helper/appcolor.dart';
 import '../../helper/fontfamily.dart';
 import '../../helper/getText.dart';
@@ -36,28 +35,44 @@ class _VechileInfoScreenState extends State<VechileInfoScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
+    callInitFunctions();
     super.initState();
   }
 
-  // callInit(){
-  //   final provider = Provider.of<SignupProvider>(context,listen: false);
-  // }
+  callInitFunctions(){
+    final provider = Provider.of<VehicleInfoProvider>(context,listen: false);
+    provider.clearValues();
+  }
 
   checkValidation() {
-    final provider = Provider.of<SignupProvider>(context, listen: false);
-    if (provider.licenceImage == null) {
+    final provider = Provider.of<VehicleInfoProvider>(context, listen: false);
+    if (formKey.currentState!.validate()) {
+       if(provider.vehicleImage==null||provider.vehicleImage2==null||provider.licenceImage==null||provider.insuranceCopyImage==null||provider.inspectionImage==null||provider.criminalRecordImage==null){
       Utils.errorSnackBar(
-          getTranslated('upload_license_image', context)!, context);
+          getTranslated('upload_all_images', context)!, context);  
     }
-    if (formKey.currentState!.validate() && provider.licenceImage != null) {
-      AppRoutes.pushCupertinoNavigation(const UploadVehicleImageScreen());
+    else{
+      provider.bikeCarVehicleApiFunction();
+    }
+    }
+  }
+
+  checkBiyCycleValidation(){
+     final provider = Provider.of<VehicleInfoProvider>(context, listen: false);
+    if (formKey.currentState!.validate()) {
+       if(provider.vehicleImage==null){
+      Utils.errorSnackBar(
+          getTranslated('upload_vehicle_image', context)!, context);  
+    }
+    else{
+      provider.bicycleVehicleApiFunction();
+    }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SignupProvider>(builder: (context, myProvider, child) {
+    return Consumer<VehicleInfoProvider>(builder: (context, myProvider, child) {
       return Scaffold(
         appBar: appBar(
             title: getTranslated('vehicle_information', context)!,
@@ -79,6 +94,8 @@ class _VechileInfoScreenState extends State<VechileInfoScreen> {
                     width: double.infinity,
                     buttonColor: AppColor.appTheme,
                     onTap: () {
+                      widget.route == VehicleType.bicycle.name?
+                      checkBiyCycleValidation():
                       checkValidation();
                     })
               ],
@@ -260,58 +277,66 @@ class _VechileInfoScreenState extends State<VechileInfoScreen> {
         });
   }
 
-biCycleWidget(SignupProvider myProvider){
+biCycleWidget(VehicleInfoProvider myProvider){
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-     const  getText(
-            title: "Vehicle Brand",
+       getText(
+            title: getTranslated('vehicleBrand', context)!,
             size: 12,
             fontFamily: FontFamily.poppinsMedium,
             color: AppColor.lightTextColor,
             fontWeight: FontWeight.w400),
         ScreenSize.height(6),
         SignUpTextField(
-          hintText: 'Enter brand name',
-          controller: myProvider.vehicleNameController,
+          hintText: getTranslated('enter_brand_name', context)!,
+          controller: myProvider.vehicleBrandController,
+          textInputAction: TextInputAction.next,
           validator: (val) {
             if (val.isEmpty) {
-              return 'Enter brand name';
+              return getTranslated('enter_brand_name', context)!;
             }
           },
         ),
         ScreenSize.height(15),
-        const  getText(
-            title: "Vehicle Size (optional)",
+          getText(
+            title: getTranslated('vehicle_size', context)!,
             size: 12,
             fontFamily: FontFamily.poppinsMedium,
             color: AppColor.lightTextColor,
             fontWeight: FontWeight.w400),
         ScreenSize.height(6),
         SignUpTextField(
-          hintText: 'Enter vehicle size',
-          controller: myProvider.vehicleNameController,
-        ),
-        ScreenSize.height(15),
-        const  getText(
-            title: "Vehicle color",
-            size: 12,
-            fontFamily: FontFamily.poppinsMedium,
-            color: AppColor.lightTextColor,
-            fontWeight: FontWeight.w400),
-        ScreenSize.height(6),
-        SignUpTextField(
-          hintText: 'Enter vehicle color',
-          controller: myProvider.vehicleNameController,
+          hintText: getTranslated('enter_vehicle_size', context)!,
+          controller: myProvider.vehicleSizeController,
+          textInputAction: TextInputAction.next,
           validator: (val) {
             if (val.isEmpty) {
-              return 'Enter vehicle color';
+              return getTranslated('enter_vehicle_size', context)!;
             }
           },
         ),
         ScreenSize.height(15),
-        const getText(
-            title: 'Vehicle Image',
+          getText(
+            title: getTranslated('vehicle_color', context)!,
+            size: 12,
+            fontFamily: FontFamily.poppinsMedium,
+            color: AppColor.lightTextColor,
+            fontWeight: FontWeight.w400),
+        ScreenSize.height(6),
+        SignUpTextField(
+          hintText: getTranslated('enter_vehicle_color', context)!,
+          controller: myProvider.vehicleColorController,
+          textInputAction: TextInputAction.next,
+          validator: (val) {
+            if (val.isEmpty) {
+              return getTranslated('enter_vehicle_color', context)!;
+            }
+          },
+        ),
+        ScreenSize.height(15),
+         getText(
+            title: getTranslated('vehicle_image', context)!,
             size: 12,
             fontFamily: FontFamily.poppinsMedium,
             color: AppColor.lightTextColor,
@@ -320,7 +345,7 @@ biCycleWidget(SignupProvider myProvider){
         uploadImageWidget(
             onTap: () {
               imageBottomSheet(context, cameraTap: () {
-                myProvider.imagePicker(context, ImageSource.camera).then((val) {
+                ImagePickerService.imagePicker(context, ImageSource.camera).then((val) {
                   if (val != null) {
                     myProvider.vehicleImage = val;
                     setState(() {});
@@ -328,7 +353,7 @@ biCycleWidget(SignupProvider myProvider){
                   }
                 });
               }, galleryTap: () {
-                myProvider
+                ImagePickerService
                     .imagePicker(context, ImageSource.gallery)
                     .then((val) {
                   if (val != null) {
@@ -345,7 +370,7 @@ biCycleWidget(SignupProvider myProvider){
   );
 }
 
-  carAndBikeWidget(SignupProvider myProvider) {
+  carAndBikeWidget(VehicleInfoProvider myProvider) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -366,19 +391,19 @@ biCycleWidget(SignupProvider myProvider){
           },
         ),
         ScreenSize.height(15),
-       const getText(
-            title: 'Vehicle brand name',
+        getText(
+            title: getTranslated('vehicleBrand', context)!,
             size: 12,
             fontFamily: FontFamily.poppinsMedium,
             color: AppColor.lightTextColor,
             fontWeight: FontWeight.w400),
         ScreenSize.height(6),
         SignUpTextField(
-          hintText: "Enter vehicle brand name",
-          controller: myProvider.vehicleNameController,
+          hintText: getTranslated('enter_brand_name', context)!,
+          controller: myProvider.vehicleBrandController,
           validator: (val) {
             if (val.isEmpty) {
-              return getTranslated('enter_vehicle_name', context)!;
+              return getTranslated('enter_brand_name', context)!;
             }
           },
         ),
@@ -446,7 +471,7 @@ biCycleWidget(SignupProvider myProvider){
           hintText: getTranslated('enter_registration_number', context)!,
           controller: myProvider.registrationController,
           inputFormatters: [
-            // UpperCaseTextFormatter()
+            
           ],
           validator: (val) {
             if (val.isEmpty) {
@@ -478,8 +503,8 @@ biCycleWidget(SignupProvider myProvider){
           Expanded(child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const  getText(
-            title: "Vehicle Image-1",
+                getText(
+            title: "${getTranslated('vehicle_image', context)!}-1",
             size: 12,
             fontFamily: FontFamily.poppinsMedium,
             color: AppColor.lightTextColor,
@@ -488,34 +513,34 @@ biCycleWidget(SignupProvider myProvider){
         uploadImageWidget(
             onTap: () {
               imageBottomSheet(context, cameraTap: () {
-                myProvider.imagePicker(context, ImageSource.camera).then((val) {
+                ImagePickerService.imagePicker(context, ImageSource.camera).then((val) {
                   if (val != null) {
-                    myProvider.licenceImage = val;
+                    myProvider.vehicleImage = val;
                     setState(() {});
                     Navigator.pop(context);
                   }
                 });
               }, galleryTap: () {
-                myProvider
+                ImagePickerService
                     .imagePicker(context, ImageSource.gallery)
                     .then((val) {
                   if (val != null) {
-                    myProvider.licenceImage = val;
+                    myProvider.vehicleImage = val;
                     setState(() {});
                     Navigator.pop(context);
                   }
                 });
               });
             },
-            imgPath: myProvider.licenceImage),
+            imgPath: myProvider.vehicleImage),
             ],
           )),
           ScreenSize.width(15),
           Expanded(child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-               const getText(
-            title: "Vehicle Image-2",
+                getText(
+            title: "${getTranslated('vehicle_image', context)!}-2",
             size: 12,
             fontFamily: FontFamily.poppinsMedium,
             color: AppColor.lightTextColor,
@@ -523,9 +548,9 @@ biCycleWidget(SignupProvider myProvider){
         ScreenSize.height(6),
         uploadImageWidget(onTap: (){
                   imageBottomSheet(context,cameraTap: (){
-                    myProvider.imagePicker(context, ImageSource.camera).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                       if(val!=null){
-                        myProvider.insuranceCopyImage = val;
+                        myProvider.vehicleImage2 = val;
                         setState(() {
 
                         });
@@ -533,9 +558,9 @@ biCycleWidget(SignupProvider myProvider){
                       }
                     });
                   },galleryTap: (){
-                    myProvider.imagePicker(context, ImageSource.gallery).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                       if(val!=null){
-                        myProvider.insuranceCopyImage = val;
+                        myProvider.vehicleImage2 = val;
                         setState(() {
                         });
                         Navigator.pop(context);
@@ -543,7 +568,7 @@ biCycleWidget(SignupProvider myProvider){
                     });
                   });
                 },
-                    imgPath:myProvider.insuranceCopyImage),
+                    imgPath:myProvider.vehicleImage2),
                     ],
           ))
         ],
@@ -565,7 +590,7 @@ biCycleWidget(SignupProvider myProvider){
         uploadImageWidget(
             onTap: () {
               imageBottomSheet(context, cameraTap: () {
-                myProvider.imagePicker(context, ImageSource.camera).then((val) {
+                ImagePickerService.imagePicker(context, ImageSource.camera).then((val) {
                   if (val != null) {
                     myProvider.licenceImage = val;
                     setState(() {});
@@ -573,7 +598,7 @@ biCycleWidget(SignupProvider myProvider){
                   }
                 });
               }, galleryTap: () {
-                myProvider
+                ImagePickerService
                     .imagePicker(context, ImageSource.gallery)
                     .then((val) {
                   if (val != null) {
@@ -600,7 +625,7 @@ biCycleWidget(SignupProvider myProvider){
         ScreenSize.height(6),
         uploadImageWidget(onTap: (){
                   imageBottomSheet(context,cameraTap: (){
-                    myProvider.imagePicker(context, ImageSource.camera).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                       if(val!=null){
                         myProvider.insuranceCopyImage = val;
                         setState(() {
@@ -610,7 +635,7 @@ biCycleWidget(SignupProvider myProvider){
                       }
                     });
                   },galleryTap: (){
-                    myProvider.imagePicker(context, ImageSource.gallery).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                       if(val!=null){
                         myProvider.insuranceCopyImage = val;
                         setState(() {
@@ -631,8 +656,8 @@ biCycleWidget(SignupProvider myProvider){
           Expanded(child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             const getText(
-            title: 'Inspection certificate',
+              getText(
+            title: getTranslated('inspection_certificate', context)!,
             size: 12,
             fontFamily: FontFamily.poppinsMedium,
             color: AppColor.lightTextColor,
@@ -641,7 +666,7 @@ biCycleWidget(SignupProvider myProvider){
         uploadImageWidget(
             onTap: () {
               imageBottomSheet(context, cameraTap: () {
-                myProvider.imagePicker(context, ImageSource.camera).then((val) {
+                ImagePickerService.imagePicker(context, ImageSource.camera).then((val) {
                   if (val != null) {
                     myProvider.inspectionImage = val;
                     setState(() {});
@@ -649,7 +674,7 @@ biCycleWidget(SignupProvider myProvider){
                   }
                 });
               }, galleryTap: () {
-                myProvider
+                ImagePickerService
                     .imagePicker(context, ImageSource.gallery)
                     .then((val) {
                   if (val != null) {
@@ -667,8 +692,8 @@ biCycleWidget(SignupProvider myProvider){
           Expanded(child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const  getText(
-            title: 'Criminal record certificate',
+                getText(
+            title: getTranslated('ceriminal_record_certificate', context)!,
             size: 12,
             maxLies: 1,
             fontFamily: FontFamily.poppinsMedium,
@@ -677,7 +702,7 @@ biCycleWidget(SignupProvider myProvider){
         ScreenSize.height(6),
         uploadImageWidget(onTap: (){
                   imageBottomSheet(context,cameraTap: (){
-                     myProvider.imagePicker(context, ImageSource.camera).then((val){
+                     ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                       if(val!=null){
                         myProvider.criminalRecordImage = val;
                         setState(() {
@@ -687,7 +712,7 @@ biCycleWidget(SignupProvider myProvider){
                       }
                     });
                   },galleryTap: (){
-                    myProvider.imagePicker(context, ImageSource.gallery).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                       if(val!=null){
                         myProvider.criminalRecordImage = val;
                         setState(() {

@@ -2,7 +2,6 @@ import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
-import 'package:cn_delivery/helper/custom_button.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
@@ -10,7 +9,6 @@ import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/screens/auth/vechile_info_screen.dart';
 import 'package:cn_delivery/utils/enum.dart';
 import 'package:cn_delivery/utils/utils.dart';
-import 'package:cn_delivery/widget/appBar.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 

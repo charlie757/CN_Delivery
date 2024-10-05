@@ -3,7 +3,6 @@ import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/getText.dart';
 import 'package:cn_delivery/provider/otp_verify_provider.dart';
-import 'package:cn_delivery/screens/auth/choose_vehicle_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -128,10 +127,9 @@ class _OtpVerifyScreenState extends State<OtpVerifyScreen> {
                     width: double.infinity,
                     buttonColor: AppColor.appTheme,
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>ChooseVehicleScreen()));
-                        // if(formKey.currentState!.validate()){
-                        //  myProvider.isLoading?null: myProvider.verifyApiFunction(widget.email, otpController.text);
-                        // }
+                        if(formKey.currentState!.validate()){
+                         myProvider.isLoading?null: myProvider.verifyApiFunction(widget.email, otpController.text);
+                        }
                       },)
 
                 ],

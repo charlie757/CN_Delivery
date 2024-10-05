@@ -4,7 +4,6 @@ import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/getText.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/helper/custom_button.dart';
-import 'package:cn_delivery/screens/auth/choose_vehicle_screen.dart';
 import 'package:cn_delivery/screens/auth/login_screen.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:flutter/material.dart';

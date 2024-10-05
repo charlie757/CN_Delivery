@@ -6,6 +6,7 @@ import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/customtextfield.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
+import 'package:cn_delivery/helper/image_picker_service.dart';
 import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
@@ -230,7 +231,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     imageBottomSheet(context,
                         cameraTap: (){
-                          Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                          ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                             if(val!=null){
                               profileProvider.imgFile = val;
                               setState(() {
@@ -240,7 +241,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             }
                           });
                         },galleryTap: (){
-                          Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                          ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                             if(val!=null){
                               profileProvider.imgFile = val;
                               setState(() {
@@ -527,7 +528,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             uploadImageWidget(onTap: (){
               imageBottomSheet(context,
                   cameraTap: (){
-                Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                   if(val!=null){
                     profileProvider.passportImage = val;
                     setState(() {
@@ -537,7 +538,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   }
                 });
               },galleryTap: (){
-                Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                   if(val!=null){
                     profileProvider.passportImage = val;
                     setState(() {
@@ -557,7 +558,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ScreenSize.height(6),
             uploadImageWidget(onTap: (){
               imageBottomSheet(context,cameraTap: (){
-                Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                   if(val!=null){
                     profileProvider.licenceImage = val;
                     setState(() {
@@ -567,7 +568,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   }
                 });
               },galleryTap: (){
-                Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                   if(val!=null){
                     profileProvider.licenceImage = val;
                     setState(() {
@@ -762,7 +763,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           uploadImageWidget(onTap: (){
             imageBottomSheet(context,cameraTap: (){
-              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+              ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                 if(val!=null){
                   profileProvider.insuranceCopyImage = val;
                   setState(() {
@@ -772,7 +773,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
               });
             },galleryTap: (){
-              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+              ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                 if(val!=null){
                   profileProvider.insuranceCopyImage = val;
                   setState(() {
@@ -792,7 +793,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ScreenSize.height(6),
           uploadImageWidget(onTap: (){
             imageBottomSheet(context,cameraTap: (){
-              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+              ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                 if(val!=null){
                   profileProvider.touristPermitImage = val;
                   setState(() {
@@ -802,7 +803,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
               });
             },galleryTap: (){
-              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+              ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                 if(val!=null){
                   profileProvider.touristPermitImage = val;
                   setState(() {
@@ -823,7 +824,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
           uploadImageWidget(onTap: (){
             imageBottomSheet(context,cameraTap: (){
-              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+              ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                 if(val!=null){
                   profileProvider.vehicleImage = val;
                   setState(() {
@@ -833,7 +834,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 }
               });
             },galleryTap: (){
-              Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+              ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                 if(val!=null){
                   profileProvider.vehicleImage = val;
                   setState(() {
@@ -885,7 +886,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 uploadImageWidget(onTap: (){
                   imageBottomSheet(context,cameraTap: (){
-                    Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                       if(val!=null){
                         profileProvider.touristPermitImage = val;
                         setState(() {
@@ -895,7 +896,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       }
                     });
                   },galleryTap: (){
-                    Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                       if(val!=null){
                         profileProvider.touristPermitImage = val;
                         setState(() {
@@ -925,7 +926,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 uploadImageWidget(onTap: (){
                   imageBottomSheet(context,cameraTap: (){
-                    Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.camera).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
                       if(val!=null){
                         profileProvider.vehicleImage = val;
                         setState(() {
@@ -935,7 +936,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       }
                     });
                   },galleryTap: (){
-                    Provider.of<SignupProvider>(context,listen: false).imagePicker(context, ImageSource.gallery).then((val){
+                    ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
                       if(val!=null){
                         profileProvider.vehicleImage = val;
                         setState(() {

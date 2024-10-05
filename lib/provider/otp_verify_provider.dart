@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:cn_delivery/screens/auth/choose_vehicle_screen.dart';
 import 'package:cn_delivery/screens/auth/reset_password_screen.dart';
 import 'package:cn_delivery/utils/showcircleprogressdialog.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import '../api/api_service.dart';
 import '../api/api_url.dart';
 import '../config/approutes.dart';
-import '../screens/dashboard_screen.dart';
 import '../utils/session_manager.dart';
 import '../utils/utils.dart';
 
@@ -74,7 +74,7 @@ verifyApiFunction(String email, String otp) async {
     }
     else{
       SessionManager.setToken = response['data']['token'];
-      AppRoutes.pushReplacementNavigation(const DashboardScreen());
+      AppRoutes.pushReplacementNavigation(const ChooseVehicleScreen());
     }
   } else {}
 }

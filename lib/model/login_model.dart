@@ -36,6 +36,7 @@ class Data {
   dynamic isActive;
   dynamic isOnline;
   dynamic fcmToken;
+  dynamic isVehicleAdd;
   dynamic identityNumber;
   dynamic city;
   dynamic state;
@@ -53,6 +54,7 @@ class Data {
       this.isActive,
       this.isOnline,
       this.fcmToken,
+      this.isVehicleAdd,
       this.identityNumber,
       this.city,
       this.state,
@@ -70,6 +72,7 @@ class Data {
     isActive = json['is_active'];
     isOnline = json['is_online'];
     fcmToken = json['fcm_token'];
+    isVehicleAdd = json['is_vehicle_add'];
     identityNumber = json['identity_number'];
     city = json['city'];
     state = json['state'];
@@ -89,6 +92,7 @@ class Data {
     data['is_active'] = isActive;
     data['is_online'] = isOnline;
     data['fcm_token'] = fcmToken;
+    data['is_vehicle_add'] = isVehicleAdd;
     data['identity_number'] = identityNumber;
     data['city'] = city;
     data['state'] = state;

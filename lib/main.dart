@@ -16,6 +16,7 @@ import 'package:cn_delivery/provider/notification_provider.dart';
 import 'package:cn_delivery/provider/otp_verify_provider.dart';
 import 'package:cn_delivery/provider/profile_provider.dart';
 import 'package:cn_delivery/provider/signup_provider.dart';
+import 'package:cn_delivery/provider/vehicle_info_provider.dart';
 import 'package:cn_delivery/provider/view_order_details_provider.dart';
 import 'package:cn_delivery/screens/splash_screen.dart';
 import 'package:cn_delivery/utils/constants.dart';
@@ -58,6 +59,7 @@ void main() async {
     ChangeNotifierProvider(create: (_) => ViewOrderDetailsProvider()),
     ChangeNotifierProvider(create: (_) => NotificationProvider()),
     ChangeNotifierProvider(create: (_) => LocalizationProvider()),
+    ChangeNotifierProvider(create: (_) => VehicleInfoProvider()),
   ], child: const MyApp()));
 }
 

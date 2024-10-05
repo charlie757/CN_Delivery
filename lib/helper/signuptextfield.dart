@@ -2,8 +2,8 @@ import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'appcolor.dart';
-import 'getText.dart';
 
+// ignore: must_be_immutable
 class SignUpTextField extends StatefulWidget {
   final String hintText;
   final TextEditingController? controller;

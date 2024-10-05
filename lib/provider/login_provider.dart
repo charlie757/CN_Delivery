@@ -4,6 +4,7 @@ import 'package:cn_delivery/api/api_service.dart';
 import 'package:cn_delivery/api/api_url.dart';
 import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/model/login_model.dart';
+import 'package:cn_delivery/screens/auth/choose_vehicle_screen.dart';
 import 'package:cn_delivery/screens/dashboard_screen.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
 import 'package:cn_delivery/utils/constants.dart';
@@ -72,12 +73,19 @@ class LoginProvider extends ChangeNotifier {
       if (value != null) {
         loginModel = LoginModel.fromJson(value);
         if (loginModel!.status == true) {
+          SessionManager.setToken = loginModel!.data!.token;
+          if(loginModel!.data!.isVehicleAdd==0){
+            AppRoutes.pushCupertinoNavigation(const ChooseVehicleScreen());
+          }
+          else{
           Utils.successSnackBar(
               loginModel!.message.toString(), navigatorKey.currentContext!);
           SessionManager.setToken = loginModel!.data!.token;
           AppRoutes.pushReplacementNavigation(const DashboardScreen());
           emailController.clear();
-          passwordController.clear();
+          passwordController.clear();  
+          }
+          
         }
         else{
           if(value['data']!=null&&value['data']['is_otp_verify']!=null&& value['data']['is_otp_verify']==false){

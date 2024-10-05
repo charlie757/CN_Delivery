@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
