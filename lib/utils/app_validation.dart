@@ -51,9 +51,11 @@ class AppValidation {
     RegExp regExp = RegExp(Utils.passwordPattern.trim());
     if (val.isEmpty) {
       return getTranslated( 'enter_password', navigatorKey.currentContext!)!;
-    } else if (!regExp.hasMatch(val)) {
-      return getTranslated( 'password_validation', navigatorKey.currentContext!)!;
-    } else {
+    }
+     else if (val.length<6) {
+      return getTranslated( 'passwordLenghtValidation', navigatorKey.currentContext!)!;
+    }
+     else {
       return null;
 
       /// should be return "null" value here in else condition
@@ -64,8 +66,8 @@ class AppValidation {
     RegExp regExp = RegExp(Utils.passwordPattern.trim());
     if (currentValue.isEmpty) {
       return getTranslated( 'enter_password', navigatorKey.currentContext!)!;
-    } else if (!regExp.hasMatch(currentValue)) {
-      return getTranslated( 'password_validation', navigatorKey.currentContext!)!;
+    } else if (currentValue.length<6) {
+      return getTranslated( 'passwordLenghtValidation', navigatorKey.currentContext!)!;
     } else if (previousValue.isNotEmpty) {
       if (currentValue != previousValue) {
         return getTranslated( 'password_same', navigatorKey.currentContext!)!;
@@ -138,6 +140,38 @@ class AppValidation {
       /// should be return "null" value here in else condition
     }
   }
+
+  static String? vehicleBrandValidator(val) {
+    if (val.isEmpty) {
+      return getTranslated( 'enter_brand_name', navigatorKey.currentContext!)!;
+    } else {
+      return null;
+
+      /// should be return "null" value here in else condition
+    }
+  }
+
+  
+  static String? vehicleSizeValidator(val) {
+    if (val.isEmpty) {
+      return getTranslated( 'enter_vehicle_size', navigatorKey.currentContext!)!;
+    } else {
+      return null;
+
+      /// should be return "null" value here in else condition
+    }
+  }
+
+  
+  static String? vehicleColorValidator(val) {
+    if (val.isEmpty) {
+      return getTranslated( 'enter_vehicle_color', navigatorKey.currentContext!)!;
+    } else {
+      return null;
+
+      /// should be return "null" value here in else condition
+    }
+  }
   static String? vehicleTypeValidator(val) {
     if (val.isEmpty) {
       return getTranslated( 'select_vehicle_type_validation', navigatorKey.currentContext!)!;
@@ -188,6 +222,16 @@ class AppValidation {
   static String? vehicleRegistrationValidator(val) {
     if (val.isEmpty) {
       return getTranslated( 'enter_registration_number', navigatorKey.currentContext!)!;
+    } else {
+      return null;
+
+      /// should be return "null" value here in else condition
+    }
+  }
+
+   static String? vehicleLicenseValidator(val) {
+    if (val.isEmpty) {
+      return getTranslated( 'enter_licence_number', navigatorKey.currentContext!)!;
     } else {
       return null;
 

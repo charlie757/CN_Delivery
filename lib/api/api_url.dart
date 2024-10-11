@@ -9,6 +9,7 @@ class ApiUrl {
   static String verifyForgotOtpUrl = '${baseUrl}delivery-man/auth/verify-otp';
   static String resetPasswordUrl = '${baseUrl}delivery-man/auth/reset-password';
   static String getProfileUrl = '${baseUrl}delivery-man/info';
+  static String getVehicleInfoUrl = '${baseUrl}delivery-man/vehicle-info?';
   static String updateProfileUrl = '${baseUrl}delivery-man/update-profile';
   static String updatePasswordUrl = '${baseUrl}delivery-man/update-password';
   static String earnUrl = '${baseUrl}delivery-man/earn';

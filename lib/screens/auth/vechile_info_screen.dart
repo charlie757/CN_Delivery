@@ -52,7 +52,7 @@ class _VechileInfoScreenState extends State<VechileInfoScreen> {
           getTranslated('upload_all_images', context)!, context);  
     }
     else{
-      provider.bikeCarVehicleApiFunction();
+      provider.bikeCarVehicleApiFunction(widget.route==VehicleType.bike.name?'motorcycle':"car");
     }
     }
   }
@@ -384,6 +384,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
         SignUpTextField(
           hintText: getTranslated('enter_vehicle_name', context)!,
           controller: myProvider.vehicleNameController,
+          textInputAction: TextInputAction.next,
           validator: (val) {
             if (val.isEmpty) {
               return getTranslated('enter_vehicle_name', context)!;
@@ -401,6 +402,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
         SignUpTextField(
           hintText: getTranslated('enter_brand_name', context)!,
           controller: myProvider.vehicleBrandController,
+          textInputAction: TextInputAction.next,
           validator: (val) {
             if (val.isEmpty) {
               return getTranslated('enter_brand_name', context)!;
@@ -418,6 +420,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
         SignUpTextField(
           hintText: getTranslated('enter_model_number', context)!,
           controller: myProvider.modelNumberController,
+          textInputAction: TextInputAction.next,
           validator: (val) {
             if (val.isEmpty) {
               return getTranslated('enter_model_number', context)!;
@@ -435,6 +438,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
         SignUpTextField(
           hintText: getTranslated('select_registration_date', context)!,
           controller: myProvider.dorController,
+          textInputAction: TextInputAction.next,
           onTap: () {
             myProvider.datePicker(myProvider.selectedDORDate).then((val) {
               if (val != null) {
@@ -470,8 +474,8 @@ biCycleWidget(VehicleInfoProvider myProvider){
         SignUpTextField(
           hintText: getTranslated('enter_registration_number', context)!,
           controller: myProvider.registrationController,
+          textInputAction: TextInputAction.next,
           inputFormatters: [
-            
           ],
           validator: (val) {
             if (val.isEmpty) {
@@ -490,6 +494,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
         SignUpTextField(
           hintText: getTranslated('enter_licence_number', context)!,
           controller: myProvider.licenceController,
+          textInputAction: TextInputAction.done,
           inputFormatters: [UpperCaseTextFormatter()],
           validator: (val) {
             if (val.isEmpty) {

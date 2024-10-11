@@ -5,6 +5,7 @@ import 'package:cn_delivery/api/api_service.dart';
 import 'package:cn_delivery/api/api_url.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/model/profile_model.dart';
+import 'package:cn_delivery/model/vehicle_info_model.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
 import 'package:cn_delivery/utils/constants.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
@@ -17,6 +18,7 @@ import 'package:image_picker/image_picker.dart';
 
 class ProfileProvider extends ChangeNotifier {
   ProfileModel? profileModel;
+  VehicleInfoModel? vehicleInfoModel;
   int tabBarIndex = 0;
   int selectedLangIndex = 0;
   int selectedGender = -1;
@@ -32,13 +34,20 @@ class ProfileProvider extends ChangeNotifier {
   final countryController = TextEditingController();
   final stateIdController = TextEditingController();
   final genderController = TextEditingController();
+
+    
   final vehicleNameController = TextEditingController();
   final vehicleTypeController  = TextEditingController();
+  final vehicleBrandController = TextEditingController();
+  final vehicleSizeController = TextEditingController();
+  final vehicleColorController = TextEditingController();
   final modelNumberController = TextEditingController();
   final domController = TextEditingController();
   final dorController = TextEditingController();
   final fuelController = TextEditingController();
   final vehicleRegistrationController = TextEditingController();
+  final vehicleLicenseController = TextEditingController();
+
 
   final oldPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
@@ -48,11 +57,11 @@ class ProfileProvider extends ChangeNotifier {
   bool isLoading = false;
   bool profileLoading = false;
   File? imgFile;
-  File? passportImage;
+  File? stateIdentityImage;
   File? licenceImage;
   File? insuranceCopyImage;
-  File?  touristPermitImage;
   File? vehicleImage;
+  File? vehicleImage2;
 
   DateTime selectedDOMDate = DateTime.now();
   DateTime selectedDORDate = DateTime.now();
@@ -68,9 +77,13 @@ class ProfileProvider extends ChangeNotifier {
   String? countyErrorMsg = '';
   String? stateIdErrorMsg = '';
   String? genderErrorMsg = '';
+  String? vehicleBrandErrorMsg = '';
+  String? vehicleSizeErrorMsg = '';
+  String? vehicleColorErrorMsg = '';
   String? vehicleNameErrorMsg = '';
   String? vehicleTypeErrorMsg = '';
   String? modelNumberErrorMsg = '';
+  String? vehicleLicenseErrorMsg = '';
   String? domErrorMsg = '';
   String? dorErrorMsg = '';
   String? fuelErrorMsg = '';
@@ -104,10 +117,10 @@ class ProfileProvider extends ChangeNotifier {
     oldPasswordErrorMsg = '';
     newPasswordErrorMsg = '';
     confirmNewPasswordErrorMsg = '';
+    stateIdentityImage=null;
+    vehicleImage2=null;
     licenceImage=null;
-    passportImage=null;
     vehicleImage=null;
-    touristPermitImage=null;
     insuranceCopyImage=null;
   }
 
@@ -140,7 +153,8 @@ class ProfileProvider extends ChangeNotifier {
     if (AppValidation.firstNameValidator(firstNameController.text) == null &&
         AppValidation.lastNameValidator(lastNameController.text) == null &&
         AppValidation.addressValidator(addressController.text) == null &&
-        AppValidation.stateIdValidator(stateIdController.text) == null) {
+        AppValidation.cityValidator(cityController.text) == null &&
+        AppValidation.countryValidator(countryController.text) == null) {
       print('sfdv');
       updateProfileApiFunction();
     } else {
@@ -149,7 +163,8 @@ class ProfileProvider extends ChangeNotifier {
           AppValidation.firstNameValidator(firstNameController.text);
       lNameErrorMsg = AppValidation.lastNameValidator(lastNameController.text);
       addressErrorMsg = AppValidation.addressValidator(addressController.text);
-      stateIdErrorMsg = AppValidation.stateIdValidator(stateIdController.text);
+      cityErrorMsg = AppValidation.cityValidator(cityController.text);
+      countyErrorMsg = AppValidation.countryValidator(countryController.text);
     }
     notifyListeners();
   }
@@ -208,9 +223,37 @@ class ProfileProvider extends ChangeNotifier {
       if (value != null) {
         profileModel = ProfileModel.fromJson(value);
         setValuesInController();
+        getVehicleInfoApiFunction(profileModel!.data!.vehicleType);
       }
     });
   }
+
+  getVehicleInfoApiFunction(String type)async{
+    var body = json.encode({});
+    ApiService.apiMethod(
+      url: "${ApiUrl.getVehicleInfoUrl}vehicle_type=$type",
+      body: body,
+      method: checkApiMethod(httpMethod.get),
+    ).then((value) {
+      if (value != null) {
+        vehicleInfoModel = VehicleInfoModel.fromJson(value);
+        setVehicleValuesInController();
+      }
+    });
+  }
+
+setVehicleValuesInController(){
+vehicleTypeController.text = vehicleInfoModel!.data!.vehicleType??'';
+vehicleBrandController.text = vehicleInfoModel!.data!.vehicleBrand??'';
+vehicleSizeController.text = vehicleInfoModel!.data!.vehicleSize??'';
+vehicleColorController.text = vehicleInfoModel!.data!.vehicleColor??'';
+vehicleNameController.text = vehicleInfoModel!.data!.vehicleName??'';
+modelNumberController.text = vehicleInfoModel!.data!.vehicleModelNumber??'';
+dorController.text = vehicleInfoModel!.data!.vehicleDateOfRegistration??'';
+vehicleRegistrationController.text = vehicleInfoModel!.data!.vehicleRegistrationNumber??'';
+vehicleLicenseController.text = vehicleInfoModel!.data!.vehicleLicenseNumber??'';
+notifyListeners();
+}
 
   setValuesInController() {
     firstNameController.text = profileModel!.data!.fName ?? "";
@@ -218,18 +261,10 @@ class ProfileProvider extends ChangeNotifier {
     mobileController.text = profileModel!.data!.phone ?? "";
     emailController.text = profileModel!.data!.email ?? "";
     addressController.text = profileModel!.data!.address ?? "";
-    // cityController.text = profileModel!.data!.city ?? "";
-    // stateController.text = profileModel!.data!.state ?? "";
-    // countryController.text = profileModel!.data!.country ?? "";
-    stateIdController.text = profileModel!.data!.identityNumber ?? "";
     genderController.text = profileModel!.data!.gender??"";
-    vehicleNameController.text = profileModel!.data!.vehicleName??'';
-    vehicleTypeController.text = profileModel!.data!.vehicleType??'';
-    modelNumberController.text = profileModel!.data!.vehicleModelNumber??"";
-    domController.text = profileModel!.data!.vehicleDateOfManufacture??"";
-    dorController.text = profileModel!.data!.vehicleDateOfRegistration??"";
-    fuelController.text = profileModel!.data!.vehicleFeuleType??"";
-    vehicleRegistrationController.text = profileModel!.data!.vehicleRegistrationNumber??'';
+    cityController.text = profileModel!.data!.city ?? "";
+    countryController.text = profileModel!.data!.country ?? "";
+    
     profileImgUrl = profileModel!.data!.image ?? '';
     isOnline = profileModel!.data!.isOnline == 1 ? true : false;
     if(genderController.text.isNotEmpty){
@@ -288,13 +323,9 @@ class ProfileProvider extends ChangeNotifier {
     request.headers.addAll(headers);
     request.fields['f_name'] = firstNameController.text;
     request.fields['l_name'] = lastNameController.text;
-    // request.fields['email'] = emailController.text;
-    // request.fields['phone'] = mobileController.text;
     request.fields['address'] = addressController.text;
-    // request.fields['country_code']='1';
-    // request.fields['city'] = cityController.text;
-    // request.fields['state'] = stateController.text;
-    // request.fields['country'] = countryController.text;
+    request.fields['city'] = cityController.text;
+    request.fields['country'] = countryController.text;
     request.fields['identity_number'] = stateIdController.text;
     request.fields['gender'] = genderController.text;
     if (imgFile != null) {
@@ -304,20 +335,13 @@ class ProfileProvider extends ChangeNotifier {
       );
       request.files.add(file);
     }
-    if (passportImage != null) {
+    if (stateIdentityImage != null) {
       final file = await http.MultipartFile.fromPath(
-        'passport_image', passportImage!.path,
+        'identity_image', stateIdentityImage!.path,
         // contentType: mime.MediaType("image", "jpg")
       );
       request.files.add(file);
     }
-    if (licenceImage != null) {
-      final file = await http.MultipartFile.fromPath(
-        'identity_image', licenceImage!.path,
-      );
-      request.files.add(file);
-    }
-
     var res = await request.send();
     var vb = await http.Response.fromStream(res);
     log(vb.body);
@@ -356,12 +380,12 @@ class ProfileProvider extends ChangeNotifier {
       );
       request.files.add(file);
     }
-    if (touristPermitImage != null) {
-      final file = await http.MultipartFile.fromPath(
-        'vehicle_tourist_permit_image', touristPermitImage!.path,
-      );
-      request.files.add(file);
-    }
+    // if (touristPermitImage != null) {
+    //   final file = await http.MultipartFile.fromPath(
+    //     'vehicle_tourist_permit_image', touristPermitImage!.path,
+    //   );
+    //   request.files.add(file);
+    // }
     if (vehicleImage != null) {
       final file = await http.MultipartFile.fromPath(
         'vehicle_image', vehicleImage!.path,

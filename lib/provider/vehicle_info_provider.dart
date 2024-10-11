@@ -116,7 +116,7 @@ bicycleVehicleApiFunction()async{
   }
 }
 
-bikeCarVehicleApiFunction()async{
+bikeCarVehicleApiFunction(String type)async{
    showCircleProgressDialog(navigatorKey.currentContext!);
   Map<String, String> headers = {"Authorization": SessionManager.token,'language':
   SessionManager.languageCode == 'es' ? 'es' : 'en'};
@@ -124,7 +124,7 @@ bikeCarVehicleApiFunction()async{
   http.MultipartRequest('POST', Uri.parse(ApiUrl.updateVehicleInfoUrl));
   request.headers.addAll(headers);
  request.headers.addAll(headers);
-  request.fields['vehicle_type'] = 'motorcycle';  /// car
+  request.fields['vehicle_type'] = type;  /// car
   request.fields['vehicle_name'] = vehicleNameController.text;
   request.fields['vehicle_brand'] = vehicleBrandController.text;
   request.fields['vehicle_model_number'] = modelNumberController.text;
@@ -174,7 +174,9 @@ bikeCarVehicleApiFunction()async{
   Navigator.pop(navigatorKey.currentContext!);
   if (vb.statusCode == 200) {
     var dataAll = json.decode(vb.body);
-  
+     if(dataAll['status']==true){
+      AppRoutes.pushReplacementAndRemoveNavigation(const DashboardScreen());
+     }
   } else {
     var dataAll = json.decode(vb.body);
     Utils.errorSnackBar(dataAll['message'], navigatorKey.currentContext!);

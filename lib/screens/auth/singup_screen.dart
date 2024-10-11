@@ -374,9 +374,9 @@ class _SingUpScreenState extends State<SingUpScreen> {
                     validator: (val) {
                       if (val.isEmpty) {
                         return getTranslated('enter_password', context)!;
-                      } else if (!Utils.passwordValidateRegExp(val)) {
-                        return getTranslated('password_validation', context)!;
-                      }
+                      } else if (val.length<6) {
+                       return getTranslated( 'passwordLenghtValidation', navigatorKey.currentContext!)!;
+                        }
                       // else if(val!=myProvider.confirmPasswordController.text){
                       //   return getTranslated('password_not_match', context)!;
                       // }
@@ -398,9 +398,10 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       if (val.isEmpty) {
                         return getTranslated(
                             'enter_confirm_password', context)!;
-                      } else if (!Utils.passwordValidateRegExp(val)) {
-                        return getTranslated('password_validation', context)!;
-                      } else if (val != myProvider.passwordController.text) {
+                      }else if (val.length<6) {
+                  return getTranslated( 'passwordLenghtValidation', navigatorKey.currentContext!)!;
+                         }
+                          else if (val != myProvider.passwordController.text) {
                         return getTranslated('password_not_match', context)!;
                       }
                     },
