@@ -44,8 +44,11 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
     });
   }
 
+  final Completer<GoogleMapController> controller = Completer();
+
   @override
   void dispose() {
+    // controller.complete();
     super.dispose();
   }
 
@@ -86,7 +89,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                             ),
                           },
                           onMapCreated: (mapController) {
-                            myProvider.controller.complete(mapController);
+                            controller.complete(mapController);
                           },
                           polylines: {
                             Polyline(
@@ -489,14 +492,18 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
           Padding(
             padding: const EdgeInsets.only(left: 16, right: 15),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 getText(
-                    title: getTranslated('order_details', context)!,
-                    size: 16,
-                    fontFamily: FontFamily.poppinsSemiBold,
-                    color: Color(0xff2F2E36),
-                    fontWeight: FontWeight.w600),
-                const Spacer(),
+                 Expanded(
+                   child: getText(
+                      title: getTranslated('order_details', context)!,
+                      size: 16,
+                      // maxLies: 1,
+                      fontFamily: FontFamily.poppinsSemiBold,
+                      color: Color(0xff2F2E36),
+                      fontWeight: FontWeight.w600),
+                 ),
+                ScreenSize.width(10),
                 Text.rich(TextSpan(
                     text: '${getTranslated('total_amount', context)!} : ',
                     style: const TextStyle(

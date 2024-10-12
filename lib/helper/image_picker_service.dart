@@ -9,7 +9,7 @@ class ImagePickerService{
 static Future imagePicker(BuildContext context,ImageSource source) async {
   try {
     // final image = await ImagePicker().pickImage(source: source);
-    PickedFile ?pickedFile = await ImagePicker().getImage(source: source);
+    PickedFile ?pickedFile = await ImagePicker().getImage(source: source,imageQuality: 75);
     if (pickedFile == null) return;
     bool size = checkFileSize(pickedFile.path, context);
     return size? File(pickedFile.path):null;

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:cn_delivery/utils/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cn_delivery/api/api_service.dart';
 import 'package:cn_delivery/api/api_url.dart';
@@ -15,7 +16,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ViewOrderDetailsProvider extends ChangeNotifier {
   ViewOrderModel? model;
-  final Completer<GoogleMapController> controller = Completer();
+
   LatLng? sourceLocation;
   LatLng? destination;
 
@@ -31,7 +32,7 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       Platform.isAndroid?
-      'AIzaSyD_TkchnNl5WIeVRU2FnqZy-vLvd5LkOpM':"AIzaSyDuKSn9jBZ-2Qs6XD0VQNlxsIsAKjha0Yk", // Your Google Map Key
+      Constants.androidGoogleMapKey:Constants.iosGoogleMapKey, // Your Google Map Key
       PointLatLng(sourceLocation!.latitude, sourceLocation!.longitude),
       PointLatLng(destination!.latitude, destination!.longitude),
     );

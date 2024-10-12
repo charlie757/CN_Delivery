@@ -97,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Flexible(
       child: Container(
         width: double.infinity,
+        
         padding: const EdgeInsets.only(left: 11, top: 23, bottom: 25),
         decoration: BoxDecoration(
             color: color,
@@ -354,9 +355,9 @@ class _HomeScreenState extends State<HomeScreen> {
         )).then((value) {});
       },
       child: Container(
-        height: 32,
+        // height: 32,
         width: 143,
-        // padding: const EdgeInsets.only(left: 16, right: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 3,vertical: 7),
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: const Color(0xff5DBCF2),
@@ -365,6 +366,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: getText(
             title: getTranslated('view_order_details', context)!,
             size: 13,
+            textAlign: TextAlign.center,
             fontFamily: FontFamily.poppinsRegular,
             color: AppColor.whiteColor,
             fontWeight: FontWeight.w400),

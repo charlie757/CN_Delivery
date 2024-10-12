@@ -18,6 +18,8 @@ class Constants {
   static String LNG = 'LNG';
   static String ADDRESS = 'ADDRESS';
 
+static String androidGoogleMapKey = 'AIzaSyAFg444yhMDNO_8DG9qMFFlPJOr3LlQ5dE';
+static String iosGoogleMapKey = 'AIzaSyDuKSn9jBZ-2Qs6XD0VQNlxsIsAKjha0Yk';
 
   ///
   static bool is401Error = false; /// true if logout it and false if relogin

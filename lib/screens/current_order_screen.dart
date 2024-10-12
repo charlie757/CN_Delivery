@@ -254,8 +254,9 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
         });
       },
       child: Container(
-        height: 32,
+        // height: 32,
         width: 143,
+         padding: const EdgeInsets.symmetric(horizontal: 3,vertical: 7),
         // padding: const EdgeInsets.only(left: 16, right: 16),
         alignment: Alignment.center,
         decoration: BoxDecoration(
@@ -265,6 +266,7 @@ class _CurrentOrderScreenState extends State<CurrentOrderScreen> {
         child: getText(
             title: getTranslated('view_order_details', context)!,
             size: 13,
+            textAlign: TextAlign.center,
             fontFamily: FontFamily.poppinsRegular,
             color: AppColor.whiteColor,
             fontWeight: FontWeight.w400),
