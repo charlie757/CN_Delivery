@@ -186,5 +186,6 @@
     "recoverYourPassword": "Recupera tu contraseña si has olvidado la contraseña",
     "stateIdentityImage":"Imagen de identidad estatal",
     "uploadStateIdentityImage":"Subir imagen de identificación estatal",
-    "passwordLenghtValidation":"La contraseña debe tener un mínimo de 8 caracteres."
+    "passwordLenghtValidation":"La contraseña debe tener un mínimo de 8 caracteres.",
+    "distancePickupAndDrop":"Distancia entre la recogida y la entrega"
 }

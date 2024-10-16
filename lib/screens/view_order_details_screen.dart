@@ -37,6 +37,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
     final provider =
         Provider.of<ViewOrderDetailsProvider>(context, listen: false);
     provider.clearValues();
+    provider.model = null;
     Future.delayed(Duration.zero, () {
       provider.callApiFunction(widget.orderId);
 
@@ -247,6 +248,12 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
             ],
           ),
           ScreenSize.height(16),
+          customRowForPriceAndDistanceWidget(getTranslated('distancePickupAndDrop', context)!,
+           provider.model!.distance??''),
+           ScreenSize.height(10),
+           customRowForPriceAndDistanceWidget(getTranslated('price', context)!,
+           provider.model!.deliverymanCharge??''),
+          ScreenSize.height(16),
           Container(
             height: 1,
             color: const Color(0xffD9D9D9),
@@ -317,6 +324,19 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
           )
         ],
       ),
+    );
+  }
+
+  customRowForPriceAndDistanceWidget(String title, String subTitle){
+    return Row(
+      children: [
+        Expanded(
+          child: getText(title: "$title:", size: 13.5, fontFamily: FontFamily.poppinsMedium,
+           color: AppColor.blackColor, fontWeight: FontWeight.w500),
+        ),
+          getText(title: subTitle, size: 13, fontFamily: FontFamily.poppinsRegular,
+         color: AppColor.blackColor, fontWeight: FontWeight.w400),
+      ],
     );
   }
 

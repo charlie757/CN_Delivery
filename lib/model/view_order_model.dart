@@ -8,6 +8,7 @@ class ViewOrderModel {
   dynamic paymentMethod;
   dynamic orderAmount;
   dynamic orderDate;
+  dynamic distance;
   dynamic deliverymanCharge;
   dynamic expectedDeliveryDate;
   List<Product>? product;
@@ -22,6 +23,7 @@ class ViewOrderModel {
       this.paymentMethod,
       this.orderAmount,
       this.orderDate,
+      this.distance,
       this.deliverymanCharge,
       this.expectedDeliveryDate,
       this.product});
@@ -39,6 +41,7 @@ class ViewOrderModel {
     paymentMethod = json['payment_method'];
     orderAmount = json['order_amount'] ?? "";
     orderDate = json['order_date'];
+    distance = json['distance'];
     deliverymanCharge = json['deliveryman_charge'];
     expectedDeliveryDate = json['expected_delivery_date'];
     if (json['product'] != null) {
@@ -65,6 +68,7 @@ class ViewOrderModel {
     data['payment_method'] = paymentMethod;
     data['order_amount'] = orderAmount;
     data['order_date'] = orderDate;
+    data['distance'] = distance;
     data['deliveryman_charge'] = deliverymanCharge;
     data['expected_delivery_date'] = expectedDeliveryDate;
     if (product != null) {

@@ -188,5 +188,6 @@
     "recoverYourPassword": "Recover your password if you have forgot the password",
     "stateIdentityImage":"State identity image",
     "uploadStateIdentityImage":"Upload state identity image" ,
-    "passwordLenghtValidation":"Password should be 8 characters minimum"
+    "passwordLenghtValidation":"Password should be 8 characters minimum",
+    "distancePickupAndDrop":"Distance between pickup and drop"
 }
