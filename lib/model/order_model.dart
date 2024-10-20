@@ -1,4 +1,4 @@
-class AllOrderModel {
+class OrderModel {
   dynamic id;
   dynamic orderStatus;
   dynamic paymentMethod;
@@ -7,7 +7,7 @@ class AllOrderModel {
   dynamic deliverymanCharge;
   List<Product>? product;
 
-  AllOrderModel(
+  OrderModel(
       {this.id,
       this.orderStatus,
       this.paymentMethod,
@@ -16,7 +16,7 @@ class AllOrderModel {
       this.deliverymanCharge,
       this.product});
 
-  AllOrderModel.fromJson(Map<String, dynamic> json) {
+  OrderModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     orderStatus = json['order_status'] ?? '';
     paymentMethod = json['payment_method'] ?? "";

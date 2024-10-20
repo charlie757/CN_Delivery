@@ -1,7 +1,8 @@
-import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/utils/constants.dart';
+import 'package:cn_delivery/utils/enum.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:cn_delivery/api/api_service.dart';
 import 'package:cn_delivery/api/api_url.dart';
@@ -17,8 +18,11 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class ViewOrderDetailsProvider extends ChangeNotifier {
   ViewOrderModel? model;
 
-  LatLng? sourceLocation;
-  LatLng? destination;
+  // LatLng? sourceLocation;
+  // LatLng? destination;
+  LatLng? storeLocation;
+  LatLng? deliveryLocation;
+  LatLng? currentLocation;
 
   double pickupLat = 0.0;
   double pickupLng = 0.0;
@@ -28,13 +32,13 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
 
   List<LatLng> polylineCoordinates = [];
   void getPolyPoints() async {
-
     PolylinePoints polylinePoints = PolylinePoints();
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       Platform.isAndroid?
       Constants.androidGoogleMapKey:Constants.iosGoogleMapKey, // Your Google Map Key
-      PointLatLng(sourceLocation!.latitude, sourceLocation!.longitude),
-      PointLatLng(destination!.latitude, destination!.longitude),
+      // PointLatLng(double.parse(SessionManager.lat),  double.parse(SessionManager.lng)),
+      PointLatLng(storeLocation!.latitude, storeLocation!.longitude),
+        PointLatLng(deliveryLocation!.latitude, deliveryLocation!.longitude),
     );
     if (result.points.isNotEmpty) {
       result.points.forEach(
@@ -51,12 +55,12 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
     pickupLng = 0.0;
     shippingLat = 0.0;
     shippingLng = 0.0;
-    sourceLocation = null;
-    destination = null;
+    storeLocation = null;
+    deliveryLocation=null;
     polylineCoordinates = [];
   }
 
-  callApiFunction(id) {
+  orderDetailsApiFunction(id) {
     showCircleProgressDialog(navigatorKey.currentContext!);
     var body = json.encode({});
     ApiService.apiMethod(
@@ -84,23 +88,23 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
       Location location = locations[0];
       pickupLat = location.latitude;
       pickupLng = location.longitude;
+      storeLocation = LatLng(location.latitude, location.longitude);
       notifyListeners();
     } catch (e) {}
   }
 
+
   shippingLatLong(String address) async {
     try {
       List<Location> locations = await locationFromAddress(address);
-      print("shipping${locations[0]}");
       Location location = locations[0]; // Assuming you want the first location
       shippingLat = location.latitude;
       shippingLng = location.longitude;
-      sourceLocation = LatLng(pickupLat, pickupLng);
-      destination = LatLng(location.latitude, location.longitude);
-      Future.delayed(Duration(seconds: 3), () {
-        getPolyPoints();
-      });
-
+      deliveryLocation = LatLng(location.latitude, location.longitude);
+      if(storeLocation!=null&&deliveryLocation!=null){
+          print('sfdvfdvdf');
+          // getPolyPoints();
+        }
       notifyListeners();
     } catch (e) {
       print("e..$e");
@@ -108,9 +112,9 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
   }
 
   updateStatusApiFunction(String orderId, String status) {
-    //'delivered, out_for_delivery'
     showCircleProgressDialog(navigatorKey.currentContext!);
     var body = json.encode({'order_id': orderId, 'status': status});
+    print(body);
     ApiService.apiMethod(
       url: ApiUrl.updateOrderStatusUrl,
       body: body,
@@ -118,8 +122,8 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
     ).then((value) {
       Navigator.pop(navigatorKey.currentContext!);
       if (value != null) {
-        Utils.successSnackBar(value['message'], navigatorKey.currentContext!);
-        callApiFunction(orderId);
+        // Utils.successSnackBar(value['message'], navigatorKey.currentContext!);
+        orderDetailsApiFunction(orderId);
       }
       notifyListeners();
     });
@@ -142,5 +146,40 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
     } else {
       throw 'Could not launch $url';
     }
+  }
+
+  String statusTitle(String state){
+    if(state.toLowerCase()=='accepted') {
+      return getTranslated('goingForPickup', navigatorKey.currentContext!)!;
+    }
+    else if(state.toLowerCase()=='out_for_pickup'){
+      return getTranslated('pickedUp', navigatorKey.currentContext!)!;
+    }
+    else if(state.toLowerCase()=='picked'){
+      return getTranslated('outForDelivery', navigatorKey.currentContext!)!;
+    }
+    else if(state.toLowerCase()=='out_for_delivery'){
+      return getTranslated('delivered', navigatorKey.currentContext!)!;
+    }
+    else if(state.toLowerCase()=='delivered'){
+      return getTranslated('deliveryCompleted', navigatorKey.currentContext!)!;
+    }
+    return '';
+  }
+
+  changeStatus(String status){
+    if(status.toLowerCase()=='accepted') {
+      return OrderStatusTypes.out_for_pickup.name;
+    }
+    else if(status.toLowerCase()=='out_for_pickup'){
+      return OrderStatusTypes.picked.name;
+    }
+    else if(status.toLowerCase()=='picked'){
+      return OrderStatusTypes.out_for_delivery.name;
+    }
+    else if(status.toLowerCase()=='out_for_delivery'){
+      return OrderStatusTypes.delivered.name;
+    }
+    return '';
   }
 }

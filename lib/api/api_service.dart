@@ -57,7 +57,7 @@ class ApiService {
           print(response.statusCode);
           return _handleResponse(response, isErrorMessageShow, url);
         } on Exception catch (_) {
-          rethrow;
+          
         }
       } else {}
     } on SocketException catch (_) {

@@ -42,10 +42,28 @@ static String iosGoogleMapKey = 'AIzaSyDuKSn9jBZ-2Qs6XD0VQNlxsIsAKjha0Yk';
         languageName: 'Spanish',
         countryCode: 'ES',
         languageCode: 'es'),
-    // LanguageModel(
-    //     imageUrl: '',
-    //     languageName: 'Arabic',
-    //     countryCode: 'SA',
-    //     languageCode: 'ar'),
+    
   ];
+
+  
+ static String statusTitle(String state){
+    if(state.toLowerCase()=='accepted') {
+      return getTranslated('accepted', navigatorKey.currentContext!)!;
+    }
+    else if(state.toLowerCase()=='out_for_pickup'){
+      return getTranslated('outForPickup', navigatorKey.currentContext!)!;
+    }
+    else if(state.toLowerCase()=='picked'){
+      return getTranslated('picked', navigatorKey.currentContext!)!;
+    }
+    else if(state.toLowerCase()=='out_for_delivery'){
+      return getTranslated('outForDelivery', navigatorKey.currentContext!)!;
+    }
+    else if(state.toLowerCase()=='delivered'){
+      return getTranslated('delivered', navigatorKey.currentContext!)!;
+    }
+    
+    return '';
+  }
+
 }

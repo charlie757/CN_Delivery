@@ -111,13 +111,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     Timer.periodic(const Duration(seconds: 10), (val){
       print('every 10 sec');
       LocationService.getCurrentLocation();
-    });
-    Timer.periodic(const Duration(minutes: 2), (val){
-      if(SessionManager.token.isNotEmpty){
+      Future.delayed(const Duration(seconds: 8),(){
+        if(SessionManager.token.isNotEmpty){
         print('every 2 min');
         Provider.of<DashboardProvider>(context,listen: false).updateLastLocationApiFunction();
       }
+      });
     });
+  
   }
 
   @override

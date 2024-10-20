@@ -7,9 +7,9 @@ import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/home_provider.dart';
-import 'package:cn_delivery/provider/localization_provider.dart';
 import 'package:cn_delivery/screens/view_order_details_screen.dart';
 import 'package:cn_delivery/widget/appBar.dart';
+import 'package:cn_delivery/widget/dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,17 +32,17 @@ class _HomeScreenState extends State<HomeScreen> {
     final myProvider = Provider.of<HomeProvider>(context, listen: false);
     Future.delayed(Duration.zero, () {
       myProvider.callApiFunction();
+      myProvider.upcomingOrderApiFunction();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    print(Provider.of<LocalizationProvider>(context).locale);
     return Consumer<HomeProvider>(builder: (context, myProvider, child) {
       return Scaffold(
         backgroundColor: AppColor.whiteColor,
         appBar: appBar(
-            title: getTranslated('dashboard', context)!, isNotification: false),
+            title: getTranslated('dashboard', context)!, isNotification: true),
         body: SingleChildScrollView(
           child: Padding(
             padding:
@@ -187,19 +187,18 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   upcomingOrdersWidget(HomeProvider provider) {
-    return provider.homeModel != null &&
-            provider.homeModel!.data != null &&
-            provider.homeModel!.data!.currentOrdersList!.isNotEmpty
+    return provider.upcomingOrderModel != null &&
+            provider.upcomingOrderModel!.data != null &&
+            provider.upcomingOrderModel!.data!.isNotEmpty
         ? ListView.separated(
             separatorBuilder: (context, sp) {
               return ScreenSize.height(20);
             },
             shrinkWrap: true,
             physics: const ScrollPhysics(),
-            itemCount: provider.homeModel!.data!.currentOrdersList!.length,
+            itemCount: provider.upcomingOrderModel!.data!.length,
             itemBuilder: (context, index) {
-              var model = provider.homeModel!.data!.currentOrdersList![index];
-              return orderUi(model, provider);
+              return orderUi(index, provider);
             })
         : Container();
     // Center(
@@ -212,7 +211,8 @@ class _HomeScreenState extends State<HomeScreen> {
     //   );
   }
 
-  orderUi(model, HomeProvider provider) {
+  orderUi(int index, HomeProvider provider) {
+    var model = provider.upcomingOrderModel!.data![index];
     return Container(
       decoration: BoxDecoration(
           color: AppColor.whiteColor,
@@ -300,7 +300,13 @@ class _HomeScreenState extends State<HomeScreen> {
           ScreenSize.height(2),
           Align(
             alignment: Alignment.centerRight,
-            child: viewOrderDetailsButton(model.id.toString(), provider),
+            child: viewOrderDetailsButton(title: getTranslated('view_order_details', context)!,
+            width: 143.0,
+             onTap: (){
+              AppRoutes.pushCupertinoNavigation(ViewOrderDetailsScreen(
+          orderId: model.id.toString(),
+        )).then((value) {});
+             }),
           ),
           ScreenSize.height(8),
           Row(
@@ -342,29 +348,57 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
+          ScreenSize.height(12),
+          Row(
+            children: [
+              Expanded(child: viewOrderDetailsButton(title: getTranslated('reject', context)!,
+              color: AppColor.appTheme,
+              onTap: (){
+                openDialogBox( title: getTranslated('reject', context)!,
+                 subTitle: getTranslated('confirmation_reject_order', context)!, noTap: (){
+                  Navigator.pop(context);
+                 }, yesTap: (){
+                  provider.rejectOrderApiFunction(model.id.toString()).then((val){
+                    Navigator.pop(context);
+                    provider.upcomingOrderApiFunction();
+                  });
+                 });
+              }),),
+              ScreenSize.width(15),
+              Expanded(child: viewOrderDetailsButton(title: getTranslated('accept', context)!,
+              color: AppColor.lightBlueColor,
+              onTap: (){
+                openDialogBox( title: getTranslated('accept', context)!,
+                 subTitle: getTranslated('confirmation_accept_order', context)!, noTap: (){
+                  Navigator.pop(context);
+                 }, yesTap: (){
+                     Navigator.pop(context);
+                  provider.acceptOrderApiFunction(model.id.toString()).then((val){
+                    provider.upcomingOrderApiFunction();
+                  });
+                 });
+              }),),
+            ],
+          )
         ],
       ),
     );
   }
 
-  viewOrderDetailsButton(String id, HomeProvider provider) {
+
+  viewOrderDetailsButton({required String title,Function()?onTap,  double width = double.infinity, Color color = AppColor.lightBlueColor}) {
     return GestureDetector(
-      onTap: () {
-        AppRoutes.pushCupertinoNavigation(ViewOrderDetailsScreen(
-          orderId: id.toString(),
-        )).then((value) {});
-      },
+      onTap: onTap,
       child: Container(
-        // height: 32,
-        width: 143,
-        padding: const EdgeInsets.symmetric(horizontal: 3,vertical: 7),
+        width: width,
+        padding: const EdgeInsets.symmetric(horizontal: 3,vertical: 8),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          color: const Color(0xff5DBCF2),
+          color: color,
           borderRadius: BorderRadius.circular(16.5),
         ),
         child: getText(
-            title: getTranslated('view_order_details', context)!,
+            title: title,
             size: 13,
             textAlign: TextAlign.center,
             fontFamily: FontFamily.poppinsRegular,

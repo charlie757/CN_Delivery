@@ -28,4 +28,7 @@ class AppImages {
   static const uploadImage = 'assets/icons/upload.png';
   static const cameraIcon = 'assets/icons/camera1.png';
   static const galleryIcon = 'assets/icons/gallery.png';
+  static const customerMarkerIcon = 'assets/icons/person_marker.png';
+  static const bicycleMarkerIcon = 'assets/icons/bicycle_marker.png';
+  static const homeMarkerIcon = 'assets/icons/home_marker.png';
 }

@@ -18,6 +18,9 @@ class ApiUrl {
   static String dashboardUrl = '${baseUrl}delivery-man/dashboard';
   static String updateFcmTokenUrl = '${baseUrl}delivery-man/update-fcm-token';
   static String currentOrderUrl = '${baseUrl}delivery-man/current-orders';
+  static String acceptOrderUrl = '${baseUrl}delivery-man/accept-order';
+  static String rejectOrderUrl = '${baseUrl}delivery-man/reject-order';
+  static String upcomingOrderUrl = '${baseUrl}delivery-man/all-orders-request';
   static String notificationUrl = '${baseUrl}delivery-man/notifications';
   static String orderDetailsUrl = '${baseUrl}delivery-man/order-details?';
   static String updateOrderStatusUrl =

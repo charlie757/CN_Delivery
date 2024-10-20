@@ -5,8 +5,11 @@ import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/view_order_details_provider.dart';
+import 'package:cn_delivery/utils/location_service.dart';
 import 'package:cn_delivery/utils/map_utils.dart';
+import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:cn_delivery/utils/utils.dart';
+import 'package:cn_delivery/widget/dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:cn_delivery/helper/appcolor.dart';
@@ -14,8 +17,10 @@ import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
+
 
 class ViewOrderDetailsScreen extends StatefulWidget {
   final String orderId;
@@ -28,36 +33,69 @@ class ViewOrderDetailsScreen extends StatefulWidget {
 class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
   @override
   void initState() {
+    loadCustomMarker();
     callInitFunction();
-
+    callLocation();
     super.initState();
   }
+  
+  Uint8List? customerMarker;
+  Uint8List? storeMarker;
+  Uint8List? deliveryMarker;
 
+ void loadCustomMarker() async {
+    customerMarker = await Utils.getBytesFromAsset(AppImages.customerMarkerIcon, 120);
+    storeMarker = await Utils.getBytesFromAsset(AppImages.homeMarkerIcon, 120);
+    deliveryMarker = await Utils.getBytesFromAsset(AppImages.bicycleMarkerIcon, 120);
+  }
   callInitFunction() {
     final provider =
         Provider.of<ViewOrderDetailsProvider>(context, listen: false);
     provider.clearValues();
     provider.model = null;
     Future.delayed(Duration.zero, () {
-      provider.callApiFunction(widget.orderId);
-
+      provider.orderDetailsApiFunction(widget.orderId);
       // provider.getPolyPoints();
     });
   }
+Timer? timer;
+  callLocation(){
+     final provider =
+        Provider.of<ViewOrderDetailsProvider>(context, listen: false);
+         provider.currentLocation = LatLng(double.parse(SessionManager.lat),  double.parse(SessionManager.lng));
+        //  provider.storeLocation = LatLng( 26.959749661137145,  75.77617763736208);
+      timer= Timer.periodic(const Duration(seconds: 3), (val){
+        print('sfdsvdfdfvfd');
+        if(provider.polylineCoordinates.isNotEmpty){
+          print('yes i am updated');
+          provider.polylineCoordinates.clear();
+          LocationService.getCurrentLocation();
+          provider.currentLocation = LatLng(double.parse(SessionManager.lat),  double.parse(SessionManager.lng));
+         provider.getPolyPoints();     
+        }
+        // if(provider.storeLocation!=null&&provider.deliveryLocation!=null){
+        //   provider.currentLocation = LatLng(double.parse(SessionManager.lat),  double.parse(SessionManager.lng));
+        //  provider.getPolyPoints();
+        
+        // }
+    });
+   
+}
 
   final Completer<GoogleMapController> controller = Completer();
 
   @override
   void dispose() {
-    // controller.complete();
+    timer!.cancel();
     super.dispose();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ViewOrderDetailsProvider>(
         builder: (context, myProvider, child) {
-      // print(myProvider.lat);
       return Scaffold(
         body: Stack(
           children: [
@@ -65,38 +103,51 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
               children: [
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 2.4,
-                  child: myProvider.sourceLocation != null
+                  child: myProvider.storeLocation != null&&myProvider.deliveryLocation!=null
                       ? GoogleMap(
                           initialCameraPosition: CameraPosition(
-                            target: myProvider.sourceLocation!,
+                            target: myProvider.storeLocation !,
                             zoom: 13.5,
                           ),
                           scrollGesturesEnabled: true, // Enable scrolling
                           zoomGesturesEnabled: true, // Enable zooming
                           markers: {
+                             myProvider.model!.orderStatus.toString().toLowerCase()=='accepted'||
+                             myProvider.model!.orderStatus.toString().toLowerCase()=='out_for_pickup'?
                             Marker(
-                              markerId: MarkerId("pickup"),
+                              markerId: MarkerId("Store"),
+                              icon: storeMarker!=null? BitmapDescriptor.fromBytes(storeMarker!) : BitmapDescriptor.defaultMarker,
                               infoWindow: InfoWindow(
                                 title: getTranslated('pickup_location', context)!,
                               ),
-                              position: myProvider.sourceLocation!,
-                            ),
-                            Marker(
-                              markerId: MarkerId("delivery"),
+                              position: myProvider.storeLocation!,
+                            )
+                            : Marker(
+                              markerId: MarkerId("Customer"),
+                              icon: customerMarker!=null? BitmapDescriptor.fromBytes(customerMarker!) : BitmapDescriptor.defaultMarker,
                               infoWindow: InfoWindow(
                                 title: getTranslated('delivery_location', context)!,
                               ),
-                              position: myProvider.destination!,
+                              position: myProvider.deliveryLocation!,
+                            ),
+                            Marker(
+                              markerId: MarkerId("You"),
+                              icon: deliveryMarker!=null? BitmapDescriptor.fromBytes(deliveryMarker!) : BitmapDescriptor.defaultMarker,
+                              infoWindow: InfoWindow(
+                                title: getTranslated('your_location', context)!,
+                              ),
+                              position: myProvider.currentLocation!,
                             ),
                           },
                           onMapCreated: (mapController) {
+                            myProvider.getPolyPoints();
                             controller.complete(mapController);
                           },
                           polylines: {
                             Polyline(
                               polylineId: const PolylineId("route"),
                               points: myProvider.polylineCoordinates,
-                              color: const Color(0xFF7B61FF),
+                              color: AppColor.greenColor,
                               width: 6,
                             ),
                           },
@@ -146,8 +197,9 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
           ],
         ),
         bottomNavigationBar: myProvider.model != null &&
-                (myProvider.model!.orderStatus == getTranslated('pending', context)! ||
-                    myProvider.model!.orderStatus == getTranslated('out_for_delivery', context)! )
+                myProvider.model!.orderStatus!='pending'
+                // (myProvider.model!.orderStatus == getTranslated('pending', context)! ||
+                //     myProvider.model!.orderStatus == getTranslated('out_for_delivery', context)! )
             ? Container(
                 height: 70,
                 padding: const EdgeInsets.only(
@@ -168,29 +220,28 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                     ]),
                 width: double.infinity,
                 child: AppButton(
-                    title: myProvider.model!.orderStatus == getTranslated('pending', context)!
-                        ? getTranslated('outForDelivery', context)!
-                        : myProvider.model!.orderStatus == getTranslated('out_for_delivery', context)!
-                        ? 'Delivered'
-                            : '',
+                    title:myProvider.statusTitle(myProvider.model!.orderStatus),
+                    // myProvider.model!.orderStatus == getTranslated('pending', context)!
+                    //     ? getTranslated('outForDelivery', context)!
+                    //     : myProvider.model!.orderStatus == getTranslated('out_for_delivery', context)!
+                    //     ? 'Delivered'
+                    //         : '',
                     height: 50,
                     width: double.infinity,
                     buttonColor: AppColor.appTheme,
                     onTap: () {
-                      myProvider.model!.orderStatus == getTranslated('pending', context)!
-                          ? openDialogBox(() {
-                              Navigator.pop(context);
-                              myProvider.updateStatusApiFunction(
-                                  widget.orderId, getTranslated('out_for_delivery', context)! );
-                            })
-                          : myProvider.model!.orderStatus == getTranslated('out_for_delivery', context)!
-                          ? openDialogBox(() {
-                                  Navigator.pop(context);
-                                  myProvider.updateStatusApiFunction(
-                                      widget.orderId, getTranslated('delivered', context)!);
-                                })
-                              : null;
+                      if(myProvider.model!.orderStatus!='delivered'){
+                      openDialogBox(title: myProvider.statusTitle(myProvider.model!.orderStatus), subTitle: getTranslated('are_you_sure_change_status', context)!,
+                      noTap: (){
+                        Navigator.pop(context);
+                      }, yesTap: (){
+                        Navigator.pop(context);
+                         myProvider.updateStatusApiFunction(
+                                  widget.orderId, myProvider.changeStatus(myProvider.model!.orderStatus));
+                      });
+                      }
                     }),
+                    // delivered
               )
             : Container(
                 height: 20,
@@ -762,91 +813,6 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen> {
                 : const Color(0xff0790FF),
             fontWeight: FontWeight.w400),
       ),
-    );
-  }
-
-  void openDialogBox(Function() yesTap) {
-    showGeneralDialog(
-      context: context,
-      barrierLabel: "Barrier",
-      barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.5),
-      transitionDuration: const Duration(milliseconds: 400),
-      pageBuilder: (_, __, ___) {
-        return Stack(
-          children: [
-            Center(
-              child: Container(
-                // height: 394,
-                margin: const EdgeInsets.symmetric(horizontal: 40),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12)),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 35, left: 20, right: 20, bottom: 33),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        getTranslated('are_you_sure_change_status', context)!,
-                        style: TextStyle(
-                            decoration: TextDecoration.none,
-                            fontSize: 14,
-                            fontFamily: FontFamily.poppinsSemiBold,
-                            color: AppColor.textBlackColor,
-                            fontWeight: FontWeight.w600),
-                        textAlign: TextAlign.center,
-                      ),
-                      ScreenSize.height(47),
-                      Row(
-                        children: [
-                          Flexible(
-                            child: AppButton(
-                                title: getTranslated('no', context)!,
-                                height: 50,
-                                width: double.infinity,
-                                buttonColor: AppColor.whiteColor,
-                                textColor: AppColor.textBlackColor,
-                                onTap: () {
-                                  Navigator.pop(context);
-                                }),
-                          ),
-                          ScreenSize.width(20),
-                          Flexible(
-                            child: AppButton(
-                                title: getTranslated('yes', context)!,
-                                height: 50,
-                                width: double.infinity,
-                                buttonColor: AppColor.appTheme,
-                                onTap: yesTap),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-      transitionBuilder: (_, anim, __, child) {
-        Tween<Offset> tween;
-        if (anim.status == AnimationStatus.reverse) {
-          tween = Tween(begin: const Offset(0, 1), end: Offset.zero);
-        } else {
-          tween = Tween(begin: const Offset(0, 1), end: Offset.zero);
-        }
-
-        return SlideTransition(
-          position: tween.animate(anim),
-          child: FadeTransition(
-            opacity: anim,
-            child: child,
-          ),
-        );
-      },
     );
   }
 }

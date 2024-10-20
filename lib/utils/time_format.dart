@@ -30,4 +30,15 @@ class TimeFormat{
     return formattedDate;
   }
 
+static String convertNotificationDate(myDateTime) {
+    var dateFormat = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    var utcDate = dateFormat.format(DateTime.parse(myDateTime));
+
+    DateTime dateTime = dateFormat.parse(utcDate, true).toLocal();
+    String formattedDate = DateFormat('d MMMM yyyy').format(dateTime);
+    String formattedTime = DateFormat('h:mm a').format(dateTime);
+
+    return formattedDate;
+  }
+
 }
