@@ -108,7 +108,7 @@ bicycleVehicleApiFunction()async{
   print(vb.statusCode);
   Navigator.pop(navigatorKey.currentContext!);
   if (vb.statusCode == 200) {
-    var dataAll = json.decode(vb.body);
+    // var dataAll = json.decode(vb.body);
     AppRoutes.pushReplacementAndRemoveNavigation(const DashboardScreen());
   } else {
     var dataAll = json.decode(vb.body);

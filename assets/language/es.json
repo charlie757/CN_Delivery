@@ -201,5 +201,17 @@
     "picked":"Escogida",
     "goingForPickup":"Voy a recoger",
     "pickedUp":"Recogido",
-    "deliveryCompleted":"Entrega completada"
+    "deliveryCompleted":"Entrega completada",
+    "order_prepration":"Preparación de pedidos",
+    "order_ready_for_pickup":"Pedido listo para recoger",
+    "change_status":"Cambiar estado",
+    "check_status":"Comprobar estado",
+    "order_status":"Estado del pedido",
+    "delivery_person_assigned":"Persona de entrega asignada",
+    "processing":"Tratamiento",
+    "order_ready_for_pickup_subtitle":"Pedido listo para recoger en tienda",
+    "order_picked_up":"pedido recogido",
+    "order_picked_up_from_store":"Pedido recogido en tienda",
+    "order_delivered_to_customer":"Pedido entregado a la cliente",
+    "confirmation":"Confirmación"
 }

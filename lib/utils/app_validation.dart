@@ -48,7 +48,7 @@ class AppValidation {
   }
 
   static String? passwordValidator(val) {
-    RegExp regExp = RegExp(Utils.passwordPattern.trim());
+    // RegExp regExp = RegExp(Utils.passwordPattern.trim());
     if (val.isEmpty) {
       return getTranslated( 'enter_password', navigatorKey.currentContext!)!;
     }
@@ -63,7 +63,7 @@ class AppValidation {
   }
 
   static String? reEnterpasswordValidator(currentValue, previousValue) {
-    RegExp regExp = RegExp(Utils.passwordPattern.trim());
+    // RegExp regExp = RegExp(Utils.passwordPattern.trim());
     if (currentValue.isEmpty) {
       return getTranslated( 'enter_password', navigatorKey.currentContext!)!;
     } else if (currentValue.length<6) {

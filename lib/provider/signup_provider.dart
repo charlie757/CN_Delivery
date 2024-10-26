@@ -2,8 +2,6 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'package:cn_delivery/localization/language_constrants.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:country_calling_code_picker/picker.dart';
 import '../api/api_url.dart';
@@ -14,7 +12,6 @@ import '../utils/session_manager.dart';
 import '../utils/showcircleprogressdialog.dart';
 import '../utils/utils.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_easyloading/flutter_easyloading.dart';
 class SignupProvider extends ChangeNotifier{
   Country? selectedCountry;
 final fNameController = TextEditingController();

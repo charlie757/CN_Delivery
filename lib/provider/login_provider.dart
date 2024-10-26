@@ -78,8 +78,8 @@ class LoginProvider extends ChangeNotifier {
             AppRoutes.pushCupertinoNavigation(const ChooseVehicleScreen());
           }
           else{
-          Utils.successSnackBar(
-              loginModel!.message.toString(), navigatorKey.currentContext!);
+          // Utils.successSnackBar(
+          //     loginModel!.message.toString(), navigatorKey.currentContext!);
           SessionManager.setToken = loginModel!.data!.token;
           AppRoutes.pushReplacementNavigation(const DashboardScreen());
           emailController.clear();

@@ -6,10 +6,10 @@ import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/dashboard_provider.dart';
 import 'package:cn_delivery/provider/profile_provider.dart';
 import 'package:cn_delivery/screens/all_orders_screen.dart';
-import 'package:cn_delivery/screens/current_order_screen.dart';
 import 'package:cn_delivery/screens/earning_screen.dart';
 import 'package:cn_delivery/screens/home_screen.dart';
 import 'package:cn_delivery/screens/profile_screen.dart';
+import 'package:cn_delivery/utils/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -43,11 +43,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   List screenList = [
     const HomeScreen(),
-    const CurrentOrderScreen(),
+    // const CurrentOrderScreen(),
     const AllOrderScreen(),
     const EarningScreen(),
     const ProfileScreen()
   ];
+
+updateLocation(){
+  LocationService.getCurrentLocation();
+  Provider.of<DashboardProvider>(context,listen: false).updateLastLocationApiFunction();
+}
+
   @override
   Widget build(BuildContext context) {
     return Consumer<DashboardProvider>(builder: (context, myProvider, child) {
@@ -78,24 +84,29 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 customBottomNavigationBar(
                     AppImages.homeIcon, getTranslated('home', context)!, 0, myProvider, () {
                       print('object');
+                       updateLocation();
                   myProvider.updateIndex(0);
                 }),
+                // customBottomNavigationBar(
+                //     AppImages.currentOrderIcon, getTranslated('current_orders', context)!, 1, myProvider,
+                //     () {
+                //   updateLocation();
+                //   myProvider.updateIndex(1);
+                // }),
                 customBottomNavigationBar(
-                    AppImages.currentOrderIcon, getTranslated('current_orders', context)!, 1, myProvider,
-                    () {
+                    AppImages.allOrderIcon, getTranslated('all_orders', context)!, 1, myProvider, () {
+                      updateLocation();
                   myProvider.updateIndex(1);
                 }),
                 customBottomNavigationBar(
-                    AppImages.allOrderIcon, getTranslated('all_orders', context)!, 2, myProvider, () {
+                    AppImages.earningIcon, getTranslated('earning', context)!, 2, myProvider, () {
+                      updateLocation();
                   myProvider.updateIndex(2);
                 }),
                 customBottomNavigationBar(
-                    AppImages.earningIcon, getTranslated('earning', context)!, 3, myProvider, () {
+                    AppImages.profileIcon, getTranslated('profile', context)!, 3, myProvider, () {
+                      updateLocation();
                   myProvider.updateIndex(3);
-                }),
-                customBottomNavigationBar(
-                    AppImages.profileIcon, getTranslated('profile', context)!, 4, myProvider, () {
-                  myProvider.updateIndex(4);
                 }),
               ],
             ),

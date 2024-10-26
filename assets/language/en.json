@@ -150,7 +150,7 @@
     "out_for_delivery":"out_for_delivery",
     "going_to_delivery":"Going to delivery",
     "delivery":"Delivery",
-    "delivered":"delivered",
+    "delivered":"Delivered",
     "payment_received":"Payment Received",
     "pickup_location":"Store Location",
     "delivery_location":"Delivery Location",
@@ -203,5 +203,17 @@
     "picked":"Picked",
     "goingForPickup":"Going for Pickup",
     "pickedUp":"Picked Up",
-    "deliveryCompleted":"Delivery Completed"
+    "deliveryCompleted":"Delivery Completed",
+    "order_prepration":"Order Preparation",
+    "order_ready_for_pickup":"Order ready for pickup",
+    "change_status":"Change Status",
+    "check_status":"Check Status",
+    "order_status":"Order Status",
+    "delivery_person_assigned":"Delivery person assigned",
+    "processing":"Processing",
+    "order_ready_for_pickup_subtitle":"Order ready for pickup at the store",
+    "order_picked_up":"Order picked up",
+    "order_picked_up_from_store":"Order picked up from store",
+    "order_delivered_to_customer":"Order delivered to the customer",
+    "confirmation":"Confirmation"
 }

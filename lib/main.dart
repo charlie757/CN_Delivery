@@ -104,7 +104,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     // Register the observer
-    WidgetsBinding.instance.addObserver(this);
+    // WidgetsBinding.instance.addObserver(this);
   }
 
   updateCurrentLocation()async{
@@ -124,29 +124,15 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     // Unregister the observer
-    WidgetsBinding.instance.removeObserver(this);
+    // WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-    switch (state) {
-      case AppLifecycleState.inactive:
-        updateCurrentLocation();
-        break;
-      case AppLifecycleState.paused:
-        updateCurrentLocation();
-        break;
-      case AppLifecycleState.resumed:
-        updateCurrentLocation();
-        break;
-      case AppLifecycleState.detached:
-        updateCurrentLocation();
-        break;
-      case AppLifecycleState.hidden:
-    }
-  }
+  // checkStatusOfApp(bool value){
+  //   Provider.of<ViewOrderDetailsProvider>(context,listen: false).upadateAppStatus(value);
+  //   print(Provider.of<ViewOrderDetailsProvider>(context,listen: false).isForground);
+  // }
+
 
 
   @override

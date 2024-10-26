@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/utils/constants.dart';
 import 'package:cn_delivery/utils/enum.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -17,6 +16,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class ViewOrderDetailsProvider extends ChangeNotifier {
   ViewOrderModel? model;
+
 
   // LatLng? sourceLocation;
   // LatLng? destination;
@@ -36,9 +36,11 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       Platform.isAndroid?
       Constants.androidGoogleMapKey:Constants.iosGoogleMapKey, // Your Google Map Key
-      // PointLatLng(double.parse(SessionManager.lat),  double.parse(SessionManager.lng)),
-      PointLatLng(storeLocation!.latitude, storeLocation!.longitude),
-        PointLatLng(deliveryLocation!.latitude, deliveryLocation!.longitude),
+      PointLatLng(currentLocation!.latitude, currentLocation!.longitude),
+      model!.orderStatus.toString().toLowerCase()==OrderStatusTypes.order_picked_up_by_delivery_person.name||
+      model!.orderStatus.toString().toLowerCase()==OrderStatusTypes.delivered.name?
+        PointLatLng(deliveryLocation!.latitude, deliveryLocation!.longitude):
+        PointLatLng(storeLocation!.latitude, storeLocation!.longitude),
     );
     if (result.points.isNotEmpty) {
       result.points.forEach(
@@ -51,6 +53,7 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
   }
 
   clearValues() {
+    model = null;
     pickupLat = 0.0;
     pickupLng = 0.0;
     shippingLat = 0.0;
@@ -60,15 +63,16 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
     polylineCoordinates = [];
   }
 
+
   orderDetailsApiFunction(id) {
-    showCircleProgressDialog(navigatorKey.currentContext!);
+   model==null? showCircleProgressDialog(navigatorKey.currentContext!):null;
     var body = json.encode({});
     ApiService.apiMethod(
       url: "${ApiUrl.orderDetailsUrl}order_id=$id",
       body: body,
       method: checkApiMethod(httpMethod.get),
     ).then((value) {
-      Navigator.pop(navigatorKey.currentContext!);
+     model==null? Navigator.pop(navigatorKey.currentContext!):null;
       if (value != null) {
         model = ViewOrderModel.fromJson(value[0]);
         pickupLatLong(
@@ -122,7 +126,7 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
     ).then((value) {
       Navigator.pop(navigatorKey.currentContext!);
       if (value != null) {
-        // Utils.successSnackBar(value['message'], navigatorKey.currentContext!);
+        Navigator.pop(navigatorKey.currentContext!);/// to close the bottom sheet
         orderDetailsApiFunction(orderId);
       }
       notifyListeners();
@@ -148,36 +152,30 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
     }
   }
 
-  String statusTitle(String state){
-    if(state.toLowerCase()=='accepted') {
-      return getTranslated('goingForPickup', navigatorKey.currentContext!)!;
-    }
-    else if(state.toLowerCase()=='out_for_pickup'){
-      return getTranslated('pickedUp', navigatorKey.currentContext!)!;
-    }
-    else if(state.toLowerCase()=='picked'){
-      return getTranslated('outForDelivery', navigatorKey.currentContext!)!;
-    }
-    else if(state.toLowerCase()=='out_for_delivery'){
-      return getTranslated('delivered', navigatorKey.currentContext!)!;
-    }
-    else if(state.toLowerCase()=='delivered'){
-      return getTranslated('deliveryCompleted', navigatorKey.currentContext!)!;
-    }
-    return '';
-  }
+  // String statusTitle(String state){
+  //   if(state.toLowerCase()=='accepted') {
+  //     return getTranslated('goingForPickup', navigatorKey.currentContext!)!;
+  //   }
+  //   else if(state.toLowerCase()=='out_for_pickup'){
+  //     return getTranslated('pickedUp', navigatorKey.currentContext!)!;
+  //   }
+  //   else if(state.toLowerCase()=='picked'){
+  //     return getTranslated('outForDelivery', navigatorKey.currentContext!)!;
+  //   }
+  //   else if(state.toLowerCase()=='out_for_delivery'){
+  //     return getTranslated('delivered', navigatorKey.currentContext!)!;
+  //   }
+  //   else if(state.toLowerCase()=='delivered'){
+  //     return getTranslated('deliveryCompleted', navigatorKey.currentContext!)!;
+  //   }
+  //   return '';
+  // }
 
   changeStatus(String status){
-    if(status.toLowerCase()=='accepted') {
-      return OrderStatusTypes.out_for_pickup.name;
+    if(status.toLowerCase()==OrderStatusTypes.order_ready_for_pickup.name) {
+      return OrderStatusTypes.order_picked_up_by_delivery_person.name;
     }
-    else if(status.toLowerCase()=='out_for_pickup'){
-      return OrderStatusTypes.picked.name;
-    }
-    else if(status.toLowerCase()=='picked'){
-      return OrderStatusTypes.out_for_delivery.name;
-    }
-    else if(status.toLowerCase()=='out_for_delivery'){
+    else if(status.toLowerCase()==OrderStatusTypes.order_picked_up_by_delivery_person.name){
       return OrderStatusTypes.delivered.name;
     }
     return '';

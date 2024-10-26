@@ -61,6 +61,7 @@ class HomeProvider extends ChangeNotifier {
       method: checkApiMethod(httpMethod.put),
     ).then((value) {
       Navigator.pop(navigatorKey.currentContext!);
+      upcomingOrderApiFunction();
       return value;
     });
   }
@@ -76,7 +77,9 @@ class HomeProvider extends ChangeNotifier {
       method: checkApiMethod(httpMethod.put),
     ).then((value) {
       Navigator.pop(navigatorKey.currentContext!);
+      upcomingOrderApiFunction();
       return value;
     });
   }
+
 }

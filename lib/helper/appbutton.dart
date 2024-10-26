@@ -28,7 +28,7 @@ class AppButton extends StatelessWidget {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
           elevation: elevation,
-          shadowColor: AppColor.appTheme,
+          shadowColor:elevation==0?null: AppColor.appTheme,
           backgroundColor: buttonColor,
           // primary: widget.buttonColor,
           shape:

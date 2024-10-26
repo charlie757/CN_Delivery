@@ -105,6 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintText: getTranslated('enter_your_email', context)!,
                   isReadOnly: myProvider.isLoading,
                   errorMsg: myProvider.emailValidationMsg,
+                  textInputAction: TextInputAction.next,
                   onChanged: (val) {
                     myProvider.emailValidationMsg =
                         AppValidation.emailValidator(val);

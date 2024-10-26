@@ -3,6 +3,7 @@
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -16,6 +17,7 @@ class CustomTextfield extends StatelessWidget {
   final TextInputType? textInputType;
   final errorMsg;
   final ValueChanged<String>? onChanged;
+  TextInputAction? textInputAction;
   Function()?onTap;
    CustomTextfield(
       {super.key,
@@ -27,6 +29,7 @@ class CustomTextfield extends StatelessWidget {
       this.inputFormatters,
       this.textInputType,
       this.errorMsg,
+      this.textInputAction,
       this.onChanged,this.onTap});
 
   @override
@@ -53,6 +56,7 @@ class CustomTextfield extends StatelessWidget {
           child: TextFormField(
             controller: controller,
             onTap: onTap,
+            textInputAction: textInputAction,
             readOnly: isReadOnly,
             cursorColor: AppColor.appTheme,
             obscureText: isObscureText,
