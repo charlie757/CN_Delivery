@@ -215,5 +215,11 @@
     "order_picked_up":"Order picked up",
     "order_picked_up_from_store":"Order picked up from store",
     "order_delivered_to_customer":"Order delivered to the customer",
-    "confirmation":"Confirmation"
+    "confirmation":"Confirmation",
+    "delivery_man_charges":"Delivery man charges",
+    "distance_pickup_and_you":"Distance between you and pickup",
+    "distance_drop_and_you":"Distance between you and drop",
+    "shop_details":"Shop Details",
+    "admin_commison":"Admin commission",
+    "total_delivery_man_amount":"Total delivery man amount"
 }

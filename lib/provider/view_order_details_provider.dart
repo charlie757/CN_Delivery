@@ -17,7 +17,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 class ViewOrderDetailsProvider extends ChangeNotifier {
   ViewOrderModel? model;
 
-
+String totalDistanceCurrentAndDrop = '';
+  String totalDistanceCurrentAndPickup = '';
   // LatLng? sourceLocation;
   // LatLng? destination;
   LatLng? storeLocation;
@@ -61,8 +62,26 @@ class ViewOrderDetailsProvider extends ChangeNotifier {
     storeLocation = null;
     deliveryLocation=null;
     polylineCoordinates = [];
+     totalDistanceCurrentAndDrop = '';
+  totalDistanceCurrentAndPickup = '';
   }
 
+
+ updateDistancePickup(){
+  if(currentLocation!=null&&storeLocation!=null){
+ totalDistanceCurrentAndPickup = Utils.calculateDistance(currentLocation!.latitude, currentLocation!.longitude, 
+    storeLocation!.latitude, storeLocation!.latitude).toStringAsFixed(2).toString();
+  }
+  notifyListeners();
+}
+
+updateDistanceDrop(){
+  if(currentLocation!=null&&deliveryLocation!=null){
+ totalDistanceCurrentAndDrop = Utils.calculateDistance(currentLocation!.latitude, currentLocation!.longitude, 
+    deliveryLocation!.latitude, deliveryLocation!.latitude).toStringAsFixed(2).toString();
+  }
+  notifyListeners();
+}
 
   orderDetailsApiFunction(id) {
    model==null? showCircleProgressDialog(navigatorKey.currentContext!):null;

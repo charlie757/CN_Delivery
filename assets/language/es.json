@@ -213,5 +213,11 @@
     "order_picked_up":"pedido recogido",
     "order_picked_up_from_store":"Pedido recogido en tienda",
     "order_delivered_to_customer":"Pedido entregado a la cliente",
-    "confirmation":"Confirmación"
+    "confirmation":"Confirmación",
+    "delivery_man_charges":"Cargos del repartidor",
+    "distance_pickup_and_you":"Distancia entre usted y el punto de recogida",
+    "distance_drop_and_you":"Distancia entre usted y la gota",
+    "shop_details":"Detalles de la tienda",
+    "admin_commison":"Comisión de administración",
+    "total_delivery_man_amount":"Importe total del repartidor"
 }

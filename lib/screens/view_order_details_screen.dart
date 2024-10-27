@@ -64,6 +64,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
 
   Timer? timer;
   bool isForground = true;
+  
   updateAppStatus(value){
     isForground=value;
     print(isForground);
@@ -77,6 +78,9 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
     provider.currentLocation = LatLng(
         double.parse(SessionManager.lat), double.parse(SessionManager.lng));
     timer = Timer.periodic(const Duration(seconds: 3), (val) {
+      print('every 3 sec');
+      provider.updateDistancePickup(); //// calculate the distance
+      provider.updateDistanceDrop(); //// calculate the distance
       if (provider.polylineCoordinates.isNotEmpty) {
         print('yes i am updated');
         provider.polylineCoordinates.clear();
@@ -354,12 +358,24 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
             ],
           ),
           ScreenSize.height(16),
-          customRowForPriceAndDistanceWidget(
+          customRowForPriceAndDistanceWidget(title:
               getTranslated('distancePickupAndDrop', context)!,
-              provider.model!.distance ?? ''),
+             subTitle: provider.model!.distance ?? ''),
           ScreenSize.height(10),
-          customRowForPriceAndDistanceWidget(getTranslated('price', context)!,
-              provider.model!.deliverymanCharge ?? ''),
+          customRowForPriceAndDistanceWidget(title:getTranslated('distance_pickup_and_you', context)!,
+             subTitle:"${provider.totalDistanceCurrentAndPickup} KM"),
+          ScreenSize.height(10),
+          customRowForPriceAndDistanceWidget(title:getTranslated('distance_drop_and_you', context)!,
+             subTitle:"${provider.totalDistanceCurrentAndDrop} KM"),
+              ScreenSize.height(10),
+          customRowForPriceAndDistanceWidget(title:getTranslated('delivery_man_charges', context)!,
+           subTitle:    provider.model!.deliverymanCharge ?? ''),
+           ScreenSize.height(10),
+          customRowForPriceAndDistanceWidget(title:getTranslated('admin_commison', context)!,
+           subTitle: '15%'),
+           ScreenSize.height(10),
+          customRowForPriceAndDistanceWidget(title:getTranslated('total_delivery_man_amount', context)!,
+           subTitle:provider.model!.deliverymanCharge!=null? (double.parse(provider.model!.deliverymanCharge.toString().split(' ')[0])*(15/100)).toString():'-'),
           ScreenSize.height(16),
           Container(
             height: 1,
@@ -434,7 +450,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
     );
   }
 
-  customRowForPriceAndDistanceWidget(String title, String subTitle) {
+  customRowForPriceAndDistanceWidget({required String title,required String subTitle}) {
     return Row(
       children: [
         Expanded(
@@ -472,6 +488,13 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+           getText(
+              title: getTranslated('shop_details', context)!,
+              size: 16,
+              fontFamily: FontFamily.poppinsMedium,
+              color: AppColor.blackColor,
+              fontWeight: FontWeight.w500),
+              ScreenSize.height(12),
           Row(
             children: [
               provider.model!.shop!.image.isNotEmpty
@@ -492,38 +515,37 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      provider.model!.shop != null
+                    getText(
+                    title:  provider.model!.shop != null
                           ? "${provider.model!.shop!.name ?? ""}"
                           : '',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 16,
+                      maxLies: 1,
+                          size: 16,
                           fontFamily: FontFamily.poppinsMedium,
                           color: AppColor.blackColor,
-                          fontWeight: FontWeight.w600),
+                          fontWeight: FontWeight.w600
                     ),
+                    ScreenSize.height(2),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Image.asset(
+                        Padding(padding: EdgeInsets.only(top: 3),
+                        child: Image.asset(
                           AppImages.locationIcon,
                           height: 12,
-                          width: 9,
-                        ),
+                          width: 10,
+                        ),),
                         ScreenSize.width(5),
                         Flexible(
-                          child: Text(
-                            provider.model!.shop != null
+                          child: getText(
+                           title: provider.model!.shop != null
                                 ? "${provider.model!.shop!.address ?? ""}, ${provider.model!.shop!.city ?? ""}, ${provider.model!.shop!.country ?? ""}"
                                 : '',
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontSize: 13,
+                            maxLies: 2,
+                                size: 13,
                                 fontFamily: FontFamily.poppinsRegular,
                                 color: Color(0xffB8B8B8),
-                                fontWeight: FontWeight.w400),
+                                fontWeight: FontWeight.w400
                           ),
                         ),
                       ],
@@ -561,7 +583,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
                 ScreenSize.width(10),
                 getText(
                     title:
-                        '+1 - ${provider.model!.shop != null ? provider.model!.shop!.phone.toString() : ''}',
+                        '+ - ${provider.model!.shop != null ? provider.model!.shop!.phone.toString() : ''}',
                     size: 14,
                     fontFamily: FontFamily.poppinsRegular,
                     color: Color(0xffB8B8B8),
