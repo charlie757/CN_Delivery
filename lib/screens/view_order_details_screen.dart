@@ -64,13 +64,13 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
 
   Timer? timer;
   bool isForground = true;
-  
-  updateAppStatus(value){
-    isForground=value;
+
+  updateAppStatus(value) {
+    isForground = value;
     print(isForground);
-    setState(() {
-    });
+    setState(() {});
   }
+
   callLocation() {
     final provider =
         Provider.of<ViewOrderDetailsProvider>(context, listen: false);
@@ -109,20 +109,20 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
     super.didChangeAppLifecycleState(state);
     switch (state) {
       case AppLifecycleState.inactive:
-      print('inactive');
+        print('inactive');
         break;
       case AppLifecycleState.paused:
-      print('pause');
-      timer!.cancel();
-      updateAppStatus(false);
+        print('pause');
+        timer!.cancel();
+        updateAppStatus(false);
         break;
       case AppLifecycleState.resumed:
-      callLocation();
-      updateAppStatus(true);
+        callLocation();
+        updateAppStatus(true);
         // callLocation();
         break;
       case AppLifecycleState.detached:
-      print('pause');
+        print('pause');
         break;
       case AppLifecycleState.hidden:
     }
@@ -149,9 +149,17 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
                           scrollGesturesEnabled: true, // Enable scrolling
                           zoomGesturesEnabled: true, // Enable zooming
                           markers: {
-                           myProvider.model!.orderStatus.toString().toLowerCase()==OrderStatusTypes.order_picked_up_by_delivery_person.name||
-                           myProvider.model!.orderStatus.toString().toLowerCase()==OrderStatusTypes.delivered.name
-                                ?Marker(
+                            myProvider.model!.orderStatus
+                                            .toString()
+                                            .toLowerCase() ==
+                                        OrderStatusTypes
+                                            .order_picked_up_by_delivery_person
+                                            .name ||
+                                    myProvider.model!.orderStatus
+                                            .toString()
+                                            .toLowerCase() ==
+                                        OrderStatusTypes.delivered.name
+                                ? Marker(
                                     markerId: MarkerId("Customer"),
                                     icon: customerMarker != null
                                         ? BitmapDescriptor.fromBytes(
@@ -162,7 +170,8 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
                                           'delivery_location', context)!,
                                     ),
                                     position: myProvider.deliveryLocation!,
-                                  ): Marker(
+                                  )
+                                : Marker(
                                     markerId: MarkerId("Store"),
                                     icon: storeMarker != null
                                         ? BitmapDescriptor.fromBytes(
@@ -173,8 +182,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
                                           'pickup_location', context)!,
                                     ),
                                     position: myProvider.storeLocation!,
-                                  )
-                                ,
+                                  ),
                             Marker(
                               markerId: MarkerId("You"),
                               icon: deliveryMarker != null
@@ -203,8 +211,13 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
                 ),
                 Expanded(
                   child: SingleChildScrollView(
+                    padding: EdgeInsets.only(top: 15),
                     child: Column(
                       children: [
+                        myProvider.model != null
+                            ? orderDetailsWidget(myProvider)
+                            : Container(),
+                        ScreenSize.height(15),
                         myProvider.model != null
                             ? pickAndDeliveryInfo(myProvider)
                             : Container(),
@@ -214,7 +227,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
                             : Container(),
                         ScreenSize.height(15),
                         myProvider.model != null
-                            ? orderDetailsWidget(myProvider)
+                            ? orderSummaryWidget(myProvider)
                             : Container(),
                         ScreenSize.height(50),
                       ],
@@ -274,31 +287,33 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
 
   changeStatusWidget(ViewOrderDetailsProvider myProvider) {
     return AppButton(
-        title: Constants.orderStatusTitle(myProvider.model!.orderStatus.toString()),
+        title: Constants.orderStatusTitle(
+            myProvider.model!.orderStatus.toString()),
         height: 50,
         elevation: 0,
         width: double.infinity,
-        buttonColor:myProvider.model!.orderStatus.toString().toLowerCase()==OrderStatusTypes.delivery_person_assigned.name||myProvider.model!.orderStatus.toString().toLowerCase()==OrderStatusTypes.processing.name?
-        AppColor.borderD9Color:
-         AppColor.appTheme,
+        buttonColor: myProvider.model!.orderStatus.toString().toLowerCase() ==
+                    OrderStatusTypes.delivery_person_assigned.name ||
+                myProvider.model!.orderStatus.toString().toLowerCase() ==
+                    OrderStatusTypes.processing.name
+            ? AppColor.borderD9Color
+            : AppColor.appTheme,
         onTap: () {
-          if(myProvider.model!.orderStatus.toString().toLowerCase()==OrderStatusTypes.delivery_person_assigned.name||myProvider.model!.orderStatus.toString().toLowerCase()==OrderStatusTypes.processing.name){
-
-          }
-          else{
+          if (myProvider.model!.orderStatus.toString().toLowerCase() ==
+                  OrderStatusTypes.delivery_person_assigned.name ||
+              myProvider.model!.orderStatus.toString().toLowerCase() ==
+                  OrderStatusTypes.processing.name) {
+          } else {
             openStatusBottomSheet(
                 context: context,
                 orderStatus: myProvider.model!.orderStatus.toString(),
                 ontap: () {
                   Navigator.pop(context);
-                  myProvider
-                      .updateStatusApiFunction(
-                          widget.orderId,
-                          myProvider
-                              .changeStatus(myProvider.model!.orderStatus));
+                  myProvider.updateStatusApiFunction(widget.orderId,
+                      myProvider.changeStatus(myProvider.model!.orderStatus));
                 });
           }
-         }
+        }
         // delivered
         );
   }
@@ -348,7 +363,12 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              customBtn(provider.model!.orderStatus.toString().capitalize().replaceAll('_', ' '), () {}),
+              customBtn(
+                  provider.model!.orderStatus
+                      .toString()
+                      .capitalize()
+                      .replaceAll('_', ' '),
+                  () {}),
               ScreenSize.width(15),
               customBtn(
                   provider.model!.paymentMethod.toString() == 'cash_on_delivery'
@@ -358,25 +378,27 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
             ],
           ),
           ScreenSize.height(16),
-          customRowForPriceAndDistanceWidget(title:
-              getTranslated('distancePickupAndDrop', context)!,
-             subTitle: provider.model!.distance ?? ''),
+          customRowForPriceAndDistanceWidget(
+              title: getTranslated('distancePickupAndDrop', context)!,
+              subTitle: provider.model!.distance ?? ''),
           ScreenSize.height(10),
-          customRowForPriceAndDistanceWidget(title:getTranslated('distance_pickup_and_you', context)!,
-             subTitle:"${provider.totalDistanceCurrentAndPickup} KM"),
+          customRowForPriceAndDistanceWidget(
+              title: getTranslated('distance_pickup_and_you', context)!,
+              subTitle: "${provider.totalDistanceCurrentAndPickup} KM"),
           ScreenSize.height(10),
-          customRowForPriceAndDistanceWidget(title:getTranslated('distance_drop_and_you', context)!,
-             subTitle:"${provider.totalDistanceCurrentAndDrop} KM"),
-              ScreenSize.height(10),
-          customRowForPriceAndDistanceWidget(title:getTranslated('delivery_man_charges', context)!,
-           subTitle:    provider.model!.deliverymanCharge ?? ''),
-           ScreenSize.height(10),
-          customRowForPriceAndDistanceWidget(title:getTranslated('admin_commison', context)!,
-           subTitle: '15%'),
-           ScreenSize.height(10),
-          customRowForPriceAndDistanceWidget(title:getTranslated('total_delivery_man_amount', context)!,
-           subTitle:provider.model!.deliverymanCharge!=null? (double.parse(provider.model!.deliverymanCharge.toString().split(' ')[0])*(15/100)).toString():'-'),
-          ScreenSize.height(16),
+          customRowForPriceAndDistanceWidget(
+              title: getTranslated('distance_drop_and_you', context)!,
+              subTitle: "${provider.totalDistanceCurrentAndDrop} KM"),
+          ScreenSize.height(10),
+          // customRowForPriceAndDistanceWidget(title:getTranslated('delivery_man_charges', context)!,
+          //  subTitle:    provider.model!.deliverymanCharge ?? ''),
+          //  ScreenSize.height(10),
+          // customRowForPriceAndDistanceWidget(title:getTranslated('admin_commison', context)!,
+          //  subTitle: '15%'),
+          //  ScreenSize.height(10),
+          // customRowForPriceAndDistanceWidget(title:getTranslated('total_delivery_man_amount', context)!,
+          //  subTitle:provider.model!.deliverymanCharge!=null? (double.parse(provider.model!.deliverymanCharge.toString().split(' ')[0])*(15/100)).toString():'-'),
+          // ScreenSize.height(16),
           Container(
             height: 1,
             color: const Color(0xffD9D9D9),
@@ -450,7 +472,8 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
     );
   }
 
-  customRowForPriceAndDistanceWidget({required String title,required String subTitle}) {
+  customRowForPriceAndDistanceWidget(
+      {required String title, required String subTitle}) {
     return Row(
       children: [
         Expanded(
@@ -488,13 +511,13 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           getText(
+          getText(
               title: getTranslated('shop_details', context)!,
               size: 16,
               fontFamily: FontFamily.poppinsMedium,
               color: AppColor.blackColor,
               fontWeight: FontWeight.w500),
-              ScreenSize.height(12),
+          ScreenSize.height(12),
           Row(
             children: [
               provider.model!.shop!.image.isNotEmpty
@@ -516,37 +539,37 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     getText(
-                    title:  provider.model!.shop != null
-                          ? "${provider.model!.shop!.name ?? ""}"
-                          : '',
-                      maxLies: 1,
-                          size: 16,
-                          fontFamily: FontFamily.poppinsMedium,
-                          color: AppColor.blackColor,
-                          fontWeight: FontWeight.w600
-                    ),
+                        title: provider.model!.shop != null
+                            ? "${provider.model!.shop!.name ?? ""}"
+                            : '',
+                        maxLies: 1,
+                        size: 16,
+                        fontFamily: FontFamily.poppinsMedium,
+                        color: AppColor.blackColor,
+                        fontWeight: FontWeight.w600),
                     ScreenSize.height(2),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(padding: EdgeInsets.only(top: 3),
-                        child: Image.asset(
-                          AppImages.locationIcon,
-                          height: 12,
-                          width: 10,
-                        ),),
+                        Padding(
+                          padding: EdgeInsets.only(top: 3),
+                          child: Image.asset(
+                            AppImages.locationIcon,
+                            height: 12,
+                            width: 10,
+                          ),
+                        ),
                         ScreenSize.width(5),
                         Flexible(
                           child: getText(
-                           title: provider.model!.shop != null
-                                ? "${provider.model!.shop!.address ?? ""}, ${provider.model!.shop!.city ?? ""}, ${provider.model!.shop!.country ?? ""}"
-                                : '',
-                            maxLies: 2,
-                                size: 13,
-                                fontFamily: FontFamily.poppinsRegular,
-                                color: Color(0xffB8B8B8),
-                                fontWeight: FontWeight.w400
-                          ),
+                              title: provider.model!.shop != null
+                                  ? "${provider.model!.shop!.address ?? ""}, ${provider.model!.shop!.city ?? ""}, ${provider.model!.shop!.country ?? ""}"
+                                  : '',
+                              maxLies: 2,
+                              size: 13,
+                              fontFamily: FontFamily.poppinsRegular,
+                              color: Color(0xffB8B8B8),
+                              fontWeight: FontWeight.w400),
                         ),
                       ],
                     ),
@@ -629,6 +652,53 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
     );
   }
 
+  orderSummaryWidget(ViewOrderDetailsProvider provider) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 15),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: AppColor.whiteColor,
+          border: Border.all(color: const Color(0xffF5F5F5)),
+          boxShadow: [
+            BoxShadow(
+                offset: const Offset(0, 2),
+                color: AppColor.blackColor.withOpacity(.2),
+                blurRadius: 3)
+          ]),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          getText(
+              title: getTranslated('order_summary', context)!,
+              size: 16,
+              // maxLies: 1,
+              fontFamily: FontFamily.poppinsSemiBold,
+              color: Color(0xff2F2E36),
+              fontWeight: FontWeight.w600),
+          ScreenSize.height(15),
+          customRowForPriceAndDistanceWidget(
+              title: getTranslated('order_price', context)!,
+              subTitle: '\$${provider.model!.orderAmount.toString()}'),
+          ScreenSize.height(15),
+          customRowForPriceAndDistanceWidget(
+              title: getTranslated('delivery_fee', context)!,
+              subTitle: provider.model!.deliverymanCharge != null &&
+                      provider.model!.deliverymanCharge.toString().isNotEmpty
+                  ? '\$${double.parse(provider.model!.deliverymanCharge.toString().split(' ')[0])}'
+                  : '-'),
+          ScreenSize.height(15),
+          //  customRowForPriceAndDistanceWidget(title: 'Admin Comission', subTitle: systemFee.isEmpty?'-':"\$$systemFee"),
+          //  ScreenSize.height(15),
+          customRowForPriceAndDistanceWidget(
+              title: getTranslated('grand_total', context)!,
+              subTitle:
+                  '\$${double.parse(provider.model!.orderAmount.toString()) + double.parse(provider.model!.deliverymanCharge.toString().split(' ')[0])}'),
+        ],
+      ),
+    );
+  }
+
   orderDetailsWidget(ViewOrderDetailsProvider provider) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 15),
@@ -642,7 +712,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
                 color: AppColor.blackColor.withOpacity(.2),
                 blurRadius: 3)
           ]),
-      padding: const EdgeInsets.only(top: 17, bottom: 15),
+      padding: const EdgeInsets.only(top: 1, bottom: 15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -651,41 +721,41 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: getText(
-                      title: getTranslated('order_details', context)!,
-                      size: 16,
-                      // maxLies: 1,
-                      fontFamily: FontFamily.poppinsSemiBold,
-                      color: Color(0xff2F2E36),
-                      fontWeight: FontWeight.w600),
-                ),
-                ScreenSize.width(10),
-                Text.rich(TextSpan(
-                    text: '${getTranslated('total_amount', context)!} : ',
-                    style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: FontFamily.poppinsRegular,
-                        color: AppColor.lightTextColor),
-                    children: [
-                      TextSpan(
-                        text: '\$${provider.model!.orderAmount.toString()}',
-                        style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: FontFamily.poppinsSemiBold,
-                            color: AppColor.blackColor),
-                      )
-                    ]))
+                // Expanded(
+                //   child: getText(
+                //       title: getTranslated('order_details', context)!,
+                //       size: 16,
+                //       // maxLies: 1,
+                //       fontFamily: FontFamily.poppinsSemiBold,
+                //       color: Color(0xff2F2E36),
+                //       fontWeight: FontWeight.w600),
+                // ),
+                // ScreenSize.width(10),
+                // Text.rich(TextSpan(
+                //     text: '${getTranslated('total_amount', context)!} : ',
+                //     style: const TextStyle(
+                //         fontSize: 14,
+                //         fontWeight: FontWeight.w400,
+                //         fontFamily: FontFamily.poppinsRegular,
+                //         color: AppColor.lightTextColor),
+                //     children: [
+                //       TextSpan(
+                //         text: '\$${provider.model!.orderAmount.toString()}',
+                //         style: TextStyle(
+                //             fontSize: 16,
+                //             fontWeight: FontWeight.w400,
+                //             fontFamily: FontFamily.poppinsSemiBold,
+                //             color: AppColor.blackColor),
+                //       )
+                //     ]))
               ],
             ),
           ),
-          ScreenSize.height(12),
-          Container(
-            height: 1,
-            color: const Color(0xffD9D9D9),
-          ),
+          // ScreenSize.height(12),
+          // Container(
+          //   height: 1,
+          //   color: const Color(0xffD9D9D9),
+          // ),
           provider.model!.product != null
               ? Container(
                   // color: Colors.red,
@@ -902,7 +972,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
                     title == getTranslated('open_map', context)!
                 ? AppColor.greenColor
                 : const Color(0xff0790FF),
-                maxLies: 1,
+            maxLies: 1,
             fontWeight: FontWeight.w400),
       ),
     );

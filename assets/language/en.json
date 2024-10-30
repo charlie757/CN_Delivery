@@ -221,5 +221,9 @@
     "distance_drop_and_you":"Distance between you and drop",
     "shop_details":"Shop Details",
     "admin_commison":"Admin commission",
-    "total_delivery_man_amount":"Total delivery man amount"
+    "total_delivery_man_amount":"Total delivery man amount",
+    "order_summary":"Order Summary",
+    "order_price":"Order Price",
+    "delivery_fee":"Delivery Fee",
+    "grand_total":"Grand Total"
 }

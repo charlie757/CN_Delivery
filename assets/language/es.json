@@ -219,5 +219,9 @@
     "distance_drop_and_you":"Distancia entre usted y la gota",
     "shop_details":"Detalles de la tienda",
     "admin_commison":"Comisión de administración",
-    "total_delivery_man_amount":"Importe total del repartidor"
+    "total_delivery_man_amount":"Importe total del repartidor",
+    "order_summary":"Resumen del pedido",
+    "order_price":"Precio del pedido",
+    "delivery_fee":"Tarifa de envío",
+    "grand_total":"Gran total"
 }
