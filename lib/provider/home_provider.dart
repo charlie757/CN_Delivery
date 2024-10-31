@@ -12,16 +12,16 @@ class HomeProvider extends ChangeNotifier {
   HomeModel? homeModel;
   UpcomingOrderModel? upcomingOrderModel;
   callApiFunction() {
-    homeModel == null
-        ? showCircleProgressDialog(navigatorKey.currentContext!)
-        : false;
+    // homeModel == null
+    //     ? showCircleProgressDialog(navigatorKey.currentContext!)
+    //     : false;
     var body = json.encode({});
     ApiService.apiMethod(
       url: ApiUrl.dashboardUrl,
       body: body,
       method: checkApiMethod(httpMethod.get),
     ).then((value) {
-      homeModel == null ? Navigator.pop(navigatorKey.currentContext!) : null;
+      // homeModel == null ? Navigator.pop(navigatorKey.currentContext!) : null;
       if (value != null) {
         homeModel = HomeModel.fromJson(value);
         notifyListeners();

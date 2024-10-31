@@ -219,7 +219,7 @@ class ProfileProvider extends ChangeNotifier {
       body: body,
       method: checkApiMethod(httpMethod.get),
     ).then((value) {
-      isLoading ? Navigator.pop(navigatorKey.currentContext!) : null;
+      isLoading &&!Constants.is401Error ? Navigator.pop(navigatorKey.currentContext!) : null;
       if (value != null) {
         profileModel = ProfileModel.fromJson(value);
         setValuesInController();

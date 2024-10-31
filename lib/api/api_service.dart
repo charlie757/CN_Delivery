@@ -69,10 +69,10 @@ class ApiService {
     } else if (response.statusCode == 401) {
       print(Constants.is401Error);
       if(Constants.is401Error==false){
-        Future.delayed(const Duration(seconds: 1),(){
+        // Future.delayed(const Duration(milliseconds: 300),(){
           Constants.is401Error=true;
           Utils.logOut();
-        });
+        // });
       }
       else{
         print('fgfdhfg');
