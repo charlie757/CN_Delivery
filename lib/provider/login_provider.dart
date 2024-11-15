@@ -9,7 +9,6 @@ import 'package:cn_delivery/screens/dashboard_screen.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
 import 'package:cn_delivery/utils/constants.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
-import 'package:cn_delivery/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/auth/otp_verify_screen.dart';

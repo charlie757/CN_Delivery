@@ -53,7 +53,7 @@ class _EarningScreenState extends State<EarningScreen> {
                 Row(
                   children: [
                     Image.asset(
-                      AppImages.walletIcon,
+                      AppImages.totalEarningIcon,
                       width: 44.43,
                       height: 43,
                     ),

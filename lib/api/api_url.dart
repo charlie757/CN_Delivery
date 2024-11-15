@@ -28,4 +28,8 @@ class ApiUrl {
   static String updateVehicleInfoUrl = '${baseUrl}delivery-man/update-vehicle-info';
   static String updateLastLocationUrl = '${baseUrl}delivery-man/update-last-location';
   static String deleteAccountUrl = '${baseUrl}delivery-man/account-delete';
+  static String walletEarnUrl = '${baseUrl}delivery-man/earn';
+  static String addAmountUrl = '${baseUrl}delivery-man/add-amount-wallet';
+  static String bankInfoUrl = '${baseUrl}delivery-man/bank-info';
+  static String updateBankInfoUrl = '${baseUrl}delivery-man/update-bank-info';
 }

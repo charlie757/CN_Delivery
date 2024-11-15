@@ -239,4 +239,12 @@ class AppValidation {
     }
   }
 
+   static String? bankValidation({required String val, required String errorMsg}) {
+    if (val.isEmpty) {
+      return errorMsg;
+    } else {
+      return null;
+    }
+  }
+
 }

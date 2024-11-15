@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import '../../helper/appImages.dart';
 import '../../helper/appbutton.dart';
 import '../../helper/appcolor.dart';
-import '../../helper/customtextfield.dart';
+import '../../helper/rounded_textfield.dart';
 import '../../helper/fontfamily.dart';
 import '../../helper/getText.dart';
 import '../../helper/screensize.dart';
@@ -60,7 +60,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   size: 15, fontFamily: FontFamily.poppinsRegular,
                   color: AppColor.blackColor, fontWeight: FontWeight.w400),
               ScreenSize.height(50),
-              CustomTextfield(
+              RoundedTextField(
                 controller: myProvider.emailController,
                 hintText: getTranslated('enter_your_email', context)!,
                 isReadOnly: myProvider.isLoading,

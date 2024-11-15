@@ -1,5 +1,5 @@
 import 'package:cn_delivery/helper/appcolor.dart';
-import 'package:cn_delivery/helper/customtextfield.dart';
+import 'package:cn_delivery/helper/rounded_textfield.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/getText.dart';
 import 'package:cn_delivery/helper/screensize.dart';
@@ -46,7 +46,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     size: 22, fontFamily: FontFamily.poppinsMedium,
                     color: AppColor.blackColor, fontWeight: FontWeight.w500),
                 ScreenSize.height(20),
-                CustomTextfield(
+                RoundedTextField(
                   controller: myProvider.passwordController,
                   hintText: getTranslated('new_password', context)!,
                   errorMsg: myProvider.passwordErrorMsg,
@@ -60,8 +60,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     height: 30,
                     width: 30,
                     alignment: Alignment.center,
-                    child: ImageIcon(
-                      const AssetImage(
+                    child:const ImageIcon(
+                       AssetImage(
                         AppImages.passwordIcon,
                       ),
                       size: 24,
@@ -70,7 +70,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   ),
                 ),
                 ScreenSize.height(20),
-                CustomTextfield(
+                RoundedTextField(
                   controller: myProvider.confirmPasswordController,
                   hintText: getTranslated('confirm_password', context)!,
                   errorMsg: myProvider.confirmNewPasswordErrorMsg,

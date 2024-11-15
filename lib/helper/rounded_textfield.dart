@@ -7,7 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CustomTextfield extends StatelessWidget {
+class RoundedTextField extends StatelessWidget {
   final hintText;
   final TextEditingController controller;
   final icon;
@@ -19,7 +19,7 @@ class CustomTextfield extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   TextInputAction? textInputAction;
   Function()?onTap;
-   CustomTextfield(
+   RoundedTextField(
       {super.key,
       this.hintText,
       required this.controller,

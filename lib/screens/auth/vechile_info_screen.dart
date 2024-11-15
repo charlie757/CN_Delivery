@@ -13,7 +13,7 @@ import '../../helper/appcolor.dart';
 import '../../helper/fontfamily.dart';
 import '../../helper/getText.dart';
 import '../../helper/screensize.dart';
-import '../../helper/signuptextfield.dart';
+import '../../helper/rectangle_textfield.dart';
 import '../../utils/utils.dart';
 import '../../widget/customradio.dart';
 import '../../widget/image_bottom_sheet.dart';
@@ -288,7 +288,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
             color: AppColor.lightTextColor,
             fontWeight: FontWeight.w400),
         ScreenSize.height(6),
-        SignUpTextField(
+        RectangleTextfield(
           hintText: getTranslated('enter_brand_name', context)!,
           controller: myProvider.vehicleBrandController,
           textInputAction: TextInputAction.next,
@@ -306,7 +306,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
             color: AppColor.lightTextColor,
             fontWeight: FontWeight.w400),
         ScreenSize.height(6),
-        SignUpTextField(
+        RectangleTextfield(
           hintText: getTranslated('enter_vehicle_size', context)!,
           controller: myProvider.vehicleSizeController,
           textInputAction: TextInputAction.next,
@@ -324,7 +324,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
             color: AppColor.lightTextColor,
             fontWeight: FontWeight.w400),
         ScreenSize.height(6),
-        SignUpTextField(
+        RectangleTextfield(
           hintText: getTranslated('enter_vehicle_color', context)!,
           controller: myProvider.vehicleColorController,
           textInputAction: TextInputAction.next,
@@ -381,7 +381,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
             color: AppColor.lightTextColor,
             fontWeight: FontWeight.w400),
         ScreenSize.height(6),
-        SignUpTextField(
+        RectangleTextfield(
           hintText: getTranslated('enter_vehicle_name', context)!,
           controller: myProvider.vehicleNameController,
           textInputAction: TextInputAction.next,
@@ -399,7 +399,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
             color: AppColor.lightTextColor,
             fontWeight: FontWeight.w400),
         ScreenSize.height(6),
-        SignUpTextField(
+        RectangleTextfield(
           hintText: getTranslated('enter_brand_name', context)!,
           controller: myProvider.vehicleBrandController,
           textInputAction: TextInputAction.next,
@@ -417,7 +417,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
             color: AppColor.lightTextColor,
             fontWeight: FontWeight.w400),
         ScreenSize.height(6),
-        SignUpTextField(
+        RectangleTextfield(
           hintText: getTranslated('enter_model_number', context)!,
           controller: myProvider.modelNumberController,
           textInputAction: TextInputAction.next,
@@ -435,7 +435,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
             color: AppColor.lightTextColor,
             fontWeight: FontWeight.w400),
         ScreenSize.height(6),
-        SignUpTextField(
+        RectangleTextfield(
           hintText: getTranslated('select_registration_date', context)!,
           controller: myProvider.dorController,
           textInputAction: TextInputAction.next,
@@ -471,7 +471,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
             color: AppColor.lightTextColor,
             fontWeight: FontWeight.w400),
         ScreenSize.height(6),
-        SignUpTextField(
+        RectangleTextfield(
           hintText: getTranslated('enter_registration_number', context)!,
           controller: myProvider.registrationController,
           textInputAction: TextInputAction.next,
@@ -491,7 +491,7 @@ biCycleWidget(VehicleInfoProvider myProvider){
             color: AppColor.lightTextColor,
             fontWeight: FontWeight.w400),
         ScreenSize.height(6),
-        SignUpTextField(
+        RectangleTextfield(
           hintText: getTranslated('enter_licence_number', context)!,
           controller: myProvider.licenceController,
           textInputAction: TextInputAction.done,

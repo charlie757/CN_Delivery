@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'appcolor.dart';
 
 // ignore: must_be_immutable
-class SignUpTextField extends StatefulWidget {
+class RectangleTextfield extends StatefulWidget {
   final String hintText;
   final TextEditingController? controller;
   final TextInputType textInputType;
@@ -21,7 +21,7 @@ class SignUpTextField extends StatefulWidget {
   FocusNode? focusNode;
   Function()?onTap;
 
-  SignUpTextField({required this.hintText,  this.controller,this.textInputType=TextInputType.text,
+  RectangleTextfield({required this.hintText,  this.controller,this.textInputType=TextInputType.text,
     this.inputFormatters,
     this.isReadOnly=false,
     this.textInputAction,
@@ -36,10 +36,10 @@ class SignUpTextField extends StatefulWidget {
   });
 
   @override
-  State<SignUpTextField> createState() => _SignUpTextFieldState();
+  State<RectangleTextfield> createState() => _RectangleTextfieldState();
 }
 
-class _SignUpTextFieldState extends State<SignUpTextField> {
+class _RectangleTextfieldState extends State<RectangleTextfield> {
 
 
   @override
@@ -63,6 +63,7 @@ class _SignUpTextFieldState extends State<SignUpTextField> {
       cursorColor: AppColor.blueColor,
       obscureText: widget.isObscureText,
       decoration: InputDecoration(
+        isDense: true,
         suffixIcon: widget.suffix,
         border: OutlineInputBorder(
             borderSide:const BorderSide(

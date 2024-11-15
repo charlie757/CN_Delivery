@@ -21,6 +21,12 @@ class Constants {
 
   static String androidGoogleMapKey = 'AIzaSyAFg444yhMDNO_8DG9qMFFlPJOr3LlQ5dE';
   static String iosGoogleMapKey = 'AIzaSyDuKSn9jBZ-2Qs6XD0VQNlxsIsAKjha0Yk';
+  
+  static String publicPaymentKey = 'pub_prod_D7H2nlvRubeUhH42AfJF03wJNPXD33ly';
+  // 'pub_test_xIZwEEzxj44qVcC1lvzrmrfQsc9QCq6S';
+  static String intergrityKey ='pub_prod_D7H2nlvRubeUhH42AfJF03wJNPXD33ly';
+  //  'test_integrity_weejWIJuG4iukwpo3qMgcBnfZkrpzUKR';
+
 
   ///
   static bool is401Error = false;

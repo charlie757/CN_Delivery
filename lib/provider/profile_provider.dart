@@ -264,7 +264,6 @@ notifyListeners();
     genderController.text = profileModel!.data!.gender??"";
     cityController.text = profileModel!.data!.city ?? "";
     countryController.text = profileModel!.data!.country ?? "";
-    
     profileImgUrl = profileModel!.data!.image ?? '';
     isOnline = profileModel!.data!.isOnline == 1 ? true : false;
     if(genderController.text.isNotEmpty){

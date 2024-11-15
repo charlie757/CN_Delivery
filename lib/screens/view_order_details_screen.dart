@@ -373,7 +373,7 @@ class _ViewOrderDetailsScreenState extends State<ViewOrderDetailsScreen>
               customBtn(
                   provider.model!.paymentMethod.toString() == 'cash_on_delivery'
                       ? "COD"
-                      : provider.model!.paymentMethod.toString(),
+                      : provider.model!.paymentMethod.toString().replaceAll('_', ' '),
                   () {}),
             ],
           ),

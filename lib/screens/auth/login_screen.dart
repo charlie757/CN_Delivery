@@ -2,7 +2,7 @@ import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
-import 'package:cn_delivery/helper/customtextfield.dart';
+import 'package:cn_delivery/helper/rounded_textfield.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/screensize.dart';
@@ -100,7 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
                 ScreenSize.height(20),
-                CustomTextfield(
+                RoundedTextField(
                   controller: myProvider.emailController,
                   hintText: getTranslated('enter_your_email', context)!,
                   isReadOnly: myProvider.isLoading,
@@ -115,8 +115,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     height: 30,
                     width: 30,
                     alignment: Alignment.center,
-                    child: ImageIcon(
-                      const AssetImage(
+                    child:const ImageIcon(
+                       AssetImage(
                         AppImages.emailIcon,
                       ),
                       size: 24,
@@ -125,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 ScreenSize.height(25),
-                CustomTextfield(
+                RoundedTextField(
                   controller: myProvider.passwordController,
                   hintText: getTranslated('enter_your_password', context)!,
                   isReadOnly: myProvider.isLoading,

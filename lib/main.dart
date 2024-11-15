@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cn_delivery/helper/appcolor.dart';
-import 'package:cn_delivery/helper/custom_delegate.dart';
+import 'package:cn_delivery/localization/custom_delegate.dart';
 import 'package:cn_delivery/localization/app_localization.dart';
 import 'package:cn_delivery/provider/all_order_provider.dart';
+import 'package:cn_delivery/provider/bank_details_provider.dart';
 import 'package:cn_delivery/provider/current_order_provider.dart';
 import 'package:cn_delivery/provider/dashboard_provider.dart';
 import 'package:cn_delivery/provider/earn_provider.dart';
@@ -18,6 +19,7 @@ import 'package:cn_delivery/provider/profile_provider.dart';
 import 'package:cn_delivery/provider/signup_provider.dart';
 import 'package:cn_delivery/provider/vehicle_info_provider.dart';
 import 'package:cn_delivery/provider/view_order_details_provider.dart';
+import 'package:cn_delivery/provider/wallet_provider.dart';
 import 'package:cn_delivery/screens/splash_screen.dart';
 import 'package:cn_delivery/utils/constants.dart';
 import 'package:cn_delivery/utils/location_service.dart';
@@ -60,6 +62,8 @@ void main() async {
     ChangeNotifierProvider(create: (_) => NotificationProvider()),
     ChangeNotifierProvider(create: (_) => LocalizationProvider()),
     ChangeNotifierProvider(create: (_) => VehicleInfoProvider()),
+    ChangeNotifierProvider(create: (_) => WalletProvider()),
+    ChangeNotifierProvider(create: (_) => BankDetailsProvider()),
   ], child: const MyApp()));
 }
 

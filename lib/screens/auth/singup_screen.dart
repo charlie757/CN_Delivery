@@ -5,7 +5,7 @@ import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/getText.dart';
 import 'package:cn_delivery/helper/image_picker_service.dart';
 import 'package:cn_delivery/helper/screensize.dart';
-import 'package:cn_delivery/helper/signuptextfield.dart';
+import 'package:cn_delivery/helper/rectangle_textfield.dart';
 import 'package:cn_delivery/provider/signup_provider.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:cn_delivery/widget/image_bottom_sheet.dart';
@@ -182,7 +182,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       color: AppColor.lightTextColor,
                       fontWeight: FontWeight.w400),
                   ScreenSize.height(6),
-                  SignUpTextField(
+                  RectangleTextfield(
                     hintText: getTranslated('enter_fName', context)!,
                     controller: myProvider.fNameController,
                     textInputAction: TextInputAction.next,
@@ -200,7 +200,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       color: AppColor.lightTextColor,
                       fontWeight: FontWeight.w400),
                   ScreenSize.height(6),
-                  SignUpTextField(
+                  RectangleTextfield(
                     hintText: getTranslated('enter_lName', context)!,
                     textInputAction: TextInputAction.next,
                     controller: myProvider.lNameController,
@@ -271,7 +271,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       color: AppColor.lightTextColor,
                       fontWeight: FontWeight.w400),
                   ScreenSize.height(6),
-                  SignUpTextField(
+                  RectangleTextfield(
                     hintText: getTranslated('email_address', context)!,
                     controller: myProvider.emailController,
                     textInputAction: TextInputAction.next,
@@ -291,7 +291,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       color: AppColor.lightTextColor,
                       fontWeight: FontWeight.w400),
                   ScreenSize.height(6),
-                  SignUpTextField(
+                  RectangleTextfield(
                     hintText: getTranslated('enter_address', context)!,
                     textInputAction: TextInputAction.next,
                     controller: myProvider.addressController,
@@ -309,7 +309,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       color: AppColor.lightTextColor,
                       fontWeight: FontWeight.w400),
                   ScreenSize.height(6),
-                  SignUpTextField(
+                  RectangleTextfield(
                     hintText: getTranslated('enter_department_city', context)!,
                     textInputAction: TextInputAction.next,
                     controller: myProvider.cityController,
@@ -327,7 +327,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       color: AppColor.lightTextColor,
                       fontWeight: FontWeight.w400),
                   ScreenSize.height(6),
-                  SignUpTextField(
+                  RectangleTextfield(
                     hintText: getTranslated('enter_your_country', context)!,
                     textInputAction: TextInputAction.next,
                     controller: myProvider.countryController,
@@ -345,7 +345,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       color: AppColor.lightTextColor,
                       fontWeight: FontWeight.w400),
                   ScreenSize.height(6),
-                  SignUpTextField(
+                  RectangleTextfield(
                     hintText: getTranslated('select_gender', context)!,
                     isReadOnly: true,
                     textInputAction: TextInputAction.next,
@@ -367,7 +367,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       color: AppColor.lightTextColor,
                       fontWeight: FontWeight.w400),
                   ScreenSize.height(6),
-                  SignUpTextField(
+                  RectangleTextfield(
                     hintText: getTranslated('enterPassword', context)!,
                     controller: myProvider.passwordController,
                     textInputAction: TextInputAction.next,
@@ -390,7 +390,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       color: AppColor.lightTextColor,
                       fontWeight: FontWeight.w400),
                   ScreenSize.height(6),
-                  SignUpTextField(
+                  RectangleTextfield(
                     hintText: getTranslated('enter_confirm_password', context)!,
                     textInputAction: TextInputAction.done,
                     controller: myProvider.confirmPasswordController,

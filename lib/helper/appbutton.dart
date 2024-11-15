@@ -30,7 +30,6 @@ class AppButton extends StatelessWidget {
           elevation: elevation,
           shadowColor:elevation==0?null: AppColor.appTheme,
           backgroundColor: buttonColor,
-          // primary: widget.buttonColor,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(40))),
       onPressed: onTap,

@@ -3,14 +3,13 @@ import 'dart:io';
 import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
-import 'package:cn_delivery/helper/customtextfield.dart';
+import 'package:cn_delivery/helper/rounded_textfield.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/gettext.dart';
 import 'package:cn_delivery/helper/image_picker_service.dart';
 import 'package:cn_delivery/helper/network_image_helper.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
-import 'package:cn_delivery/provider/localization_provider.dart';
 import 'package:cn_delivery/provider/profile_provider.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
 import 'package:cn_delivery/utils/constants.dart';
@@ -18,6 +17,7 @@ import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:cn_delivery/utils/utils.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:cn_delivery/widget/dialog_box.dart';
+import 'package:cn_delivery/widget/language_dialogbox.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
@@ -51,7 +51,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(SessionManager.token);
     return Consumer<ProfileProvider>(builder: (context, myProvider, child) {
       return Scaffold(
         backgroundColor: AppColor.whiteColor,
@@ -278,7 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ],
             ),
             ScreenSize.height(20),
-            CustomTextfield(
+            RoundedTextField(
               controller: profileProvider.firstNameController,
               hintText: getTranslated('first_name', context)!,
               errorMsg: profileProvider.fNameErrorMsg,
@@ -292,8 +291,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: ImageIcon(
-                  const AssetImage(
+                child: const ImageIcon(
+                   AssetImage(
                     AppImages.profileIcon,
                   ),
                   size: 24,
@@ -302,7 +301,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             ScreenSize.height(20),
-            CustomTextfield(
+            RoundedTextField(
               controller: profileProvider.lastNameController,
               hintText: getTranslated('last_name', context)!,
               errorMsg: profileProvider.lNameErrorMsg,
@@ -326,7 +325,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             ScreenSize.height(20),
-            CustomTextfield(
+            RoundedTextField(
               controller: profileProvider.mobileController,
               hintText: getTranslated('mobile_number', context)!,
               isReadOnly: true,
@@ -355,7 +354,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             ScreenSize.height(20),
-            CustomTextfield(
+            RoundedTextField(
               controller: profileProvider.emailController,
               hintText: getTranslated('email_address', context)!,
               errorMsg: profileProvider.emailErrorMsg,
@@ -379,7 +378,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             ScreenSize.height(20),
-            CustomTextfield(
+            RoundedTextField(
               controller: profileProvider.addressController,
               hintText: getTranslated('address', context)!,
               isReadOnly: profileProvider.profileLoading,
@@ -403,7 +402,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             ScreenSize.height(20),
-            CustomTextfield(
+            RoundedTextField(
               controller: profileProvider.cityController,
               hintText: getTranslated('enter_department_city', context)!,
               isReadOnly: profileProvider.profileLoading,
@@ -427,7 +426,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             ScreenSize.height(20),
-            CustomTextfield(
+            RoundedTextField(
               controller: profileProvider.countryController,
               hintText: getTranslated('enter_your_country', context)!,
               isReadOnly: profileProvider.profileLoading,
@@ -452,7 +451,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             ScreenSize.height(20),
            
-            CustomTextfield(
+            RoundedTextField(
               controller: profileProvider.genderController,
               hintText: getTranslated('gender', context)!,
               isReadOnly: true,
@@ -527,7 +526,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CustomTextfield(
+          RoundedTextField(
             controller: profileProvider.vehicleTypeController,
             hintText: getTranslated('vehicle_type', context)!,
             isReadOnly: true,
@@ -548,7 +547,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
            ScreenSize.height(20),
-           CustomTextfield(
+           RoundedTextField(
             controller: profileProvider.vehicleBrandController,
             hintText: getTranslated('enter_brand_name', context)!,
             isReadOnly: true,
@@ -566,7 +565,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           ScreenSize.height(20),
-           CustomTextfield(
+           RoundedTextField(
             controller: profileProvider.vehicleSizeController,
             hintText: getTranslated('enter_vehicle_size', context)!,
             isReadOnly: true,
@@ -584,7 +583,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           ScreenSize.height(20),
-           CustomTextfield(
+           RoundedTextField(
             controller: profileProvider.vehicleColorController,
             hintText:  getTranslated('enter_vehicle_color', context)!,
             isReadOnly: true,
@@ -647,7 +646,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            CustomTextfield(
+            RoundedTextField(
             controller: profileProvider.vehicleTypeController,
             hintText: getTranslated('vehicle_type', context)!,
             isReadOnly: true,
@@ -668,7 +667,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           ScreenSize.height(20),
-          CustomTextfield(
+          RoundedTextField(
             controller: profileProvider.vehicleNameController,
             hintText: getTranslated('vehicle_name', context)!,
             isReadOnly: true,
@@ -686,7 +685,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
             ScreenSize.height(20),
-          CustomTextfield(
+          RoundedTextField(
             controller: profileProvider.vehicleBrandController,
             hintText: getTranslated('enter_brand_name', context)!,
             isReadOnly: true,
@@ -705,7 +704,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         
           ScreenSize.height(20),
-          CustomTextfield(
+          RoundedTextField(
             controller: profileProvider.modelNumberController,
             hintText: getTranslated('enter_model_number', context)!,
             isReadOnly: true,
@@ -723,7 +722,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           ScreenSize.height(20),
-          CustomTextfield(
+          RoundedTextField(
             controller: profileProvider.dorController,
             hintText: getTranslated('select_registration_date', context)!,
             isReadOnly: true,
@@ -749,7 +748,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           ScreenSize.height(20),
-          CustomTextfield(
+          RoundedTextField(
             controller: profileProvider.vehicleRegistrationController,
             hintText: getTranslated('registration_number', context)!,
             isReadOnly: true,
@@ -767,7 +766,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           ScreenSize.height(20),
-          CustomTextfield(
+          RoundedTextField(
             controller: profileProvider.vehicleLicenseController,
             hintText: getTranslated('enter_licence_number', context)!,
             isReadOnly: true,
@@ -1058,7 +1057,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CustomTextfield(
+            RoundedTextField(
               controller: profileProvider.oldPasswordController,
               hintText: getTranslated('old_Password', context)!,
               errorMsg: profileProvider.oldPasswordErrorMsg,
@@ -1071,8 +1070,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: ImageIcon(
-                  const AssetImage(
+                child:const ImageIcon(
+                   AssetImage(
                     AppImages.passwordIcon,
                   ),
                   size: 24,
@@ -1081,7 +1080,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             ScreenSize.height(20),
-            CustomTextfield(
+            RoundedTextField(
               controller: profileProvider.newPasswordController,
               hintText: getTranslated('new_password', context)!,
               errorMsg: profileProvider.newPasswordErrorMsg,
@@ -1095,8 +1094,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: ImageIcon(
-                  const AssetImage(
+                child:const ImageIcon(
+                   AssetImage(
                     AppImages.passwordIcon,
                   ),
                   size: 24,
@@ -1105,7 +1104,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             ScreenSize.height(20),
-            CustomTextfield(
+            RoundedTextField(
               controller: profileProvider.confirmPasswordController,
               hintText: getTranslated('confirm_password', context)!,
               errorMsg: profileProvider.confirmNewPasswordErrorMsg,
@@ -1119,7 +1118,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: ImageIcon(
+                child: const ImageIcon(
                   const AssetImage(
                     AppImages.passwordIcon,
                   ),
@@ -1190,157 +1189,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           );
         });
-  }
-
-  openLanguageBox(ProfileProvider profileProvider) {
-    return showGeneralDialog(
-      context: context,
-      barrierLabel: "Barrier",
-      barrierDismissible: true,
-      barrierColor: Colors.black.withOpacity(0.5),
-      transitionDuration: Duration(milliseconds: 200),
-      pageBuilder: (_, __, ___) {
-        return StatefulBuilder(builder: (context, state) {
-          return Center(
-            child: Container(
-              // height: 200,
-              margin: const EdgeInsets.symmetric(horizontal: 25),
-              decoration: BoxDecoration(
-                  color: AppColor.whiteColor,
-                  borderRadius: BorderRadius.circular(15)),
-              padding: const EdgeInsets.only(
-                  top: 20, left: 15, right: 15, bottom: 30),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      getText(
-                          title: getTranslated('change_language', context)!,
-                          size: 16,
-                          fontFamily: FontFamily.poppinsMedium,
-                          color: AppColor.blackColor,
-                          fontWeight: FontWeight.w600),
-                      // Icon(Icons.close)
-                      IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: const Icon(Icons.close))
-                    ],
-                  ),
-                  ScreenSize.height(20),
-                  GestureDetector(
-                    onTap: () {
-                      profileProvider.updateLangIndex(0);
-
-                      state(() {});
-                    },
-                    child: Container(
-                      height: 30,
-                      color: AppColor.whiteColor,
-                      child: Row(
-                        children: [
-                          radioButton(profileProvider, 0),
-                          ScreenSize.width(15),
-                          getText(
-                              title: getTranslated('english', context)!,
-                              size: 18,
-                              fontFamily: FontFamily.nunitoMedium,
-                              color: AppColor.blackColor,
-                              fontWeight: FontWeight.w500)
-                        ],
-                      ),
-                    ),
-                  ),
-                  ScreenSize.height(15),
-                  GestureDetector(
-                    onTap: () {
-                      profileProvider.updateLangIndex(1);
-                      state(() {});
-                    },
-                    child: Container(
-                      height: 30,
-                      color: AppColor.whiteColor,
-                      child: Row(
-                        children: [
-                          radioButton(profileProvider, 1),
-                          ScreenSize.width(15),
-                          getText(
-                              title: getTranslated('spanish', context)!,
-                              size: 18,
-                              fontFamily: FontFamily.nunitoMedium,
-                              color: AppColor.blackColor,
-                              fontWeight: FontWeight.w500)
-                        ],
-                      ),
-                    ),
-                  ),
-                  ScreenSize.height(30),
-                  AppButton(
-                      title: getTranslated('okay', context)!,
-                      height: 45,
-                      width: 150,
-                      buttonColor: AppColor.appTheme,
-                      onTap: () {
-                        Provider.of<LocalizationProvider>(context,
-                                listen: false)
-                            .setLanguage(Locale(
-                          Constants.languages[profileProvider.selectedLangIndex]
-                              .languageCode!,
-                          Constants.languages[profileProvider.selectedLangIndex]
-                              .countryCode,
-                        ));
-
-                        Provider.of<LocalizationProvider>(context,
-                                listen: false)
-                            .loadCurrentLanguage();
-                        Navigator.pop(context);
-                      })
-                ],
-              ),
-            ),
-          );
-        });
-      },
-      transitionBuilder: (_, anim, __, child) {
-        Tween<Offset> tween;
-        if (anim.status == AnimationStatus.reverse) {
-          tween = Tween(begin: Offset(-1, 0), end: Offset.zero);
-        } else {
-          tween = Tween(begin: Offset(1, 0), end: Offset.zero);
-        }
-
-        return SlideTransition(
-          position: tween.animate(anim),
-          child: FadeTransition(
-            opacity: anim,
-            child: child,
-          ),
-        );
-      },
-    );
-  }
-
-  radioButton(ProfileProvider profileProvider, int index) {
-    return Container(
-      height: 20,
-      width: 20,
-      decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: AppColor.blueColor)),
-      padding: const EdgeInsets.all(3),
-      child: Container(
-        height: 20,
-        width: 20,
-        decoration: BoxDecoration(
-            color: profileProvider.selectedLangIndex == index
-                ? AppColor.blueColor
-                : AppColor.whiteColor,
-            shape: BoxShape.circle),
-      ),
-    );
   }
 
   imagePickType(icon, String title, Function() onTap) {

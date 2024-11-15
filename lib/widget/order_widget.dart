@@ -8,10 +8,7 @@ import 'package:cn_delivery/model/order_model.dart';
 import 'package:cn_delivery/utils/constants.dart';
 import 'package:cn_delivery/utils/enum.dart';
 import 'package:cn_delivery/utils/utils.dart';
-import 'package:cn_delivery/widget/btn_widget.dart';
-import 'package:cn_delivery/widget/dialog_box.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 orderWidget(
     {required OrderModel model,

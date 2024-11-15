@@ -12,7 +12,7 @@ class AppImages {
   static const earningIcon = 'assets/icons/earning.png';
   static const profileIcon = 'assets/icons/profile.png';
   static const arrowBackIcon = 'assets/icons/arrow_back.png';
-  static const walletIcon = 'assets/icons/wallet.png';
+  static const totalEarningIcon = 'assets/icons/total_earning.png';
   static const cityIcon = 'assets/icons/city.png';
   static const countryIcon = 'assets/icons/country.png';
   static const emailIcon = 'assets/icons/email.png';
@@ -31,4 +31,14 @@ class AppImages {
   static const customerMarkerIcon = 'assets/icons/person_marker.png';
   static const bicycleMarkerIcon = 'assets/icons/bicycle_marker.png';
   static const homeMarkerIcon = 'assets/icons/home_marker.png';
+  static const walletIcon = 'assets/icons/wallet_home.png';
+  static const debitTranscationIcon = 'assets/icons/debit_transcation_icon.png';
+  static const creditTranscationIcon = 'assets/icons/credit_transcation_icon.png';
+  static const atmCardIcon = 'assets/icons/atm-card.png';
+  static const logoutIcon = 'assets/icons/logout_icon.png';
+  static const translateIcon = 'assets/icons/translate.png';
+  static const bankIcon = 'assets/icons/bank_icon.png';
+  static const pwIcon = 'assets/icons/pw.png';
+  static const tcgIcon = 'assets/icons/tcg.png';
+  static const withdrawIcon ='assets/icons/withdraw.png';
 }

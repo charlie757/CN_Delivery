@@ -9,6 +9,7 @@ import 'package:cn_delivery/screens/all_orders_screen.dart';
 import 'package:cn_delivery/screens/earning_screen.dart';
 import 'package:cn_delivery/screens/home_screen.dart';
 import 'package:cn_delivery/screens/profile_screen.dart';
+import 'package:cn_delivery/screens/wallet_screen.dart';
 import 'package:cn_delivery/utils/location_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -45,8 +46,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     const HomeScreen(),
     // const CurrentOrderScreen(),
     const AllOrderScreen(),
-    const EarningScreen(),
-    const ProfileScreen()
+    // const EarningScreen(),
+    const WalletScreen(),
+    const ProfileScreen(),
   ];
 
 updateLocation(){
@@ -87,20 +89,20 @@ updateLocation(){
                        updateLocation();
                   myProvider.updateIndex(0);
                 }),
-                // customBottomNavigationBar(
-                //     AppImages.currentOrderIcon, getTranslated('current_orders', context)!, 1, myProvider,
-                //     () {
-                //   updateLocation();
-                //   myProvider.updateIndex(1);
-                // }),
                 customBottomNavigationBar(
                     AppImages.allOrderIcon, getTranslated('all_orders', context)!, 1, myProvider, () {
                       updateLocation();
                   myProvider.updateIndex(1);
                 }),
+                // customBottomNavigationBar(
+                //     AppImages.earningIcon, getTranslated('earning', context)!, 2, myProvider, () {
+                //       updateLocation();
+                //   myProvider.updateIndex(2);
+                // }),
                 customBottomNavigationBar(
-                    AppImages.earningIcon, getTranslated('earning', context)!, 2, myProvider, () {
-                      updateLocation();
+                    AppImages.walletIcon, getTranslated('wallet', context)!, 2, myProvider,
+                    () {
+                  updateLocation();
                   myProvider.updateIndex(2);
                 }),
                 customBottomNavigationBar(
