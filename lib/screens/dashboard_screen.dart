@@ -6,7 +6,6 @@ import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/dashboard_provider.dart';
 import 'package:cn_delivery/provider/profile_provider.dart';
 import 'package:cn_delivery/screens/all_orders_screen.dart';
-import 'package:cn_delivery/screens/earning_screen.dart';
 import 'package:cn_delivery/screens/home_screen.dart';
 import 'package:cn_delivery/screens/profile_screen.dart';
 import 'package:cn_delivery/screens/wallet_screen.dart';

@@ -54,10 +54,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Consumer<ProfileProvider>(builder: (context, myProvider, child) {
       return Scaffold(
         backgroundColor: AppColor.whiteColor,
-        appBar: profileAppBar (value: myProvider.isOnline,
-               onChanged: (val) {
-          myProvider.updateInOnline(val);
-        },onTap: (){
+        appBar: profileAppBar(
+            value: myProvider.isOnline,
+            onChanged: (val) {
+              myProvider.updateInOnline(val);
+            },
+            onTap: () {
               openBottomSheetOptions();
             }),
         body: Column(
@@ -67,9 +69,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Expanded(
                 child: myProvider.tabBarIndex == 0
                     ? personalInfoWidget(myProvider)
-                    :myProvider.tabBarIndex == 1?
-                vehicleInfoWidget(myProvider):
-                changePasswordWidget(myProvider))
+                    : myProvider.tabBarIndex == 1
+                        ? vehicleInfoWidget(myProvider)
+                        : changePasswordWidget(myProvider))
           ],
         ),
       );
@@ -84,103 +86,53 @@ class _ProfileScreenState extends State<ProfileScreen> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            GestureDetector(
-              onTap: () {
-                profileProvider.updateTabBarIndex(0);
-              },
-              child: Container(
-                height: 50,
-                width: 120,
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Text(
-                        getTranslated('personal_info', context)!,
-                       maxLines: 1,overflow: TextOverflow.ellipsis,
-                       style:TextStyle(
-                        fontSize: 16,
-                        fontFamily: FontFamily.poppinsSemiBold,
-                        color: profileProvider.tabBarIndex == 0
-                            ? AppColor.blueColor
-                            : AppColor.blackColor,
-                        fontWeight: FontWeight.w600)),
-                    ScreenSize.height(15),
-                    Container(
-                      height: profileProvider.tabBarIndex == 0 ? 4 : 1,
-                      color: profileProvider.tabBarIndex == 0
-                          ? AppColor.blueColor
-                          : const Color(0xffD9D9D9),
-                    )
-                  ],
-                ),
-              ),
-            ),
+            tabBarItems(index: 0, title: getTranslated('personal_info', context)!,
+             profileProvider: profileProvider),
             ScreenSize.width(10),
-            GestureDetector(
-              onTap: () {
-                profileProvider.updateTabBarIndex(1);
-              },
-              child: Container(
-                height: 50,
-                width: 120,
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    Text(
-                        getTranslated('vehicle_info', context)!,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style:TextStyle(
-                        fontSize: 16,
-                        fontFamily: FontFamily.poppinsSemiBold,
-                        color: profileProvider.tabBarIndex == 1
-                            ? AppColor.blueColor
-                            : AppColor.blackColor,
-                        fontWeight: FontWeight.w600)),
-                    ScreenSize.height(15),
-                    Container(
-                      height: profileProvider.tabBarIndex ==1 ? 4 : 1,
-                      color: profileProvider.tabBarIndex == 1
-                          ? AppColor.blueColor
-                          : const Color(0xffD9D9D9),
-                    )
-                  ],
-                ),
-              ),
-            ),
+            tabBarItems(index: 1, title: getTranslated('vehicle_info', context)!,
+             profileProvider: profileProvider),
             ScreenSize.width(10),
-            GestureDetector(
-              onTap: () {
-                profileProvider.updateTabBarIndex(2);
-              },
-              child: Container(
-                color: Colors.white,
-                height: 50,
-                width: 180,
-                child: Column(
-                  children: [
-                    Text(
-                      getTranslated('change_password', context)!,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: FontFamily.poppinsSemiBold,
-                          color: profileProvider.tabBarIndex == 2
-                              ? AppColor.blueColor
-                              : AppColor.blackColor,
-                          fontWeight: FontWeight.w600),
-                    ),
-                    ScreenSize.height(15),
-                    Container(
-                      height: profileProvider.tabBarIndex == 2? 4 : 1,
-                      color: profileProvider.tabBarIndex == 2
-                          ? AppColor.blueColor
-                          : const Color(0xffD9D9D9),
-                    )
-                  ],
-                ),
-              ),
+            tabBarItems(index: 2, title: getTranslated('change_password', context)!,
+             profileProvider: profileProvider,width: 180),
+          ],
+        ),
+      ),
+    );
+  }
+
+  tabBarItems(
+      {required int index,
+      required String title,
+      double width=120,
+      required ProfileProvider profileProvider}) {
+    return GestureDetector(
+      onTap: () {
+        profileProvider.updateTabBarIndex(index);
+      },
+      child: Container(
+        color: Colors.white,
+        height: 50,
+        width: width,
+        child: Column(
+          children: [
+            Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  fontSize: 16,
+                  fontFamily: FontFamily.poppinsSemiBold,
+                  color: profileProvider.tabBarIndex == index
+                      ? AppColor.blueColor
+                      : AppColor.blackColor,
+                  fontWeight: FontWeight.w600),
+            ),
+            ScreenSize.height(15),
+            Container(
+              height: profileProvider.tabBarIndex == index ? 4 : 1,
+              color: profileProvider.tabBarIndex == index
+                  ? AppColor.blueColor
+                  : const Color(0xffD9D9D9),
             )
           ],
         ),
@@ -227,27 +179,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ScreenSize.width(30),
                 GestureDetector(
                   onTap: () {
-                    imageBottomSheet(context,
-                        cameraTap: (){
-                          ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
-                            if(val!=null){
-                              profileProvider.imgFile = val;
-                              setState(() {
-
-                              });
-                              Navigator.pop(context);
-                            }
-                          });
-                        },galleryTap: (){
-                          ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
-                            if(val!=null){
-                              profileProvider.imgFile = val;
-                              setState(() {
-                              });
-                              Navigator.pop(context);
-                            }
-                          });
-                        });
+                    imageBottomSheet(context, cameraTap: () {
+                      ImagePickerService.imagePicker(
+                              context, ImageSource.camera)
+                          .then((val) {
+                        if (val != null) {
+                          profileProvider.imgFile = val;
+                          setState(() {});
+                          Navigator.pop(context);
+                        }
+                      });
+                    }, galleryTap: () {
+                      ImagePickerService.imagePicker(
+                              context, ImageSource.gallery)
+                          .then((val) {
+                        if (val != null) {
+                          profileProvider.imgFile = val;
+                          setState(() {});
+                          Navigator.pop(context);
+                        }
+                      });
+                    });
                     // imagePickerBottomSheet(profileProvider);
                   },
                   child: Container(
@@ -287,12 +239,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     AppValidation.firstNameValidator(val);
                 setState(() {});
               },
-              icon: Container(
+              prefixIcon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
                 child: const ImageIcon(
-                   AssetImage(
+                  AssetImage(
                     AppImages.profileIcon,
                   ),
                   size: 24,
@@ -311,12 +263,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     AppValidation.lastNameValidator(val);
                 setState(() {});
               },
-              icon: Container(
+              prefixIcon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: ImageIcon(
-                  const AssetImage(
+                child:const ImageIcon(
+                   AssetImage(
                     AppImages.profileIcon,
                   ),
                   size: 24,
@@ -340,12 +292,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     AppValidation.phoneNumberValidator(val);
                 setState(() {});
               },
-              icon: Container(
+              prefixIcon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: ImageIcon(
-                  const AssetImage(
+                child:const ImageIcon(
+                   AssetImage(
                     AppImages.callIcon,
                   ),
                   size: 24,
@@ -364,12 +316,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     AppValidation.emailValidator(val);
                 setState(() {});
               },
-              icon: Container(
+              prefixIcon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: ImageIcon(
-                  const AssetImage(
+                child:const ImageIcon(
+                   AssetImage(
                     AppImages.emailIcon,
                   ),
                   size: 24,
@@ -388,12 +340,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     AppValidation.addressValidator(val);
                 setState(() {});
               },
-              icon: Container(
+              prefixIcon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: ImageIcon(
-                  const AssetImage(
+                child:const ImageIcon(
+                   AssetImage(
                     AppImages.locationIcon,
                   ),
                   size: 24,
@@ -408,16 +360,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
               isReadOnly: profileProvider.profileLoading,
               errorMsg: profileProvider.cityErrorMsg,
               onChanged: (val) {
-                profileProvider.cityErrorMsg =
-                    AppValidation.cityValidator(val);
+                profileProvider.cityErrorMsg = AppValidation.cityValidator(val);
                 setState(() {});
               },
-              icon: Container(
+              prefixIcon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: ImageIcon(
-                  const AssetImage(
+                child:const ImageIcon(
+                   AssetImage(
                     AppImages.locationIcon,
                   ),
                   size: 24,
@@ -436,12 +387,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     AppValidation.countryValidator(val);
                 setState(() {});
               },
-              icon: Container(
+              prefixIcon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: ImageIcon(
-                  const AssetImage(
+                child:const ImageIcon(
+                   AssetImage(
                     AppImages.locationIcon,
                   ),
                   size: 24,
@@ -450,57 +401,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             ScreenSize.height(20),
-           
             RoundedTextField(
               controller: profileProvider.genderController,
               hintText: getTranslated('gender', context)!,
               isReadOnly: true,
               errorMsg: profileProvider.genderErrorMsg,
-              icon: Container(
+              prefixIcon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: ImageIcon(
-                  const AssetImage(
+                child:const ImageIcon(
+                   AssetImage(
                     AppImages.profileIcon,
                   ),
                   size: 24,
                   color: AppColor.blueColor,
                 ),
               ),
-              onTap: (){
+              onTap: () {
                 genderBottomSheet();
               },
             ),
             ScreenSize.height(20),
-            getText(title: getTranslated('stateIdentityImage', context)!,
-                size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
+            getText(
+                title: getTranslated('stateIdentityImage', context)!,
+                size: 12,
+                fontFamily: FontFamily.poppinsMedium,
+                color: AppColor.blackColor,
                 fontWeight: FontWeight.w400),
             ScreenSize.height(6),
-            uploadImageWidget(onTap: (){
-              imageBottomSheet(context,cameraTap: (){
-                ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
-                  if(val!=null){
-                    profileProvider.stateIdentityImage = val;
-                    setState(() {
+            uploadImageWidget(
+                onTap: () {
+                  imageBottomSheet(context, cameraTap: () {
+                    ImagePickerService.imagePicker(context, ImageSource.camera)
+                        .then((val) {
+                      if (val != null) {
+                        profileProvider.stateIdentityImage = val;
+                        setState(() {});
+                        Navigator.pop(context);
+                      }
                     });
-                    Navigator.pop(context);
-                  }
-                });
-              },galleryTap: (){
-                ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
-                  if(val!=null){
-                    profileProvider.stateIdentityImage = val;
-                    setState(() {
+                  }, galleryTap: () {
+                    ImagePickerService.imagePicker(context, ImageSource.gallery)
+                        .then((val) {
+                      if (val != null) {
+                        profileProvider.stateIdentityImage = val;
+                        setState(() {});
+                        Navigator.pop(context);
+                      }
                     });
-                    Navigator.pop(context);
-                  }
-                });
-              });
-            },
-                imgPath:profileProvider.stateIdentityImage,imgUrl:
-                profileProvider.profileModel!=null&&profileProvider.profileModel!.data!=null?
-                profileProvider.profileModel!.data!.identityImage??"":""),
+                  });
+                },
+                imgPath: profileProvider.stateIdentityImage,
+                imgUrl: profileProvider.profileModel != null &&
+                        profileProvider.profileModel!.data != null
+                    ? profileProvider.profileModel!.data!.identityImage ?? ""
+                    : ""),
             ScreenSize.height(50),
             AppButton(
                 title: getTranslated('update_profile', context)!,
@@ -519,507 +475,976 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  bicycleInfoWidget(ProfileProvider profileProvider){
+  vehicleInfoWidget(ProfileProvider profileProvider) {
     return SingleChildScrollView(
-      padding:
-      const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 50),
+      padding: const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 50),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           RoundedTextField(
             controller: profileProvider.vehicleTypeController,
             hintText: getTranslated('vehicle_type', context)!,
             isReadOnly: true,
             errorMsg: profileProvider.vehicleTypeErrorMsg,
-            onTap: (){
-              // vehicleTypeBottomSheet();
+            onTap: () {
+              vehicleTypeBottomSheet();
             },
             onChanged: (val) {
               profileProvider.vehicleTypeErrorMsg =
                   AppValidation.vehicleTypeValidator(val);
               setState(() {});
             },
-            icon: Container(
+            prefixIcon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
-            ),
-          ),
-           ScreenSize.height(20),
-           RoundedTextField(
-            controller: profileProvider.vehicleBrandController,
-            hintText: getTranslated('enter_brand_name', context)!,
-            isReadOnly: true,
-            errorMsg: profileProvider.vehicleBrandErrorMsg,
-            onChanged: (val) {
-              profileProvider.vehicleBrandErrorMsg =
-                  AppValidation.vehicleBrandValidator(val);
-              setState(() {});
-            },
-            icon: Container(
-                height: 30,
-                width: 30,
-                alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
-            ),
+                child: Icon(
+                  Icons.card_travel,
+                  color: AppColor.blueColor.withOpacity(.7),
+                )),
           ),
           ScreenSize.height(20),
-           RoundedTextField(
-            controller: profileProvider.vehicleSizeController,
-            hintText: getTranslated('enter_vehicle_size', context)!,
-            isReadOnly: true,
-            errorMsg: profileProvider.vehicleSizeErrorMsg,
-            onChanged: (val) {
-              profileProvider.vehicleSizeErrorMsg =
-                  AppValidation.vehicleSizeValidator(val);
-              setState(() {});
-            },
-            icon: Container(
-                height: 30,
-                width: 30,
-                alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
-            ),
+          profileProvider.vehicleTypeController.text.toLowerCase() == 'bicycle'
+              ? bicycleInfoWidget(profileProvider)
+              : carAndBikeVehicleInfoWidget(profileProvider),
+          Padding(
+            padding: const EdgeInsets.only(top: 40),
+            child: AppButton(
+                title: getTranslated('update_vehicle_info', context)!,
+                height: 49,
+                width: double.infinity,
+                buttonColor: AppColor.appTheme,
+                isLoading: profileProvider.profileLoading,
+                onTap: () {
+                  if (profileProvider.vehicleTypeController.text
+                          .toLowerCase() ==
+                      'bicycle') {
+                    profileProvider.checkBicycleValidation();
+                  } else {
+                    profileProvider.checkCarAndBikeVehicleInfoValidation();
+                  }
+                }),
           ),
-          ScreenSize.height(20),
-           RoundedTextField(
-            controller: profileProvider.vehicleColorController,
-            hintText:  getTranslated('enter_vehicle_color', context)!,
-            isReadOnly: true,
-            errorMsg: profileProvider.vehicleColorErrorMsg,
-            onChanged: (val) {
-              profileProvider.vehicleColorErrorMsg =
-                  AppValidation.vehicleColorValidator(val);
-              setState(() {});
-            },
-            icon: Container(
-                height: 30,
-                width: 30,
-                alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
-            ),
-          ),
-         ScreenSize.height(20),
-            getText(title: getTranslated('vehicle_image', context)!,
-                size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
-                fontWeight: FontWeight.w400),
-            ScreenSize.height(6),
-            uploadImageWidget(onTap: (){
-              // imageBottomSheet(context,cameraTap: (){
-                // ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
-                //   if(val!=null){
-                //     profileProvider.stateIdentityImage = val;
-                //     setState(() {
-                //     });
-                //     Navigator.pop(context);
-                //   }
-                // });
-              // },galleryTap: (){
-              //   ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
-              //     if(val!=null){
-              //       profileProvider.stateIdentityImage = val;
-              //       setState(() {
-              //       });
-              //       Navigator.pop(context);
-              //     }
-              //   });
-              // });
-            },
-                imgPath:profileProvider.vehicleImage,imgUrl:
-                profileProvider.vehicleInfoModel!=null&&profileProvider.vehicleInfoModel!.data!=null?
-                profileProvider.vehicleInfoModel!.data!.vehicleImage??"":""),
         ],
       ),
     );
   }
 
-  vehicleInfoWidget(ProfileProvider profileProvider){
-    return profileProvider.vehicleInfoModel!.data!.vehicleType.toString().toLowerCase()=='bicycle'?
-      bicycleInfoWidget(profileProvider):carAndBikeVehicleInfoWidget(profileProvider);
-     }
-
-  carAndBikeVehicleInfoWidget(ProfileProvider profileProvider){
-    return SingleChildScrollView(
-      padding:
-      const EdgeInsets.only(left: 15, right: 15, top: 20, bottom: 50),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-            RoundedTextField(
-            controller: profileProvider.vehicleTypeController,
-            hintText: getTranslated('vehicle_type', context)!,
-            isReadOnly: true,
-            errorMsg: profileProvider.vehicleTypeErrorMsg,
-            onTap: (){
-              // vehicleTypeBottomSheet();
+  bicycleInfoWidget(ProfileProvider profileProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RoundedTextField(
+          controller: profileProvider.vehicleBrandController,
+          hintText: getTranslated('enter_brand_name', context)!,
+          isReadOnly: false,
+          errorMsg: profileProvider.vehicleBrandErrorMsg,
+          onChanged: (val) {
+            profileProvider.vehicleBrandErrorMsg =
+                AppValidation.vehicleBrandValidator(val);
+            setState(() {});
+          },
+          prefixIcon: Container(
+              height: 30,
+              width: 30,
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.card_travel,
+                color: AppColor.blueColor.withOpacity(.7),
+              )),
+        ),
+        ScreenSize.height(20),
+        RoundedTextField(
+          controller: profileProvider.vehicleSizeController,
+          hintText: getTranslated('enter_vehicle_size', context)!,
+          isReadOnly: false,
+          errorMsg: profileProvider.vehicleSizeErrorMsg,
+          onChanged: (val) {
+            profileProvider.vehicleSizeErrorMsg =
+                AppValidation.vehicleSizeValidator(val);
+            setState(() {});
+          },
+          prefixIcon: Container(
+              height: 30,
+              width: 30,
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.card_travel,
+                color: AppColor.blueColor.withOpacity(.7),
+              )),
+        ),
+        ScreenSize.height(20),
+        RoundedTextField(
+          controller: profileProvider.vehicleColorController,
+          hintText: getTranslated('enter_vehicle_color', context)!,
+          isReadOnly: false,
+          errorMsg: profileProvider.vehicleColorErrorMsg,
+          onChanged: (val) {
+            profileProvider.vehicleColorErrorMsg =
+                AppValidation.vehicleColorValidator(val);
+            setState(() {});
+          },
+          prefixIcon: Container(
+              height: 30,
+              width: 30,
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.card_travel,
+                color: AppColor.blueColor.withOpacity(.7),
+              )),
+        ),
+        ScreenSize.height(20),
+        getText(
+            title: getTranslated('vehicle_image', context)!,
+            size: 12,
+            fontFamily: FontFamily.poppinsMedium,
+            color: AppColor.blackColor,
+            fontWeight: FontWeight.w400),
+        ScreenSize.height(6),
+        uploadImageWidget(
+            onTap: () {
+              imageBottomSheet(context, cameraTap: () {
+                ImagePickerService.imagePicker(context, ImageSource.camera)
+                    .then((val) {
+                  if (val != null) {
+                    profileProvider.vehicleImage = val;
+                    setState(() {});
+                    Navigator.pop(context);
+                  }
+                });
+              }, galleryTap: () {
+                ImagePickerService.imagePicker(context, ImageSource.gallery)
+                    .then((val) {
+                  if (val != null) {
+                    profileProvider.vehicleImage = val;
+                    setState(() {});
+                    Navigator.pop(context);
+                  }
+                });
+              });
             },
-            onChanged: (val) {
-              profileProvider.vehicleTypeErrorMsg =
-                  AppValidation.vehicleTypeValidator(val);
-              setState(() {});
-            },
-            icon: Container(
-                height: 30,
-                width: 30,
-                alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
-            ),
-          ),
-          ScreenSize.height(20),
-          RoundedTextField(
-            controller: profileProvider.vehicleNameController,
-            hintText: getTranslated('vehicle_name', context)!,
-            isReadOnly: true,
-            errorMsg: profileProvider.vehicleNameErrorMsg,
-            onChanged: (val) {
-              profileProvider.vehicleNameErrorMsg =
-                  AppValidation.vehicleNameValidator(val);
-              setState(() {});
-            },
-            icon: Container(
-                height: 30,
-                width: 30,
-                alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
-            ),
-          ),
-            ScreenSize.height(20),
-          RoundedTextField(
-            controller: profileProvider.vehicleBrandController,
-            hintText: getTranslated('enter_brand_name', context)!,
-            isReadOnly: true,
-            errorMsg: profileProvider.vehicleBrandErrorMsg,
-            onChanged: (val) {
-              profileProvider.vehicleBrandErrorMsg =
-                  AppValidation.vehicleBrandValidator(val);
-              setState(() {});
-            },
-            icon: Container(
-                height: 30,
-                width: 30,
-                alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
-            ),
-          ),
-        
-          ScreenSize.height(20),
-          RoundedTextField(
-            controller: profileProvider.modelNumberController,
-            hintText: getTranslated('enter_model_number', context)!,
-            isReadOnly: true,
-            errorMsg: profileProvider.modelNumberErrorMsg,
-            onChanged: (val) {
-              profileProvider.modelNumberErrorMsg =
-                  AppValidation.modelNumberValidator(val);
-              setState(() {});
-            },
-            icon: Container(
-                height: 30,
-                width: 30,
-                alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor.withOpacity(.7),)
-            ),
-          ),
-          ScreenSize.height(20),
-          RoundedTextField(
-            controller: profileProvider.dorController,
-            hintText: getTranslated('select_registration_date', context)!,
-            isReadOnly: true,
-            errorMsg: profileProvider.dorErrorMsg,
-            onTap: (){
-              // Provider.of<SignupProvider>(context,listen: false).datePicker(profileProvider.selectedDORDate).then((val){
-              //   if(val!=null){
-              //     profileProvider.selectedDORDate = val;
-              //     profileProvider.dorController.text = "${val.day.toString().length==1?"0${val.day}":val.day}-${val.month.toString().length==1?"0${val.month}":val.month}-${val.year}";
-              //   }
-              // });
-            },
-            onChanged: (val) {
-              profileProvider.dorErrorMsg =
-                  AppValidation.dateOfRegistrationValidator(val);
-              setState(() {});
-            },
-            icon: Container(
-                height: 30,
-                width: 30,
-                alignment: Alignment.center,
-                child: Icon(Icons.date_range,color: AppColor.blueColor.withOpacity(.7),)
-            ),
-          ),
-          ScreenSize.height(20),
-          RoundedTextField(
-            controller: profileProvider.vehicleRegistrationController,
-            hintText: getTranslated('registration_number', context)!,
-            isReadOnly: true,
-            errorMsg: profileProvider.vehicleRegistrationErrorMsg,
-            onChanged: (val) {
-              profileProvider.vehicleRegistrationErrorMsg =
-                  AppValidation.vehicleRegistrationValidator(val);
-              setState(() {});
-            },
-            icon: Container(
-                height: 30,
-                width: 30,
-                alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor,)
-            ),
-          ),
-          ScreenSize.height(20),
-          RoundedTextField(
-            controller: profileProvider.vehicleLicenseController,
-            hintText: getTranslated('enter_licence_number', context)!,
-            isReadOnly: true,
-            errorMsg: profileProvider.vehicleLicenseErrorMsg,
-            onChanged: (val) {
-              profileProvider.vehicleLicenseErrorMsg =
-                  AppValidation.vehicleLicenseValidator(val);
-              setState(() {});
-            },
-            icon: Container(
-                height: 30,
-                width: 30,
-                alignment: Alignment.center,
-                child: Icon(Icons.card_travel,color: AppColor.blueColor,)
-            ),
-          ),
-          ScreenSize.height(20),
-          Row(
-            children: [
-              Expanded(child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    ScreenSize.height(20),
-            getText(title: "${getTranslated('vehicle_image', context)!}-1",
-                size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
-                fontWeight: FontWeight.w400,maxLies: 1,),
-            ScreenSize.height(6),
-            uploadImageWidget(onTap: (){
-              // imageBottomSheet(context,cameraTap: (){
-                // ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
-                //   if(val!=null){
-                //     profileProvider.stateIdentityImage = val;
-                //     setState(() {
-                //     });
-                //     Navigator.pop(context);
-                //   }
-                // });
-              // },galleryTap: (){
-              //   ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
-              //     if(val!=null){
-              //       profileProvider.stateIdentityImage = val;
-              //       setState(() {
-              //       });
-              //       Navigator.pop(context);
-              //     }
-              //   });
-              // });
-            },
-                imgPath:profileProvider.vehicleImage,imgUrl:
-                profileProvider.vehicleInfoModel!=null&&profileProvider.vehicleInfoModel!.data!=null?
-                profileProvider.vehicleInfoModel!.data!.vehicleImage??"":""),
-                ],
-              ))
-            ,ScreenSize.width(15),
-          Expanded(child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    ScreenSize.height(20),
-            getText(title: "${getTranslated('vehicle_image', context)!}-2",
-                size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
-                fontWeight: FontWeight.w400,maxLies: 1,),
-            ScreenSize.height(6),
-            uploadImageWidget(onTap: (){
-              // imageBottomSheet(context,cameraTap: (){
-                // ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
-                //   if(val!=null){
-                //     profileProvider.stateIdentityImage = val;
-                //     setState(() {
-                //     });
-                //     Navigator.pop(context);
-                //   }
-                // });
-              // },galleryTap: (){
-              //   ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
-              //     if(val!=null){
-              //       profileProvider.stateIdentityImage = val;
-              //       setState(() {
-              //       });
-              //       Navigator.pop(context);
-              //     }
-              //   });
-              // });
-            },
-                imgPath:profileProvider.vehicleImage,imgUrl:
-                profileProvider.vehicleInfoModel!=null&&profileProvider.vehicleInfoModel!.data!=null?
-                profileProvider.vehicleInfoModel!.data!.vehicleImageTwo??"":""),
-                ],
-              ))
-            ],
-          ),
-          ScreenSize.height(20),
-          Row(
-            children: [
-              Expanded(child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    ScreenSize.height(20),
-            getText(title: getTranslated('licence_image', context)!,
-                size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
-                fontWeight: FontWeight.w400,maxLies: 1,),
-            ScreenSize.height(6),
-            uploadImageWidget(onTap: (){
-              // imageBottomSheet(context,cameraTap: (){
-                // ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
-                //   if(val!=null){
-                //     profileProvider.stateIdentityImage = val;
-                //     setState(() {
-                //     });
-                //     Navigator.pop(context);
-                //   }
-                // });
-              // },galleryTap: (){
-              //   ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
-              //     if(val!=null){
-              //       profileProvider.stateIdentityImage = val;
-              //       setState(() {
-              //       });
-              //       Navigator.pop(context);
-              //     }
-              //   });
-              // });
-            },
-                imgPath:profileProvider.vehicleImage2,imgUrl:
-                profileProvider.vehicleInfoModel!=null&&profileProvider.vehicleInfoModel!.data!=null?
-                profileProvider.vehicleInfoModel!.data!.vehicleLicenseImage??"":""),
-                ],
-              ))
-            ,ScreenSize.width(15),
-          Expanded(child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    ScreenSize.height(20),
-            getText(title:  getTranslated('insurance_copy', context)!,
-                size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
-                fontWeight: FontWeight.w400,maxLies: 1,),
-            ScreenSize.height(6),
-            uploadImageWidget(onTap: (){
-              // imageBottomSheet(context,cameraTap: (){
-                // ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
-                //   if(val!=null){
-                //     profileProvider.stateIdentityImage = val;
-                //     setState(() {
-                //     });
-                //     Navigator.pop(context);
-                //   }
-                // });
-              // },galleryTap: (){
-              //   ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
-              //     if(val!=null){
-              //       profileProvider.stateIdentityImage = val;
-              //       setState(() {
-              //       });
-              //       Navigator.pop(context);
-              //     }
-              //   });
-              // });
-            },
-                imgPath:profileProvider.licenceImage,imgUrl:
-                profileProvider.vehicleInfoModel!=null&&profileProvider.vehicleInfoModel!.data!=null?
-                profileProvider.vehicleInfoModel!.data!.vehicleInsuranceImage??"":""),
-                ],
-              ))
-            ],
-          ),
-         ScreenSize.height(20),
-          Row(
-            children: [
-              Expanded(child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    ScreenSize.height(20),
-            getText(title: getTranslated('inspection_certificate', context)!,
-                size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
-                fontWeight: FontWeight.w400,maxLies: 1,),
-            ScreenSize.height(6),
-            uploadImageWidget(onTap: (){
-              // imageBottomSheet(context,cameraTap: (){
-                // ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
-                //   if(val!=null){
-                //     profileProvider.stateIdentityImage = val;
-                //     setState(() {
-                //     });
-                //     Navigator.pop(context);
-                //   }
-                // });
-              // },galleryTap: (){
-              //   ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
-              //     if(val!=null){
-              //       profileProvider.stateIdentityImage = val;
-              //       setState(() {
-              //       });
-              //       Navigator.pop(context);
-              //     }
-              //   });
-              // });
-            },
-                imgPath:profileProvider.vehicleImage,imgUrl:
-                profileProvider.vehicleInfoModel!=null&&profileProvider.vehicleInfoModel!.data!=null?
-                profileProvider.vehicleInfoModel!.data!.vehicleInspectionImage??"":""),
-                ],
-              ))
-            ,ScreenSize.width(15),
-          Expanded(child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                    ScreenSize.height(20),
-            getText(title:  getTranslated('ceriminal_record_certificate', context)!,
-                size: 12, fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor,
-                fontWeight: FontWeight.w400,maxLies: 1,),
-            ScreenSize.height(6),
-            uploadImageWidget(onTap: (){
-              // imageBottomSheet(context,cameraTap: (){
-                // ImagePickerService.imagePicker(context, ImageSource.camera).then((val){
-                //   if(val!=null){
-                //     profileProvider.stateIdentityImage = val;
-                //     setState(() {
-                //     });
-                //     Navigator.pop(context);
-                //   }
-                // });
-              // },galleryTap: (){
-              //   ImagePickerService.imagePicker(context, ImageSource.gallery).then((val){
-              //     if(val!=null){
-              //       profileProvider.stateIdentityImage = val;
-              //       setState(() {
-              //       });
-              //       Navigator.pop(context);
-              //     }
-              //   });
-              // });
-            },
-                imgPath:profileProvider.vehicleImage,imgUrl:
-                profileProvider.vehicleInfoModel!=null&&profileProvider.vehicleInfoModel!.data!=null?
-                profileProvider.vehicleInfoModel!.data!.vehicleCriminalRecordImage??"":""),
-                ],
-              ))
-            ],
-          ),
-          ScreenSize.height(50),
-          // AppButton(
-          //     title: getTranslated('update_vehicle_info', context)!,
-          //     height: 49,
-          //     width: double.infinity,
-          //     buttonColor: AppColor.appTheme,
-          //     isLoading: profileProvider.profileLoading,
-          //     onTap: () {
-          //       profileProvider.checkVehicleInfoValidation();
-          //     }),
-
-        ],
-      ),
+            imgPath: profileProvider.vehicleImage,
+            imgUrl: profileProvider.vehicleInfoModel != null &&
+                    profileProvider.vehicleInfoModel!.data != null &&
+                    profileProvider.vehicleInfoModel!.data!.vehicleType
+                            .toString()
+                            .toLowerCase() ==
+                        'bicycle'
+                ? profileProvider.vehicleInfoModel!.data!.vehicleImage ?? ""
+                : ""),
+      ],
     );
   }
+
+  carAndBikeVehicleInfoWidget(ProfileProvider profileProvider) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        RoundedTextField(
+          controller: profileProvider.vehicleNameController,
+          hintText: getTranslated('vehicle_name', context)!,
+          isReadOnly: false,
+          textInputAction: TextInputAction.next,
+          errorMsg: profileProvider.vehicleNameErrorMsg,
+          onChanged: (val) {
+            profileProvider.vehicleNameErrorMsg =
+                AppValidation.vehicleNameValidator(val);
+            setState(() {});
+          },
+          prefixIcon: Container(
+              height: 30,
+              width: 30,
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.card_travel,
+                color: AppColor.blueColor.withOpacity(.7),
+              )),
+        ),
+        ScreenSize.height(20),
+        RoundedTextField(
+          controller: profileProvider.vehicleBrandController,
+          hintText: getTranslated('enter_brand_name', context)!,
+          isReadOnly: false,
+          textInputAction: TextInputAction.next,
+          errorMsg: profileProvider.vehicleBrandErrorMsg,
+          onChanged: (val) {
+            profileProvider.vehicleBrandErrorMsg =
+                AppValidation.vehicleBrandValidator(val);
+            setState(() {});
+          },
+          prefixIcon: Container(
+              height: 30,
+              width: 30,
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.card_travel,
+                color: AppColor.blueColor.withOpacity(.7),
+              )),
+        ),
+        ScreenSize.height(20),
+        RoundedTextField(
+          controller: profileProvider.modelNumberController,
+          hintText: getTranslated('enter_model_number', context)!,
+          isReadOnly: false,
+          textInputAction: TextInputAction.next,
+          errorMsg: profileProvider.modelNumberErrorMsg,
+          onChanged: (val) {
+            profileProvider.modelNumberErrorMsg =
+                AppValidation.modelNumberValidator(val);
+            setState(() {});
+          },
+          prefixIcon: Container(
+              height: 30,
+              width: 30,
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.card_travel,
+                color: AppColor.blueColor.withOpacity(.7),
+              )),
+        ),
+        ScreenSize.height(20),
+        RoundedTextField(
+          controller: profileProvider.dorController,
+          hintText: getTranslated('select_registration_date', context)!,
+          isReadOnly: true,
+          textInputAction: TextInputAction.next,
+          errorMsg: profileProvider.dorErrorMsg,
+          onTap: () {
+            profileProvider
+                .datePicker(profileProvider.selectedDORDate)
+                .then((val) {
+              if (val != null) {
+                profileProvider.selectedDORDate = val;
+                profileProvider.dorController.text =
+                    "${val.day.toString().length == 1 ? "0${val.day}" : val.day}-${val.month.toString().length == 1 ? "0${val.month}" : val.month}-${val.year}";
+              }
+            });
+          },
+          onChanged: (val) {
+            profileProvider.dorErrorMsg =
+                AppValidation.dateOfRegistrationValidator(val);
+            setState(() {});
+          },
+          prefixIcon: Container(
+              height: 30,
+              width: 30,
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.date_range,
+                color: AppColor.blueColor.withOpacity(.7),
+              )),
+        ),
+        ScreenSize.height(20),
+        RoundedTextField(
+          controller: profileProvider.vehicleRegistrationController,
+          hintText: getTranslated('registration_number', context)!,
+          isReadOnly: false,
+          textInputAction: TextInputAction.next,
+          errorMsg: profileProvider.vehicleRegistrationErrorMsg,
+          onChanged: (val) {
+            profileProvider.vehicleRegistrationErrorMsg =
+                AppValidation.vehicleRegistrationValidator(val);
+            setState(() {});
+          },
+          prefixIcon: Container(
+              height: 30,
+              width: 30,
+              alignment: Alignment.center,
+              child: const Icon(
+                Icons.card_travel,
+                color: AppColor.blueColor,
+              )),
+        ),
+        ScreenSize.height(20),
+        RoundedTextField(
+          controller: profileProvider.vehicleLicenseController,
+          hintText: getTranslated('enter_licence_number', context)!,
+          isReadOnly: false,
+          textInputAction: TextInputAction.next,
+          errorMsg: profileProvider.vehicleLicenseErrorMsg,
+          onChanged: (val) {
+            profileProvider.vehicleLicenseErrorMsg =
+                AppValidation.vehicleLicenseValidator(val);
+            setState(() {});
+          },
+          prefixIcon: Container(
+              height: 30,
+              width: 30,
+              alignment: Alignment.center,
+              child: const Icon(
+                Icons.card_travel,
+                color: AppColor.blueColor,
+              )),
+        ),
+        ScreenSize.height(20),
+        profileProvider.vehicleTypeController.text.toLowerCase() == 'motorcycle'
+            ? bikeImages(profileProvider)
+            : carImages(profileProvider)
+      ],
+    );
+  }
+
+  bikeImages(ProfileProvider profileProvider) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScreenSize.height(20),
+                getText(
+                  title: "${getTranslated('vehicle_image', context)!}-1",
+                  size: 12,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400,
+                  maxLies: 1,
+                ),
+                ScreenSize.height(6),
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.vehicleImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      }, galleryTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.vehicleImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    imgPath: profileProvider.vehicleImage,
+                    imgUrl: profileProvider.vehicleInfoModel != null &&
+                            profileProvider.vehicleInfoModel!.data != null &&
+                            profileProvider.vehicleInfoModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                'motorcycle'
+                        ? profileProvider
+                                .vehicleInfoModel!.data!.vehicleImage ??
+                            ""
+                        : ""),
+              ],
+            )),
+            ScreenSize.width(15),
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScreenSize.height(20),
+                getText(
+                  title: "${getTranslated('vehicle_image', context)!}-2",
+                  size: 12,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400,
+                  maxLies: 1,
+                ),
+                ScreenSize.height(6),
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.vehicleImage2 = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      }, galleryTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.vehicleImage2 = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    imgPath: profileProvider.vehicleImage2,
+                    imgUrl: profileProvider.vehicleInfoModel != null &&
+                            profileProvider.vehicleInfoModel!.data != null &&
+                            profileProvider.vehicleInfoModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                'motorcycle'
+                        ? profileProvider
+                                .vehicleInfoModel!.data!.vehicleImageTwo ??
+                            ""
+                        : ""),
+              ],
+            ))
+          ],
+        ),
+        ScreenSize.height(20),
+        Row(
+          children: [
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScreenSize.height(20),
+                getText(
+                  title: getTranslated('licence_image', context)!,
+                  size: 12,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400,
+                  maxLies: 1,
+                ),
+                ScreenSize.height(6),
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.licenceImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      }, galleryTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.licenceImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    imgPath: profileProvider.licenceImage,
+                    imgUrl: profileProvider.vehicleInfoModel != null &&
+                            profileProvider.vehicleInfoModel!.data != null &&
+                            profileProvider.vehicleInfoModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                'motorcycle'
+                        ? profileProvider
+                                .vehicleInfoModel!.data!.vehicleLicenseImage ??
+                            ""
+                        : ""),
+              ],
+            )),
+            ScreenSize.width(15),
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScreenSize.height(20),
+                getText(
+                  title: getTranslated('insurance_copy', context)!,
+                  size: 12,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400,
+                  maxLies: 1,
+                ),
+                ScreenSize.height(6),
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.insuranceCopyImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      }, galleryTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.insuranceCopyImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    imgPath: profileProvider.insuranceCopyImage,
+                    imgUrl: profileProvider.vehicleInfoModel != null &&
+                            profileProvider.vehicleInfoModel!.data != null &&
+                            profileProvider.vehicleInfoModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                'motorcycle'
+                        ? profileProvider.vehicleInfoModel!.data!
+                                .vehicleInsuranceImage ??
+                            ""
+                        : ""),
+              ],
+            ))
+          ],
+        ),
+        ScreenSize.height(20),
+        Row(
+          children: [
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScreenSize.height(20),
+                getText(
+                  title: getTranslated('inspection_certificate', context)!,
+                  size: 12,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400,
+                  maxLies: 1,
+                ),
+                ScreenSize.height(6),
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.inspectionImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      }, galleryTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.inspectionImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    imgPath: profileProvider.inspectionImage,
+                    imgUrl: profileProvider.vehicleInfoModel != null &&
+                            profileProvider.vehicleInfoModel!.data != null &&
+                            profileProvider.vehicleInfoModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                'motorcycle'
+                        ? profileProvider.vehicleInfoModel!.data!
+                                .vehicleInspectionImage ??
+                            ""
+                        : ""),
+              ],
+            )),
+            ScreenSize.width(15),
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScreenSize.height(20),
+                getText(
+                  title:
+                      getTranslated('ceriminal_record_certificate', context)!,
+                  size: 12,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400,
+                  maxLies: 1,
+                ),
+                ScreenSize.height(6),
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.criminalRecordImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      }, galleryTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.criminalRecordImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    imgPath: profileProvider.criminalRecordImage,
+                    imgUrl: profileProvider.vehicleInfoModel != null &&
+                            profileProvider.vehicleInfoModel!.data != null &&
+                            profileProvider.vehicleInfoModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                'motorcycle'
+                        ? profileProvider.vehicleInfoModel!.data!
+                                .vehicleCriminalRecordImage ??
+                            ""
+                        : ""),
+              ],
+            ))
+          ],
+        ),
+      ],
+    );
+  }
+
+  carImages(ProfileProvider profileProvider) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScreenSize.height(20),
+                getText(
+                  title: "${getTranslated('vehicle_image', context)!}-1",
+                  size: 12,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400,
+                  maxLies: 1,
+                ),
+                ScreenSize.height(6),
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.vehicleImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      }, galleryTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.vehicleImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    imgPath: profileProvider.vehicleImage,
+                    imgUrl: profileProvider.vehicleInfoModel != null &&
+                            profileProvider.vehicleInfoModel!.data != null &&
+                            profileProvider.vehicleInfoModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                'car'
+                        ? profileProvider
+                                .vehicleInfoModel!.data!.vehicleImage ??
+                            ""
+                        : ""),
+              ],
+            )),
+            ScreenSize.width(15),
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScreenSize.height(20),
+                getText(
+                  title: "${getTranslated('vehicle_image', context)!}-2",
+                  size: 12,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400,
+                  maxLies: 1,
+                ),
+                ScreenSize.height(6),
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.vehicleImage2 = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      }, galleryTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.vehicleImage2 = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    imgPath: profileProvider.vehicleImage2,
+                    imgUrl: profileProvider.vehicleInfoModel != null &&
+                            profileProvider.vehicleInfoModel!.data != null &&
+                            profileProvider.vehicleInfoModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                'car'
+                        ? profileProvider
+                                .vehicleInfoModel!.data!.vehicleImageTwo ??
+                            ""
+                        : ""),
+              ],
+            ))
+          ],
+        ),
+        ScreenSize.height(20),
+        Row(
+          children: [
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScreenSize.height(20),
+                getText(
+                  title: getTranslated('licence_image', context)!,
+                  size: 12,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400,
+                  maxLies: 1,
+                ),
+                ScreenSize.height(6),
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.licenceImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      }, galleryTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.licenceImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    imgPath: profileProvider.licenceImage,
+                    imgUrl: profileProvider.vehicleInfoModel != null &&
+                            profileProvider.vehicleInfoModel!.data != null &&
+                            profileProvider.vehicleInfoModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                'car'
+                        ? profileProvider
+                                .vehicleInfoModel!.data!.vehicleLicenseImage ??
+                            ""
+                        : ""),
+              ],
+            )),
+            ScreenSize.width(15),
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScreenSize.height(20),
+                getText(
+                  title: getTranslated('insurance_copy', context)!,
+                  size: 12,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400,
+                  maxLies: 1,
+                ),
+                ScreenSize.height(6),
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.insuranceCopyImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      }, galleryTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.insuranceCopyImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    imgPath: profileProvider.insuranceCopyImage,
+                    imgUrl: profileProvider.vehicleInfoModel != null &&
+                            profileProvider.vehicleInfoModel!.data != null &&
+                            profileProvider.vehicleInfoModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                'car'
+                        ? profileProvider.vehicleInfoModel!.data!
+                                .vehicleInsuranceImage ??
+                            ""
+                        : ""),
+              ],
+            ))
+          ],
+        ),
+        ScreenSize.height(20),
+        Row(
+          children: [
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScreenSize.height(20),
+                getText(
+                  title: getTranslated('inspection_certificate', context)!,
+                  size: 12,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400,
+                  maxLies: 1,
+                ),
+                ScreenSize.height(6),
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.inspectionImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      }, galleryTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.inspectionImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    imgPath: profileProvider.inspectionImage,
+                    imgUrl: profileProvider.vehicleInfoModel != null &&
+                            profileProvider.vehicleInfoModel!.data != null &&
+                            profileProvider.vehicleInfoModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                'car'
+                        ? profileProvider.vehicleInfoModel!.data!
+                                .vehicleInspectionImage ??
+                            ""
+                        : ""),
+              ],
+            )),
+            ScreenSize.width(15),
+            Expanded(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ScreenSize.height(20),
+                getText(
+                  title:
+                      getTranslated('ceriminal_record_certificate', context)!,
+                  size: 12,
+                  fontFamily: FontFamily.poppinsMedium,
+                  color: AppColor.blackColor,
+                  fontWeight: FontWeight.w400,
+                  maxLies: 1,
+                ),
+                ScreenSize.height(6),
+                uploadImageWidget(
+                    onTap: () {
+                      imageBottomSheet(context, cameraTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.camera)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.criminalRecordImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      }, galleryTap: () {
+                        ImagePickerService.imagePicker(
+                                context, ImageSource.gallery)
+                            .then((val) {
+                          if (val != null) {
+                            profileProvider.criminalRecordImage = val;
+                            setState(() {});
+                            Navigator.pop(context);
+                          }
+                        });
+                      });
+                    },
+                    imgPath: profileProvider.criminalRecordImage,
+                    imgUrl: profileProvider.vehicleInfoModel != null &&
+                            profileProvider.vehicleInfoModel!.data != null &&
+                            profileProvider.vehicleInfoModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                'car'
+                        ? profileProvider.vehicleInfoModel!.data!
+                                .vehicleCriminalRecordImage ??
+                            ""
+                        : ""),
+              ],
+            ))
+          ],
+        ),
+      ],
+    );
+  }
+
   chanegeLanguageButton(ProfileProvider profileProvider) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
@@ -1066,12 +1491,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     AppValidation.passwordValidator(val);
                 setState(() {});
               },
-              icon: Container(
+              prefixIcon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child:const ImageIcon(
-                   AssetImage(
+                child: const ImageIcon(
+                  AssetImage(
                     AppImages.passwordIcon,
                   ),
                   size: 24,
@@ -1090,12 +1515,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         val, profileProvider.confirmPasswordController.text);
                 setState(() {});
               },
-              icon: Container(
+              prefixIcon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
-                child:const ImageIcon(
-                   AssetImage(
+                child: const ImageIcon(
+                  AssetImage(
                     AppImages.passwordIcon,
                   ),
                   size: 24,
@@ -1114,7 +1539,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         val, profileProvider.newPasswordController.text);
                 setState(() {});
               },
-              icon: Container(
+              prefixIcon: Container(
                 height: 30,
                 width: 30,
                 alignment: Alignment.center,
@@ -1232,7 +1657,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         builder: (context) {
           return Container(
             padding:
-            const EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 40),
+                const EdgeInsets.only(top: 20, left: 15, right: 15, bottom: 40),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -1240,11 +1665,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     openDialogBox(
                         title: getTranslated("logout", context)!,
-                        subTitle:  getTranslated("want_to_logout", context)!,
+                        subTitle: getTranslated("want_to_logout", context)!,
                         noTap: () {
                           Navigator.pop(context);
                         },
-                        yesTap: () async{
+                        yesTap: () async {
                           Utils.logOut();
                         });
                   },
@@ -1279,12 +1704,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     openDialogBox(
                         title: getTranslated("delete_account", context)!,
-                        subTitle:  getTranslated("want_to_delete", context)!,
+                        subTitle: getTranslated("want_to_delete", context)!,
                         noTap: () {
                           Navigator.pop(context);
                         },
-                        yesTap: () async{
-                         Provider.of<ProfileProvider>(context,listen: false).deleteAccountApiFunction();
+                        yesTap: () async {
+                          Provider.of<ProfileProvider>(context, listen: false)
+                              .deleteAccountApiFunction();
                           // Navigator.pop(context);
                           // SharedPreferences prefs = await SharedPreferences.getInstance();
                           // prefs.clear();
@@ -1318,245 +1744,202 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         });
   }
-  genderBottomSheet(){
+
+  genderBottomSheet() {
     showModalBottomSheet(
         backgroundColor: AppColor.whiteColor,
         shape: OutlineInputBorder(
             borderSide: BorderSide(color: AppColor.whiteColor),
-            borderRadius:const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20)
-            )
-        ),
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: context,
-        builder: (context){
-          return StatefulBuilder(
-              builder: (context,state) {
-                return Container(
-                  padding:const EdgeInsets.only(top: 20,left: 15,right: 15,bottom: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, state) {
+            return Container(
+              padding: const EdgeInsets.only(
+                  top: 20, left: 15, right: 15, bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          getText(title: getTranslated('select_gender', context)!, size: 18,
-                              fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500),
-                          GestureDetector(
-                            onTap: (){
-                              Navigator.pop(context);
-                            },
-                            child:const Icon(Icons.close),)
-                        ],
-                      ),
-                      ScreenSize.height(20),
+                      getText(
+                          title: getTranslated('select_gender', context)!,
+                          size: 18,
+                          fontFamily: FontFamily.poppinsMedium,
+                          color: AppColor.blackColor,
+                          fontWeight: FontWeight.w500),
                       GestureDetector(
-                        onTap: (){
-                          Provider.of<ProfileProvider>(context,listen: false).selectedGender =0;
-                          Provider.of<ProfileProvider>(context,listen: false).genderController.text = 'Male';
-                          Navigator.pop(context);
-                          state(() {
-
-                          });
-                        },
-                        child: Container(
-                          color: AppColor.whiteColor,
-                          height: 30,
-                          child: Row(
-                            children: [
-                              customRadio(0,Provider.of<ProfileProvider>(context,listen: false).selectedGender),
-                              ScreenSize.width(15),
-                              getText(title: getTranslated('male', context)!, size: 16,
-                                  fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
-                            ],
-                          ),
-                        ),
-                      ),
-                      ScreenSize.height(10),
-                      GestureDetector(
-                        onTap: (){
-                          Provider.of<ProfileProvider>(context,listen: false).selectedGender =1;
-                          Provider.of<ProfileProvider>(context,listen: false).genderController.text = 'Female';
-                          state(() {
-                          });
+                        onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Container(
-                          color: AppColor.whiteColor,
-                          height: 30,
-                          child: Row(
-                            children: [
-                              customRadio(1,Provider.of<ProfileProvider>(context,listen: false).selectedGender),
-                              ScreenSize.width(15),
-                              getText(title: getTranslated('female', context)!, size: 16,
-                                  fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
-                            ],
-                          ),
-                        ),
+                        child: const Icon(Icons.close),
                       )
                     ],
                   ),
-                );
-              }
-          );
+                  ScreenSize.height(20),
+                  GestureDetector(
+                    onTap: () {
+                      context.read<ProfileProvider>().selectedGender = 0;
+                      context.read<ProfileProvider>().genderController.text =
+                          'Male';
+                      Navigator.pop(context);
+                      state(() {});
+                    },
+                    child: Container(
+                      color: AppColor.whiteColor,
+                      height: 30,
+                      child: Row(
+                        children: [
+                          customRadio(
+                              0,
+                              Provider.of<ProfileProvider>(context,
+                                      listen: false)
+                                  .selectedGender),
+                          ScreenSize.width(15),
+                          getText(
+                              title: getTranslated('male', context)!,
+                              size: 16,
+                              fontFamily: FontFamily.nunitoMedium,
+                              color: AppColor.blackColor,
+                              fontWeight: FontWeight.w500)
+                        ],
+                      ),
+                    ),
+                  ),
+                  ScreenSize.height(10),
+                  GestureDetector(
+                    onTap: () {
+                      context.read<ProfileProvider>().selectedGender = 1;
+                      context.read<ProfileProvider>().genderController.text =
+                          'Female';
+                      state(() {});
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      color: AppColor.whiteColor,
+                      height: 30,
+                      child: Row(
+                        children: [
+                          customRadio(
+                              1,
+                              Provider.of<ProfileProvider>(context,
+                                      listen: false)
+                                  .selectedGender),
+                          ScreenSize.width(15),
+                          getText(
+                              title: getTranslated('female', context)!,
+                              size: 16,
+                              fontFamily: FontFamily.nunitoMedium,
+                              color: AppColor.blackColor,
+                              fontWeight: FontWeight.w500)
+                        ],
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            );
+          });
         });
   }
 
-  fuelTypeBottomSheet(){
+  vehicleTypeBottomSheet() {
     showModalBottomSheet(
         backgroundColor: AppColor.whiteColor,
         shape: OutlineInputBorder(
             borderSide: BorderSide(color: AppColor.whiteColor),
-            borderRadius:const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20)
-            )
-        ),
+            borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
         context: context,
-        builder: (context){
-          return StatefulBuilder(
-              builder: (context,state) {
-                return Container(
-                  padding:const EdgeInsets.only(top: 20,left: 15,right: 15,bottom: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
+        builder: (context) {
+          return StatefulBuilder(builder: (context, state) {
+            return Container(
+              padding: const EdgeInsets.only(
+                  top: 20, left: 15, right: 15, bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          getText(title: getTranslated('select_fuel_type', context)!, size: 18,
-                              fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500),
-                          GestureDetector(
-                            onTap: (){
-                              Navigator.pop(context);
-                            },
-                            child:const Icon(Icons.close),)
-                        ],
-                      ),
-                      ScreenSize.height(20),
+                      getText(
+                          title: getTranslated('select_vehicle_type', context)!,
+                          size: 18,
+                          fontFamily: FontFamily.poppinsMedium,
+                          color: AppColor.blackColor,
+                          fontWeight: FontWeight.w500),
                       GestureDetector(
-                        onTap: (){
-                          Provider.of<ProfileProvider>(context,listen:false).fuelType =0;
-                          Provider.of<ProfileProvider>(context,listen: false).fuelController.text = 'Petrol';
-                          Navigator.pop(context);
-                          state(() {
-
-                          });
-                        },
-                        child: Container(
-                          color: AppColor.whiteColor,
-                          height: 30,
-                          child: Row(
-                            children: [
-                              customRadio(0,Provider.of<ProfileProvider>(context,listen:false).fuelType),
-                              ScreenSize.width(15),
-                              getText(title: getTranslated('petrol', context)!, size: 16,
-                                  fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
-                            ],
-                          ),
-                        ),
-                      ),
-                      ScreenSize.height(10),
-                      GestureDetector(
-                        onTap: (){
-                          Provider.of<ProfileProvider>(context,listen:false).fuelType=1;
-                          Provider.of<ProfileProvider>(context,listen: false).fuelController.text = 'Diesel';
-                          state(() {
-                          });
+                        onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Container(
-                          color: AppColor.whiteColor,
-                          height: 30,
-                          child: Row(
-                            children: [
-                              customRadio(1,Provider.of<ProfileProvider>(context,listen:false).fuelType),
-                              ScreenSize.width(15),
-                              getText(title: getTranslated('diesel', context)!, size: 16,
-                                  fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
-                            ],
-                          ),
-                        ),
+                        child: const Icon(Icons.close),
                       )
                     ],
                   ),
-                );
-              }
-          );
-        });
-  }
+                  ScreenSize.height(20),
+                  ListView.separated(
+                      separatorBuilder: (context, sp) {
+                        return ScreenSize.height(10);
+                      },
+                      shrinkWrap: true,
+                      itemCount: Constants.vehicleTypeList.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            final provider = context.read<ProfileProvider>();
+                            if (provider.vehicleType != index) {
+                              provider
+                                  .clearVehicleControllerOnChangeVehicleTye();
 
-  vehicleTypeBottomSheet(){
-    showModalBottomSheet(
-        backgroundColor: AppColor.whiteColor,
-        shape: OutlineInputBorder(
-            borderSide: BorderSide(color: AppColor.whiteColor),
-            borderRadius:const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20)
-            )
-        ),
-        context: context,
-        builder: (context){
-          return StatefulBuilder(
-              builder: (context,state) {
-                return Container(
-                  padding:const EdgeInsets.only(top: 20,left: 15,right: 15,bottom: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          getText(title: getTranslated('select_vehicle_type', context)!, size: 18,
-                              fontFamily: FontFamily.poppinsMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500),
-                          GestureDetector(
-                            onTap: (){
-                              Navigator.pop(context);
-                            },
-                            child:const Icon(Icons.close),)
-                        ],
-                      ),
-                      ScreenSize.height(20),
-                      ListView.separated(
-                          separatorBuilder: (context,sp){
-                            return ScreenSize.height(10);
+                              ///  clear all controllers values when change vehicle type
+                            }
+                            provider.vehicleType = index;
+                            provider.vehicleTypeController.text =
+                                Constants.vehicleTypeList[index];
+                            if (provider.profileModel!.data!.vehicleType
+                                    .toString()
+                                    .toLowerCase() ==
+                                provider.vehicleTypeController.text
+                                    .toLowerCase()) {
+                              print('sdfghj');
+                              context
+                                  .read<ProfileProvider>()
+                                  .setVehicleValuesInController();
+                            }
+                            Navigator.pop(context);
+                            setState(() {});
+                            state(() {});
                           },
-                          shrinkWrap: true,
-                          itemCount: Constants.vehicleTypeList.length,
-                          itemBuilder: (context,index){
-                            return GestureDetector(
-                              onTap: (){
-                               Provider.of<ProfileProvider>(context,listen:false).vehicleType =index;
-                                Provider.of<ProfileProvider>(context,listen: false).vehicleTypeController.text= Constants.vehicleTypeList[index];
-                                Navigator.pop(context);
-                                state(() {
-
-                                });
-                              },
-                              child: Container(
-                                color: AppColor.whiteColor,
-                                height: 30,
-                                child: Row(
-                                  children: [
-                                    customRadio(index,Provider.of<ProfileProvider>(context,listen:false).vehicleType),
-                                    ScreenSize.width(15),
-                                    getText(title: Constants.vehicleTypeList[index], size: 16,
-                                        fontFamily: FontFamily.nunitoMedium, color: AppColor.blackColor, fontWeight: FontWeight.w500)
-                                  ],
-                                ),
-                              ),
-                            );
-                          }),
-                    ],
-                  ),
-                );
-              }
-          );
+                          child: Container(
+                            color: AppColor.whiteColor,
+                            height: 30,
+                            child: Row(
+                              children: [
+                                customRadio(
+                                    index,
+                                    Provider.of<ProfileProvider>(context,
+                                            listen: false)
+                                        .vehicleType),
+                                ScreenSize.width(15),
+                                getText(
+                                    title: Constants.vehicleTypeList[index],
+                                    size: 16,
+                                    fontFamily: FontFamily.nunitoMedium,
+                                    color: AppColor.blackColor,
+                                    fontWeight: FontWeight.w500)
+                              ],
+                            ),
+                          ),
+                        );
+                      }),
+                ],
+              ),
+            );
+          });
         });
   }
-
 }

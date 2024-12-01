@@ -8,11 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class RoundedTextField extends StatelessWidget {
-  final hintText;
+  String hintText;
   final TextEditingController controller;
-  final icon;
+  final prefixIcon;
+  final suffixIcon;
   final isObscureText;
-  final isReadOnly;
+  bool isReadOnly;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputType? textInputType;
   final errorMsg;
@@ -21,9 +22,10 @@ class RoundedTextField extends StatelessWidget {
   Function()?onTap;
    RoundedTextField(
       {super.key,
-      this.hintText,
+      this.hintText='',
       required this.controller,
-      this.icon,
+      this.prefixIcon,
+      this.suffixIcon,
       this.isObscureText = false,
       this.isReadOnly = false,
       this.inputFormatters,
@@ -68,7 +70,12 @@ class RoundedTextField extends StatelessWidget {
                 fontWeight: FontWeight.w500,
                 fontFamily: FontFamily.poppinsMedium),
             decoration: InputDecoration(
-                prefixIcon: icon,
+                prefixIcon: prefixIcon,
+                suffixIcon: suffixIcon,
+                prefixIconConstraints: const BoxConstraints(
+            minWidth: 44,
+            minHeight: 4,
+          ),
                 hintText: hintText,
                 hintStyle: const TextStyle(
                     fontSize: 16,

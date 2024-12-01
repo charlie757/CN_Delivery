@@ -5,8 +5,11 @@ import 'package:cn_delivery/helper/getText.dart';
 import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/provider/forgot_password_provider.dart';
+import 'package:cn_delivery/utils/utils.dart';
 import 'package:cn_delivery/widget/appBar.dart';
+import 'package:cn_delivery/widget/top_logo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../../helper/appImages.dart';
 import '../../helper/appbutton.dart';
@@ -32,15 +35,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Image.asset(
-                    AppImages.appIcon,
-                    // height: 80,
-                    width: 165,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+               topLogo(alignment: Alignment.centerLeft),
                 ScreenSize.height(40),
                 getText(title: getTranslated('setNewPassword', context)!,
                     size: 22, fontFamily: FontFamily.poppinsMedium,
@@ -50,23 +45,23 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   controller: myProvider.passwordController,
                   hintText: getTranslated('new_password', context)!,
                   errorMsg: myProvider.passwordErrorMsg,
+                   inputFormatters: [
+                      FilteringTextInputFormatter.deny( RegExp(r'\s')),
+                       FilteringTextInputFormatter.deny(RegExp(Utils.regexToRemoveEmoji))
+                    ],
+                   
                   onChanged: (val) {
                     myProvider.passwordErrorMsg =
                         AppValidation.reEnterpasswordValidator(
                             val, myProvider.confirmPasswordController.text);
                     setState(() {});
                   },
-                  icon: Container(
-                    height: 30,
-                    width: 30,
-                    alignment: Alignment.center,
-                    child:const ImageIcon(
-                       AssetImage(
-                        AppImages.passwordIcon,
-                      ),
-                      size: 24,
-                      color: AppColor.blueColor,
+                  prefixIcon: const ImageIcon(
+                     AssetImage(
+                      AppImages.passwordIcon,
                     ),
+                    size: 24,
+                    color: AppColor.blueColor,
                   ),
                 ),
                 ScreenSize.height(20),
@@ -74,23 +69,23 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   controller: myProvider.confirmPasswordController,
                   hintText: getTranslated('confirm_password', context)!,
                   errorMsg: myProvider.confirmNewPasswordErrorMsg,
+                   inputFormatters: [
+                      FilteringTextInputFormatter.deny( RegExp(r'\s')),
+                       FilteringTextInputFormatter.deny(RegExp(Utils.regexToRemoveEmoji))
+                    ],
+                   
                   onChanged: (val) {
                     myProvider.confirmNewPasswordErrorMsg =
                         AppValidation.reEnterpasswordValidator(
                             val, myProvider.passwordController.text);
                     setState(() {});
                   },
-                  icon: Container(
-                    height: 30,
-                    width: 30,
-                    alignment: Alignment.center,
-                    child: ImageIcon(
-                      const AssetImage(
-                        AppImages.passwordIcon,
-                      ),
-                      size: 24,
-                      color: AppColor.blueColor,
+                  prefixIcon: const ImageIcon(
+                     AssetImage(
+                      AppImages.passwordIcon,
                     ),
+                    size: 24,
+                    color: AppColor.blueColor,
                   ),
                 ),
                 ScreenSize.height(50),
@@ -102,7 +97,6 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     isLoading: myProvider.isLoading,
                     onTap: () {
                       myProvider.checkPasswordValidation();
-                      // profileProvider.checkPasswordValidation();
                     })
 
               ],

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:cn_delivery/api/api_service.dart';
 import 'package:cn_delivery/api/api_url.dart';
+import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/model/profile_model.dart';
 import 'package:cn_delivery/model/vehicle_info_model.dart';
@@ -23,7 +24,6 @@ class ProfileProvider extends ChangeNotifier {
   int selectedLangIndex = 0;
   int selectedGender = -1;
   int vehicleType=-1;
-  int fuelType=-1;
   final firstNameController = TextEditingController();
   final lastNameController = TextEditingController();
   final mobileController = TextEditingController();
@@ -48,6 +48,24 @@ class ProfileProvider extends ChangeNotifier {
   final vehicleRegistrationController = TextEditingController();
   final vehicleLicenseController = TextEditingController();
 
+ clearVehicleControllerOnChangeVehicleTye(){
+  vehicleNameController.clear();
+  vehicleBrandController.clear();
+  vehicleSizeController.clear();
+  vehicleColorController.clear();
+  modelNumberController.clear();
+  domController.clear();
+  dorController.clear();
+  fuelController.clear();
+  vehicleRegistrationController.clear();
+  vehicleLicenseController.clear();
+  vehicleImage=null;
+  vehicleImage2=null;
+  licenceImage=null;
+  insuranceCopyImage=null;
+  inspectionImage=null;
+  criminalRecordImage=null;
+ }
 
   final oldPasswordController = TextEditingController();
   final newPasswordController = TextEditingController();
@@ -62,6 +80,8 @@ class ProfileProvider extends ChangeNotifier {
   File? insuranceCopyImage;
   File? vehicleImage;
   File? vehicleImage2;
+  File?inspectionImage;
+File?criminalRecordImage;
 
   DateTime selectedDOMDate = DateTime.now();
   DateTime selectedDORDate = DateTime.now();
@@ -122,6 +142,8 @@ class ProfileProvider extends ChangeNotifier {
     licenceImage=null;
     vehicleImage=null;
     insuranceCopyImage=null;
+    inspectionImage=null;
+    criminalRecordImage=null;
   }
 
   updateLangIndex(val) {
@@ -155,10 +177,8 @@ class ProfileProvider extends ChangeNotifier {
         AppValidation.addressValidator(addressController.text) == null &&
         AppValidation.cityValidator(cityController.text) == null &&
         AppValidation.countryValidator(countryController.text) == null) {
-      print('sfdv');
       updateProfileApiFunction();
     } else {
-      print('sfdvdfd');
       fNameErrorMsg =
           AppValidation.firstNameValidator(firstNameController.text);
       lNameErrorMsg = AppValidation.lastNameValidator(lastNameController.text);
@@ -186,30 +206,68 @@ class ProfileProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+ 
+ checkBicycleValidation(){
+  if(AppValidation.vehicleBrandValidator(vehicleBrandController.text) == null &&
+    AppValidation.vehicleTypeValidator(vehicleTypeController.text) == null &&
+    AppValidation.vehicleSizeValidator(vehicleSizeController.text)==null&&
+    AppValidation.vehicleColorValidator(vehicleColorController.text)==null){
+      bicycleVehicleApiFunction();
+        }
+        else{
+           vehicleBrandErrorMsg =
+          AppValidation.vehicleNameValidator(vehicleBrandController.text);
+      vehicleTypeErrorMsg = AppValidation.vehicleTypeValidator(vehicleTypeController.text);
+      vehicleSizeErrorMsg = AppValidation.modelNumberValidator(vehicleSizeController.text);
+      vehicleColorErrorMsg = AppValidation.modelNumberValidator(vehicleColorController.text);
+     
+        }
+ }
 
-  checkVehicleInfoValidation(){
+  checkCarAndBikeVehicleInfoValidation(){
     if (AppValidation.vehicleNameValidator(vehicleNameController.text) == null &&
         AppValidation.vehicleTypeValidator(vehicleTypeController.text) == null &&
         AppValidation.modelNumberValidator(modelNumberController.text) == null &&
-        // AppValidation.dateOfManufactureValidator(domController.text) == null &&
+        AppValidation.vehicleBrandValidator(vehicleBrandController.text) == null &&
         AppValidation.dateOfRegistrationValidator(dorController.text) == null &&
-        AppValidation.fuelTypeValidator(fuelController.text) == null &&
+        AppValidation.vehicleLicenseValidator(vehicleLicenseController.text) == null &&
         AppValidation.vehicleRegistrationValidator(vehicleRegistrationController.text) == null) {
-      updateVehicleApiFunction();
+        bikeCarVehicleApiFunction(vehicleTypeController.text);
     } else {
       vehicleNameErrorMsg =
           AppValidation.vehicleNameValidator(vehicleNameController.text);
       vehicleTypeErrorMsg = AppValidation.vehicleTypeValidator(vehicleTypeController.text);
       modelNumberErrorMsg = AppValidation.modelNumberValidator(modelNumberController.text);
-      // domErrorMsg = AppValidation.dateOfManufactureValidator(domController.text);
+      vehicleBrandErrorMsg = AppValidation.dateOfManufactureValidator(vehicleBrandController.text);
       dorErrorMsg = AppValidation.dateOfRegistrationValidator(dorController.text);
-      fuelErrorMsg = AppValidation.fuelTypeValidator(fuelController.text);
+      vehicleLicenseErrorMsg = AppValidation.fuelTypeValidator(vehicleLicenseController.text);
       vehicleRegistrationErrorMsg = AppValidation.vehicleRegistrationValidator(vehicleRegistrationController.text);
     }
     notifyListeners();
 
   }
-
+Future datePicker(selectedDate) async {
+  DateTime? picked = await showDatePicker(
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData(colorSchemeSeed: AppColor.blueColor),
+          child: child!,
+        );
+      },
+      helpText: getTranslated('select_date', navigatorKey.currentContext!)!,
+      context: navigatorKey.currentContext!,
+      initialDate: selectedDate,
+      firstDate: DateTime(1900, 1),
+      lastDate: DateTime.now()
+  );
+  if (picked != null && picked != DateTime.now()) {
+    // picked.day
+    // picked.month
+    // picked.year
+    // selectedDate = picked;
+    return picked;
+  }
+}
 
   getProfileApiFunction(bool isLoading) {
     isLoading ? showCircleProgressDialog(navigatorKey.currentContext!) : null;
@@ -269,9 +327,9 @@ notifyListeners();
     if(genderController.text.isNotEmpty){
       selectedGender = genderController.text.toLowerCase()== getTranslated('male', navigatorKey.currentContext!)!.toLowerCase() ?0:1;
     }
-    if(fuelController.text.isNotEmpty){
-      fuelType = fuelController.text.toLowerCase()==getTranslated('petrol', navigatorKey.currentContext!)!.toLowerCase()?0:1;
-    }
+    // if(fuelController.text.isNotEmpty){
+    //   fuelType = fuelController.text.toLowerCase()==getTranslated('petrol', navigatorKey.currentContext!)!.toLowerCase()?0:1;
+    // }
     if(vehicleTypeController.text.isNotEmpty){
       for(int i=0;i<Constants.vehicleTypeList.length;i++){
         if(Constants.vehicleTypeList[i].toString().toLowerCase()==vehicleTypeController.text.toLowerCase()){
@@ -356,58 +414,118 @@ notifyListeners();
     }
   }
 
-  updateVehicleApiFunction() async {
-    showCircleProgressDialog(navigatorKey.currentContext!);
-    // updateProfileLoading(true);
-    Map<String, String> headers = {"Authorization": SessionManager.token,
-      'language':
-      SessionManager.languageCode == 'es' ? 'es' : 'en'};
-
-    var request =
-    http.MultipartRequest('POST', Uri.parse(ApiUrl.updateVehicleInfoUrl));
-    request.headers.addAll(headers);
-    request.fields['vehicle_name'] = vehicleNameController.text;
-    request.fields['vehicle_type'] = vehicleTypeController.text;
-    request.fields['vehicle_model_number'] = vehicleTypeController.text;
-    request.fields['vehicle_date_of_manufacture'] = domController.text;
-    request.fields['vehicle_date_of_registration'] = dorController.text;
-    request.fields['vehicle_registration_number'] = vehicleRegistrationController.text;
-    request.fields['vehicle_feule_type'] = fuelController.text;
-    if (insuranceCopyImage != null) {
-      final file = await http.MultipartFile.fromPath(
-        'vehicle_insurance_image', insuranceCopyImage!.path,
-      );
-      request.files.add(file);
-    }
-    // if (touristPermitImage != null) {
-    //   final file = await http.MultipartFile.fromPath(
-    //     'vehicle_tourist_permit_image', touristPermitImage!.path,
-    //   );
-    //   request.files.add(file);
-    // }
-    if (vehicleImage != null) {
-      final file = await http.MultipartFile.fromPath(
-        'vehicle_image', vehicleImage!.path,
-      );
-      request.files.add(file);
-    }
-
-
-    var res = await request.send();
-    var vb = await http.Response.fromStream(res);
-    log(vb.body);
-    Navigator.pop(navigatorKey.currentContext!);
-    if (vb.statusCode == 200) {
-      // updateProfileLoading(false);
-      var dataAll = json.decode(vb.body);
+bicycleVehicleApiFunction()async{
+  Utils.hideTextField();
+   showCircleProgressDialog(navigatorKey.currentContext!);
+  Map<String, String> headers = {"Authorization": SessionManager.token,'language':
+  SessionManager.languageCode == 'es' ? 'es' : 'en'};
+ var request =
+  http.MultipartRequest('POST', Uri.parse(ApiUrl.updateVehicleInfoUrl));
+  request.headers.addAll(headers);
+ request.headers.addAll(headers);
+  request.fields['vehicle_type'] = 'bicycle';
+  request.fields['vehicle_brand'] = vehicleBrandController.text;
+  request.fields['vehicle_size'] = vehicleSizeController.text;
+  request.fields['vehicle_color'] = vehicleColorController.text;
+   if(vehicleImage!=null){
+    final file = await http.MultipartFile.fromPath(
+      'vehicle_image', vehicleImage!.path,
+    );
+    request.files.add(file);
+  }
+   
+  var res = await request.send();
+  var vb = await http.Response.fromStream(res);
+  log(vb.body);
+  print(vb.request);
+  print(vb.statusCode);
+  Navigator.pop(navigatorKey.currentContext!);
+  if (vb.statusCode == 200) {
+    // var dataAll = json.decode(vb.body);
+    var dataAll = json.decode(vb.body);
       Utils.successSnackBar(dataAll['message'], navigatorKey.currentContext!);
       getProfileApiFunction(false);
-    } else {
-      updateIsLoading(false);
-      var dataAll = json.decode(vb.body);
-      Utils.errorSnackBar(dataAll['message'], navigatorKey.currentContext!);
-    }
+  } else {
+    var dataAll = json.decode(vb.body);
+    Utils.errorSnackBar(dataAll['message'], navigatorKey.currentContext!);
   }
+}
+
+bikeCarVehicleApiFunction(String type)async{
+   showCircleProgressDialog(navigatorKey.currentContext!);
+  Map<String, String> headers = {"Authorization": SessionManager.token,'language':
+  SessionManager.languageCode == 'es' ? 'es' : 'en'};
+ var request =
+  http.MultipartRequest('POST', Uri.parse(ApiUrl.updateVehicleInfoUrl));
+  request.headers.addAll(headers);
+ request.headers.addAll(headers);
+  request.fields['vehicle_type'] = type;  /// car
+  request.fields['vehicle_name'] = vehicleNameController.text;
+  request.fields['vehicle_brand'] = vehicleBrandController.text;
+  request.fields['vehicle_model_number'] = modelNumberController.text;
+  request.fields['vehicle_date_of_registration'] = dorController.text;
+  request.fields['vehicle_registration_number'] = vehicleRegistrationController.text;
+  request.fields['vehicle_license_number'] = vehicleLicenseController .text;
+  request.fields.forEach((key, value) {
+    print('$key: $value');
+  });
+
+
+   if(vehicleImage!=null){
+    final file = await http.MultipartFile.fromPath(
+      'vehicle_image', vehicleImage!.path,
+    );
+    request.files.add(file);
+  }
+  if(vehicleImage2!=null){
+    final file = await http.MultipartFile.fromPath(
+      'vehicle_image_two', vehicleImage2!.path,
+    );
+    request.files.add(file);
+  }
+  if(licenceImage!=null){
+    final file = await http.MultipartFile.fromPath(
+      'vehicle_license_image', licenceImage!.path,
+    );
+    request.files.add(file);
+  }
+  if(insuranceCopyImage!=null){
+    final file = await http.MultipartFile.fromPath(
+      'vehicle_insurance_image', insuranceCopyImage!.path,
+    );
+    request.files.add(file);
+  }
+  if(inspectionImage!=null){
+    final file = await http.MultipartFile.fromPath(
+      'vehicle_inspection_image', inspectionImage!.path,
+    );
+    request.files.add(file);
+  }
+  if(criminalRecordImage!=null){
+    final file = await http.MultipartFile.fromPath(
+      'vehicle_criminal_record_image', criminalRecordImage!.path,
+    );
+    request.files.add(file);
+  }
+   print(type);
+  var res = await request.send();
+  var vb = await http.Response.fromStream(res);
+  log(vb.body);
+  print(vb.request);
+  Navigator.pop(navigatorKey.currentContext!);
+  if (vb.statusCode == 200) {
+    var dataAll = json.decode(vb.body);
+     if(dataAll['status']==true){
+     var dataAll = json.decode(vb.body);
+      Utils.successSnackBar(dataAll['message'], navigatorKey.currentContext!);
+      getProfileApiFunction(false);
+     }
+  } else {
+    var dataAll = json.decode(vb.body);
+    Utils.errorSnackBar(dataAll['message'], navigatorKey.currentContext!);
+  }
+}
+
 
   switchOnlineApiFunction(val) {
     showCircleProgressDialog(navigatorKey.currentContext!);

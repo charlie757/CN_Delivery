@@ -12,6 +12,8 @@ import 'package:cn_delivery/screens/auth/forgot_password_screen.dart';
 import 'package:cn_delivery/screens/auth/singup_screen.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
 import 'package:cn_delivery/utils/location_service.dart';
+import 'package:cn_delivery/utils/utils.dart';
+import 'package:cn_delivery/widget/top_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/services.dart';
@@ -34,12 +36,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.whiteColor,
-      // resizeToAvoidBottomInset: false,
-      // appBar: AppBar(
-      //   backgroundColor: AppColor.whiteColor,
-      //   automaticallyImplyLeading: false,
-      //   scrolledUnderElevation: 0.0,
-      // ),
       body: SafeArea(
         child: Consumer<LoginProvider>(builder: (context, myProvider, child) {
           return SingleChildScrollView(
@@ -47,15 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Image.asset(
-                    AppImages.appIcon,
-                    // height: 80,
-                    width: 165,
-                    fit: BoxFit.cover,
-                  ),
-                ),
+                topLogo(alignment: Alignment.centerLeft),
                 ScreenSize.height(40),
                 Row(
                   children: [
@@ -88,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Flexible(
                       child: AutoSizeText(
                         getTranslated('cnsumers_Networks', context)!,
-                        style: TextStyle(
+                        style:const TextStyle(
                             fontSize: 23,
                             fontFamily: FontFamily.poppinsSemiBold,
                             color: AppColor.blueColor,
@@ -105,23 +93,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   hintText: getTranslated('enter_your_email', context)!,
                   isReadOnly: myProvider.isLoading,
                   errorMsg: myProvider.emailValidationMsg,
+                   inputFormatters: [
+                      FilteringTextInputFormatter.deny( RegExp(r'\s')),
+                       FilteringTextInputFormatter.deny(RegExp(Utils.regexToRemoveEmoji))
+                    ],
                   textInputAction: TextInputAction.next,
                   onChanged: (val) {
                     myProvider.emailValidationMsg =
                         AppValidation.emailValidator(val);
                     setState(() {});
                   },
-                  icon: Container(
-                    height: 30,
-                    width: 30,
-                    alignment: Alignment.center,
-                    child:const ImageIcon(
-                       AssetImage(
-                        AppImages.emailIcon,
-                      ),
-                      size: 24,
-                      color: AppColor.blueColor,
+                  prefixIcon: const ImageIcon(
+                     AssetImage(
+                      AppImages.emailIcon,
                     ),
+                    size: 24,
+                    color: AppColor.blueColor,
                   ),
                 ),
                 ScreenSize.height(25),
@@ -129,23 +116,35 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: myProvider.passwordController,
                   hintText: getTranslated('enter_your_password', context)!,
                   isReadOnly: myProvider.isLoading,
+                  isObscureText: myProvider.isVisiblePassword,
+                   inputFormatters: [
+                      FilteringTextInputFormatter.deny( RegExp(r'\s')),
+                       FilteringTextInputFormatter.deny(RegExp(Utils.regexToRemoveEmoji))
+                    ],
                   errorMsg: myProvider.passwordValidationMsg,
                   onChanged: (val) {
                     myProvider.passwordValidationMsg =
                         AppValidation.passwordValidator(val);
                     setState(() {});
                   },
-                  icon: Container(
-                    height: 24,
-                    width: 24,
-                    alignment: Alignment.center,
-                    child: ImageIcon(
-                      const AssetImage(
-                        AppImages.passwordIcon,
-                      ),
-                      color: AppColor.blueColor,
-                      size: 24,
+                  prefixIcon: const ImageIcon(
+                     AssetImage(
+                      AppImages.passwordIcon,
                     ),
+                    color: AppColor.blueColor,
+                    size: 24,
+                  ),
+                  suffixIcon: GestureDetector(
+                    onTap: (){
+                      if(myProvider.isVisiblePassword){
+                        myProvider.updateIsVisiblePassword(false);
+                      }else{
+                        myProvider.updateIsVisiblePassword(true);
+                      }
+                    },
+                    child: Icon(
+                     myProvider.isVisiblePassword?
+                     Icons.visibility_outlined:Icons.visibility_off_outlined,color: AppColor.blueColor.withOpacity(.7),),
                   ),
                 ),
                 ScreenSize.height(15),

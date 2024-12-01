@@ -101,79 +101,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Align(
-                    alignment: Alignment.center,
-                    child: SizedBox(
-                      width: 100,
-                      child: Stack(
-                        children: [
-                          Container(
-                            height: 102,
-                            width: 102,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                  width: 4, color: AppColor.blueColor),
-                            ),
-                            child: myProvider.profileImage != null
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(50),
-                                    child: Image.file(
-                                      myProvider.profileImage!,
-                                      fit: BoxFit.cover,
-                                    ))
-                                : Icon(
-                                    Icons.person_2,
-                                    color: AppColor.borderD9Color,
-                                    size: 50,
-                                  ),
-                          ),
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: GestureDetector(
-                              onTap: () {
-                                imageBottomSheet(context, cameraTap: () {
-                                  ImagePickerService
-                                      .imagePicker(context, ImageSource.camera)
-                                      .then((val) {
-                                    if (val != null) {
-                                      myProvider.profileImage = val;
-                                      setState(() {});
-                                      Navigator.pop(context);
-                                    }
-                                  });
-                                }, galleryTap: () {
-                                  ImagePickerService
-                                      .imagePicker(context, ImageSource.gallery)
-                                      .then((val) {
-                                    if (val != null) {
-                                      myProvider.profileImage = val;
-                                      setState(() {});
-                                      Navigator.pop(context);
-                                    }
-                                  });
-                                });
-                              },
-                              child: Container(
-                                height: 30,
-                                width: 30,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: AppColor.borderColor),
-                                alignment: Alignment.center,
-                                child: Image.asset(
-                                  AppImages.editIcon,
-                                  height: 15,
-                                  width: 15,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                 profileImageWidget(myProvider),
                   ScreenSize.height(25),
                   getText(
                       title: getTranslated('first_name', context)!,
@@ -186,6 +114,9 @@ class _SingUpScreenState extends State<SingUpScreen> {
                     hintText: getTranslated('enter_fName', context)!,
                     controller: myProvider.fNameController,
                     textInputAction: TextInputAction.next,
+                    inputFormatters: [
+                       FilteringTextInputFormatter.deny(RegExp(Utils.regexToRemoveEmoji))
+                    ],
                     validator: (val) {
                       if (val.isEmpty) {
                         return getTranslated('enter_fName', context)!;
@@ -204,6 +135,9 @@ class _SingUpScreenState extends State<SingUpScreen> {
                     hintText: getTranslated('enter_lName', context)!,
                     textInputAction: TextInputAction.next,
                     controller: myProvider.lNameController,
+                    inputFormatters: [
+                       FilteringTextInputFormatter.deny(RegExp(Utils.regexToRemoveEmoji))
+                    ],
                     validator: (val) {
                       if (val.isEmpty) {
                         return getTranslated('enter_lName', context)!;
@@ -275,6 +209,9 @@ class _SingUpScreenState extends State<SingUpScreen> {
                     hintText: getTranslated('email_address', context)!,
                     controller: myProvider.emailController,
                     textInputAction: TextInputAction.next,
+                    inputFormatters: [
+                       FilteringTextInputFormatter.deny(RegExp(Utils.regexToRemoveEmoji))
+                    ],
                     validator: (val) {
                       if (val.isEmpty) {
                         return getTranslated('enter_email_address', context)!;
@@ -295,6 +232,9 @@ class _SingUpScreenState extends State<SingUpScreen> {
                     hintText: getTranslated('enter_address', context)!,
                     textInputAction: TextInputAction.next,
                     controller: myProvider.addressController,
+                    inputFormatters: [
+                       FilteringTextInputFormatter.deny(RegExp(Utils.regexToRemoveEmoji))
+                    ],
                     validator: (val) {
                       if (val.isEmpty) {
                         return getTranslated('enter_your_address', context)!;
@@ -312,6 +252,9 @@ class _SingUpScreenState extends State<SingUpScreen> {
                   RectangleTextfield(
                     hintText: getTranslated('enter_department_city', context)!,
                     textInputAction: TextInputAction.next,
+                    inputFormatters: [
+                       FilteringTextInputFormatter.deny(RegExp(Utils.regexToRemoveEmoji))
+                    ],
                     controller: myProvider.cityController,
                     validator: (val) {
                       if (val.isEmpty) {
@@ -330,6 +273,9 @@ class _SingUpScreenState extends State<SingUpScreen> {
                   RectangleTextfield(
                     hintText: getTranslated('enter_your_country', context)!,
                     textInputAction: TextInputAction.next,
+                    inputFormatters: [
+                       FilteringTextInputFormatter.deny(RegExp(Utils.regexToRemoveEmoji))
+                    ],
                     controller: myProvider.countryController,
                     validator: (val) {
                       if (val.isEmpty) {
@@ -354,9 +300,9 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       genderBottomSheet();
                     },
                     validator: (val) {
-                      if (val.isEmpty) {
-                        return getTranslated('select_your_gender', context)!;
-                      }
+                      // if (val.isEmpty) {
+                      //   return getTranslated('select_your_gender', context)!;
+                      // }
                     },
                   ),
                   ScreenSize.height(15),
@@ -370,6 +316,10 @@ class _SingUpScreenState extends State<SingUpScreen> {
                   RectangleTextfield(
                     hintText: getTranslated('enterPassword', context)!,
                     controller: myProvider.passwordController,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.deny( RegExp(r'\s')),
+                       FilteringTextInputFormatter.deny(RegExp(Utils.regexToRemoveEmoji))
+                    ],
                     textInputAction: TextInputAction.next,
                     validator: (val) {
                       if (val.isEmpty) {
@@ -377,9 +327,6 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       } else if (val.length<6) {
                        return getTranslated( 'passwordLenghtValidation', navigatorKey.currentContext!)!;
                         }
-                      // else if(val!=myProvider.confirmPasswordController.text){
-                      //   return getTranslated('password_not_match', context)!;
-                      // }
                     },
                   ),
                   ScreenSize.height(15),
@@ -394,6 +341,10 @@ class _SingUpScreenState extends State<SingUpScreen> {
                     hintText: getTranslated('enter_confirm_password', context)!,
                     textInputAction: TextInputAction.done,
                     controller: myProvider.confirmPasswordController,
+                    inputFormatters: [
+                       FilteringTextInputFormatter.deny( RegExp(r'\s')),
+                       FilteringTextInputFormatter.deny(RegExp(Utils.regexToRemoveEmoji))
+                    ],
                     validator: (val) {
                       if (val.isEmpty) {
                         return getTranslated(
@@ -454,6 +405,82 @@ class _SingUpScreenState extends State<SingUpScreen> {
           );
         }));
   }
+
+profileImageWidget(SignupProvider myProvider){
+  return      Align(
+                    alignment: Alignment.center,
+                    child: SizedBox(
+                      width: 100,
+                      child: Stack(
+                        children: [
+                          Container(
+                            height: 102,
+                            width: 102,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                  width: 4, color: AppColor.blueColor),
+                            ),
+                            child: myProvider.profileImage != null
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Image.file(
+                                      myProvider.profileImage!,
+                                      fit: BoxFit.cover,
+                                    ))
+                                : Icon(
+                                    Icons.person_2,
+                                    color: AppColor.borderD9Color,
+                                    size: 50,
+                                  ),
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: GestureDetector(
+                              onTap: () {
+                                imageBottomSheet(context, cameraTap: () {
+                                  ImagePickerService
+                                      .imagePicker(context, ImageSource.camera)
+                                      .then((val) {
+                                    if (val != null) {
+                                      myProvider.profileImage = val;
+                                      setState(() {});
+                                      Navigator.pop(context);
+                                    }
+                                  });
+                                }, galleryTap: () {
+                                  ImagePickerService
+                                      .imagePicker(context, ImageSource.gallery)
+                                      .then((val) {
+                                    if (val != null) {
+                                      myProvider.profileImage = val;
+                                      setState(() {});
+                                      Navigator.pop(context);
+                                    }
+                                  });
+                                });
+                              },
+                              child: Container(
+                                height: 30,
+                                width: 30,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColor.borderColor),
+                                alignment: Alignment.center,
+                                child: Image.asset(
+                                  AppImages.editIcon,
+                                  height: 15,
+                                  width: 15,
+                                ),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+}
 
   genderBottomSheet() {
     showModalBottomSheet(

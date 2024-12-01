@@ -30,7 +30,6 @@ class VechileInfoScreen extends StatefulWidget {
 
 class _VechileInfoScreenState extends State<VechileInfoScreen> {
   int vehicleType = -1;
-  int fuelType = -1;
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -175,101 +174,6 @@ class _VechileInfoScreenState extends State<VechileInfoScreen> {
                           ),
                         );
                       }),
-                ],
-              ),
-            );
-          });
-        });
-  }
-
-  fuelTypeBottomSheet() {
-    showModalBottomSheet(
-        backgroundColor: AppColor.whiteColor,
-        shape: OutlineInputBorder(
-            borderSide: BorderSide(color: AppColor.whiteColor),
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-        context: context,
-        builder: (context) {
-          return StatefulBuilder(builder: (context, state) {
-            return Container(
-              padding: const EdgeInsets.only(
-                  top: 20, left: 15, right: 15, bottom: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      getText(
-                          title: getTranslated('select_fuel_type', context)!,
-                          size: 18,
-                          fontFamily: FontFamily.poppinsMedium,
-                          color: AppColor.blackColor,
-                          fontWeight: FontWeight.w500),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Icon(Icons.close),
-                      )
-                    ],
-                  ),
-                  ScreenSize.height(20),
-                  GestureDetector(
-                    onTap: () {
-                      fuelType = 0;
-                      Provider.of<SignupProvider>(context, listen: false)
-                          .fuelController
-                          .text = 'Petrol';
-                      Navigator.pop(context);
-                      state(() {});
-                    },
-                    child: Container(
-                      color: AppColor.whiteColor,
-                      height: 30,
-                      child: Row(
-                        children: [
-                          customRadio(0, fuelType),
-                          ScreenSize.width(15),
-                          getText(
-                              title: getTranslated('petrol', context)!,
-                              size: 16,
-                              fontFamily: FontFamily.nunitoMedium,
-                              color: AppColor.blackColor,
-                              fontWeight: FontWeight.w500)
-                        ],
-                      ),
-                    ),
-                  ),
-                  ScreenSize.height(10),
-                  GestureDetector(
-                    onTap: () {
-                      fuelType = 1;
-                      Provider.of<SignupProvider>(context, listen: false)
-                          .fuelController
-                          .text = 'Diesel';
-                      state(() {});
-                      Navigator.pop(context);
-                    },
-                    child: Container(
-                      color: AppColor.whiteColor,
-                      height: 30,
-                      child: Row(
-                        children: [
-                          customRadio(1, fuelType),
-                          ScreenSize.width(15),
-                          getText(
-                              title: getTranslated('diesel', context)!,
-                              size: 16,
-                              fontFamily: FontFamily.nunitoMedium,
-                              color: AppColor.blackColor,
-                              fontWeight: FontWeight.w500)
-                        ],
-                      ),
-                    ),
-                  )
                 ],
               ),
             );

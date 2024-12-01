@@ -1,5 +1,4 @@
 import 'package:cn_delivery/config/approutes.dart';
-import 'package:cn_delivery/helper/appImages.dart';
 import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
@@ -9,6 +8,7 @@ import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/screens/auth/vechile_info_screen.dart';
 import 'package:cn_delivery/utils/enum.dart';
 import 'package:cn_delivery/utils/utils.dart';
+import 'package:cn_delivery/widget/top_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:dotted_border/dotted_border.dart';
 
@@ -30,15 +30,7 @@ class _ChooseVehicleScreenState extends State<ChooseVehicleScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Align(
-                alignment: Alignment.center,
-                child: Image.asset(
-                  AppImages.appIcon,
-                  // height: 80,
-                  width: 165,
-                  fit: BoxFit.cover,
-                ),
-              ),
+             topLogo(),
               ScreenSize.height(30),
               getText(
                   title: 'Choose your vehicle',

@@ -1,5 +1,6 @@
 import 'package:cn_delivery/provider/forgot_password_provider.dart';
 import 'package:cn_delivery/widget/appBar.dart';
+import 'package:cn_delivery/widget/top_logo.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../helper/appImages.dart';
@@ -42,15 +43,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Image.asset(
-                  AppImages.appIcon,
-                  // height: 80,
-                  width: 165,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              topLogo(alignment: Alignment.centerLeft),
               ScreenSize.height(40),
               getText(title: "${getTranslated('forgotPassword', context)!}?",
                   size: 22, fontFamily: FontFamily.poppinsMedium,
@@ -70,17 +63,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       AppValidation.emailValidator(val);
                   setState(() {});
                 },
-                icon: Container(
-                  height: 30,
-                  width: 30,
-                  alignment: Alignment.center,
-                  child: ImageIcon(
-                    const AssetImage(
-                      AppImages.emailIcon,
-                    ),
-                    size: 24,
-                    color: AppColor.blueColor,
+                prefixIcon:const ImageIcon(
+                   AssetImage(
+                    AppImages.emailIcon,
                   ),
+                  size: 24,
+                  color: AppColor.blueColor,
                 ),
               ),
               ScreenSize.height(20),
@@ -92,9 +80,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   isLoading: myProvider.isLoading,
                   onTap: () {
                     myProvider.checkEmailValidation();
-                    // AppRoutes.pushCupertinoNavigation(const OtpVerifyScreen(email: email, phone: phone))
-                    // profileProvider.checkPasswordValidation();
-                  })
+                   })
             ],
           ),
           ),

@@ -41,4 +41,5 @@ class AppImages {
   static const pwIcon = 'assets/icons/pw.png';
   static const tcgIcon = 'assets/icons/tcg.png';
   static const withdrawIcon ='assets/icons/withdraw.png';
+  static const vehicleIcon = 'assets/icons/vehicle.png';
 }

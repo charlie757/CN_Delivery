@@ -57,7 +57,7 @@ callInitFunction(){
               RoundedTextField(controller: myProvider.holderNameController,
               errorMsg: myProvider.holderNameErrorMsg,
               textInputAction: TextInputAction.next,
-              hintText: getTranslated('holder_name', context),
+              hintText: getTranslated('holder_name', context)!,
               isReadOnly: myProvider.isLoading,
               onChanged: (val){
                  myProvider.holderNameErrorMsg =
@@ -75,7 +75,7 @@ callInitFunction(){
               RoundedTextField(controller: myProvider.bankNameController,
               errorMsg: myProvider.bankNameErrorMsg,
               textInputAction: TextInputAction.next,
-              hintText: getTranslated('bank_name', context),
+              hintText: getTranslated('bank_name', context)!,
               isReadOnly: myProvider.isLoading,
               onChanged: (val){
                  myProvider.bankNameErrorMsg =
@@ -92,7 +92,7 @@ callInitFunction(){
               RoundedTextField(controller: myProvider.branchController,
               errorMsg: myProvider.branchNameErrorMsg,
               textInputAction: TextInputAction.next,
-              hintText: getTranslated('branch_name', context),
+              hintText: getTranslated('branch_name', context)!,
               isReadOnly: myProvider.isLoading,
               onChanged: (val){
                 myProvider.branchNameErrorMsg = AppValidation.bankValidation(val:myProvider.branchController.text,errorMsg: getTranslated('enter_branch_name', context)!);
@@ -112,7 +112,7 @@ callInitFunction(){
                 FilteringTextInputFormatter.digitsOnly
               ],
               textInputType: TextInputType.number,
-              hintText: getTranslated('account_number', context),
+              hintText: getTranslated('account_number', context)!,
               isReadOnly: myProvider.isLoading,
               onChanged: (val){
                 myProvider.accountNumberErrorMsg = AppValidation.bankValidation(val:myProvider.accountNumberController.text,errorMsg: getTranslated('enter_account_number', context)!);
