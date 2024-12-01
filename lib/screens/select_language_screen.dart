@@ -1,4 +1,5 @@
 import 'package:cn_delivery/config/approutes.dart';
+import 'package:cn_delivery/helper/appbutton.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/helper/fontfamily.dart';
 import 'package:cn_delivery/helper/getText.dart';
@@ -42,7 +43,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                 title: getTranslated('choose', context)!,
                 size: 35,
                 fontFamily: FontFamily.poppinsMedium,
-                color: AppColor.blueColor,
+                color: AppColor.appTheme,
                 fontWeight: FontWeight.w700),
             getText(
                 title: getTranslated('your_language', context)!,
@@ -59,11 +60,11 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
       )),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 15, right: 15, bottom: 30),
-        child: CustomButton(
+        child: AppButton(
             title: getTranslated('continue', context)!,
             height: 50,
             width: double.infinity,
-            buttonColor: AppColor.blueColor,
+            buttonColor: AppColor.appTheme,
             onTap: () {
               SessionManager.setFirstTimeLanguageScreen=true;
               AppRoutes.pushCupertinoNavigation(const LoginScreen());
@@ -103,7 +104,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                     title: title,
                     size: 20,
                     fontFamily: FontFamily.poppinsMedium,
-                    color: AppColor.blueColor,
+                    color: AppColor.appTheme,
                     fontWeight: FontWeight.w800),
                 ScreenSize.height(15),
                 getText(
