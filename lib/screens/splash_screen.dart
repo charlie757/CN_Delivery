@@ -1,7 +1,8 @@
 import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appImages.dart';
-import 'package:cn_delivery/screens/dashboard_screen.dart';
+import 'package:cn_delivery/screens/dashboard/dashboard_screen.dart';
 import 'package:cn_delivery/screens/auth/login_screen.dart';
+import 'package:cn_delivery/screens/intro_screen.dart';
 import 'package:cn_delivery/screens/select_language_screen.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
   callInitFunction() {
     Future.delayed(const Duration(seconds: 3), () {
       print("fdsfd..${SessionManager.firstTimeLanguageScreen}");
+      if(SessionManager.introScreen){
       if(SessionManager.firstTimeLanguageScreen==true){
         if (SessionManager.token.isNotEmpty) {
           AppRoutes.pushReplacementNavigation(const DashboardScreen());
@@ -32,6 +34,10 @@ class _SplashScreenState extends State<SplashScreen> {
       }
       else{
         AppRoutes.pushReplacementNavigation(const SelectLanguageScreen());
+      }
+      }
+      else{
+         AppRoutes.pushReplacementNavigation(const IntroScreen());
       }
     });
   }

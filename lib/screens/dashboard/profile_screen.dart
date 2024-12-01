@@ -22,9 +22,9 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../widget/customradio.dart';
-import '../widget/image_bottom_sheet.dart';
-import '../widget/upload_image_widget.dart';
+import '../../widget/customradio.dart';
+import '../../widget/image_bottom_sheet.dart';
+import '../../widget/upload_image_widget.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});

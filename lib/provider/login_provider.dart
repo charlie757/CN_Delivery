@@ -5,7 +5,7 @@ import 'package:cn_delivery/api/api_url.dart';
 import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/model/login_model.dart';
 import 'package:cn_delivery/screens/auth/choose_vehicle_screen.dart';
-import 'package:cn_delivery/screens/dashboard_screen.dart';
+import 'package:cn_delivery/screens/dashboard/dashboard_screen.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
 import 'package:cn_delivery/utils/constants.dart';
 import 'package:cn_delivery/utils/session_manager.dart';

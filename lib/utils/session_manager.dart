@@ -11,6 +11,16 @@ class SessionManager {
     sharedPrefs = await SharedPreferences.getInstance();
   }
 
+static bool get firstTimeLanguageScreen =>
+      sharedPrefs.getBool(Constants.FIRST_TIME_LANGUAGE_SCREEN) ??false;
+  static set setFirstTimeLanguageScreen(bool value) {
+    sharedPrefs.setBool(Constants.FIRST_TIME_LANGUAGE_SCREEN, value);
+  }
+  static bool get introScreen =>
+      sharedPrefs.getBool(Constants.INTRO_SCREEN) ??false;
+  static set setIntroScreen(bool value) {
+    sharedPrefs.setBool(Constants.INTRO_SCREEN, value);
+  }
   static String get token => sharedPrefs.getString(Constants.TOKEN) ?? "";
   static set setToken(String value) {
     sharedPrefs.setString(Constants.TOKEN, value);
@@ -27,12 +37,6 @@ class SessionManager {
     sharedPrefs.setString(Constants.ADDRESS, value);
   }
 
-
-  static bool get firstTimeLanguageScreen =>
-      sharedPrefs.getBool(Constants.FIRST_TIME_LANGUAGE_SCREEN) ??false;
-  static set setFirstTimeLanguageScreen(bool value) {
-    sharedPrefs.setBool(Constants.FIRST_TIME_LANGUAGE_SCREEN, value);
-  }
   static String get fcmToken =>
       sharedPrefs.getString(Constants.FCM_TOKEN) ?? "";
   static set setFcmToken(String value) {

@@ -6,6 +6,7 @@ import 'package:cn_delivery/utils/enum.dart';
 import 'package:cn_delivery/utils/utils.dart';
 
 class Constants {
+  static String INTRO_SCREEN = 'INTRO_SCREEN';
   static String FIRST_TIME_OPEN_APP = 'FIRST_TIME_OPEN_APP';
   static String TOKEN = 'token';
   static String KEEP_ME_SIGNED_IN = 'KEEP_ME_SIGNED_IN';

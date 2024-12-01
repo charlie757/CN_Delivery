@@ -6,7 +6,7 @@ import 'package:cn_delivery/api/api_url.dart';
 import 'package:cn_delivery/config/approutes.dart';
 import 'package:cn_delivery/helper/appcolor.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
-import 'package:cn_delivery/screens/dashboard_screen.dart';
+import 'package:cn_delivery/screens/dashboard/dashboard_screen.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
 import 'package:cn_delivery/utils/showcircleprogressdialog.dart';
 import 'package:cn_delivery/utils/utils.dart';

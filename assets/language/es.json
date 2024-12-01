@@ -254,5 +254,7 @@
     "transaction_type":"Tipo de transacción",
     "date":"Fecha",
     "coming_soon":"Muy pronto",
-    "Okay":"Bueno"
+    "Okay":"Bueno",
+    "introDes":"Bienvenido a CN delivery la plataforma que se pagan más,  gánate un 85% del costo del domicilio y también gana grandes comisiones por referir personas",
+    "getStarted":"Empezar"
 }

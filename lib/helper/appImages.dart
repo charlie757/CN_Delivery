@@ -3,6 +3,7 @@ class AppImages {
   static const logo = 'assets/icons/logo.png';
   static const appIcon = 'assets/icons/app_icon.png';
   static const backgroundImg = 'assets/images/backgroundImg.png';
+  static const introImage = 'assets/images/image.png';
   static const handEmoji = 'assets/icons/hand_emoji.png';
   static const callIcon = 'assets/icons/call_icon.png';
   static const passwordIcon = 'assets/icons/password_icon.png';

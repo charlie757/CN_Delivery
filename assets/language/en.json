@@ -256,6 +256,8 @@
     "transaction_type":"Transaction type",
     "date":"Date",
     "coming_soon":"Coming soon",
-    "Okay":"Okay"
+    "Okay":"Okay",
+    "introDes":"welcome to CN delivery, the platform that pays the most, earn 85% of the cost of the delivery and also earn large commissions for referring people.",
+    "getStarted":"Get Started"
 
 }

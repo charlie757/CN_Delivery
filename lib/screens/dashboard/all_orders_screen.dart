@@ -6,7 +6,7 @@ import 'package:cn_delivery/helper/screensize.dart';
 import 'package:cn_delivery/localization/language_constrants.dart';
 import 'package:cn_delivery/model/order_model.dart';
 import 'package:cn_delivery/provider/all_order_provider.dart';
-import 'package:cn_delivery/screens/view_order_details_screen.dart';
+import 'package:cn_delivery/screens/dashboard/view_order_details_screen.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:cn_delivery/widget/order_widget.dart';
 import 'package:flutter/material.dart';
