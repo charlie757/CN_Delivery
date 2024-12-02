@@ -65,6 +65,17 @@ class ProfileProvider extends ChangeNotifier {
   insuranceCopyImage=null;
   inspectionImage=null;
   criminalRecordImage=null;
+   vehicleNameErrorMsg ='';
+      vehicleTypeErrorMsg = '';
+      modelNumberErrorMsg = '';
+      vehicleBrandErrorMsg = '';
+      dorErrorMsg = '';
+      vehicleLicenseErrorMsg = '';
+      vehicleRegistrationErrorMsg = '';
+      vehicleSizeErrorMsg = '';
+      vehicleColorErrorMsg='';
+      notifyListeners();
+
  }
 
   final oldPasswordController = TextEditingController();
@@ -222,6 +233,7 @@ File?criminalRecordImage;
       vehicleColorErrorMsg = AppValidation.modelNumberValidator(vehicleColorController.text);
      
         }
+        notifyListeners();
  }
 
   checkCarAndBikeVehicleInfoValidation(){
@@ -459,18 +471,13 @@ bikeCarVehicleApiFunction(String type)async{
   http.MultipartRequest('POST', Uri.parse(ApiUrl.updateVehicleInfoUrl));
   request.headers.addAll(headers);
  request.headers.addAll(headers);
-  request.fields['vehicle_type'] = type;  /// car
+  request.fields['vehicle_type'] = type.toLowerCase();  /// car
   request.fields['vehicle_name'] = vehicleNameController.text;
   request.fields['vehicle_brand'] = vehicleBrandController.text;
   request.fields['vehicle_model_number'] = modelNumberController.text;
   request.fields['vehicle_date_of_registration'] = dorController.text;
   request.fields['vehicle_registration_number'] = vehicleRegistrationController.text;
   request.fields['vehicle_license_number'] = vehicleLicenseController .text;
-  request.fields.forEach((key, value) {
-    print('$key: $value');
-  });
-
-
    if(vehicleImage!=null){
     final file = await http.MultipartFile.fromPath(
       'vehicle_image', vehicleImage!.path,
@@ -507,7 +514,6 @@ bikeCarVehicleApiFunction(String type)async{
     );
     request.files.add(file);
   }
-   print(type);
   var res = await request.send();
   var vb = await http.Response.fromStream(res);
   log(vb.body);

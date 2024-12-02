@@ -128,7 +128,7 @@ driverRegisterApiFunction()async{
   if (vb.statusCode == 200) {
     var dataAll = json.decode(vb.body);
     if(dataAll['data']!=null&& !dataAll['data']['is_otp_verify']){
-      AppRoutes.pushReplacementAndRemoveNavigation( OtpVerifyScreen(email: emailController.text,phone: mobileController.text,
+      AppRoutes.pushCupertinoNavigation( OtpVerifyScreen(email: emailController.text,phone: mobileController.text,
       route: 'signup',));
     }
     Utils.successSnackBar(dataAll['message'], navigatorKey.currentContext!);

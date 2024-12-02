@@ -54,12 +54,15 @@ class _SingUpScreenState extends State<SingUpScreen> {
     provider.fuelController.clear();
     provider.licenceController.clear();
     provider.registrationController.clear();
+    provider.cityController.clear();
+    provider.countryController.clear();
     provider.profileImage = null;
     provider.passportImage = null;
     provider.licenceImage = null;
     provider.insuranceCopyImage = null;
     provider.touristPermitImage = null;
     provider.vehicleImage = null;
+    provider.stateIdentityImage=null;
     provider.initCountry();
   }
 
@@ -324,7 +327,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                     validator: (val) {
                       if (val.isEmpty) {
                         return getTranslated('enter_password', context)!;
-                      } else if (val.length<6) {
+                      } else if (val.length<8) {
                        return getTranslated( 'passwordLenghtValidation', navigatorKey.currentContext!)!;
                         }
                     },
@@ -349,7 +352,7 @@ class _SingUpScreenState extends State<SingUpScreen> {
                       if (val.isEmpty) {
                         return getTranslated(
                             'enter_confirm_password', context)!;
-                      }else if (val.length<6) {
+                      }else if (val.length<8) {
                   return getTranslated( 'passwordLenghtValidation', navigatorKey.currentContext!)!;
                          }
                           else if (val != myProvider.passwordController.text) {

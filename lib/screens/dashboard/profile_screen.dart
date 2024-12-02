@@ -14,6 +14,7 @@ import 'package:cn_delivery/provider/profile_provider.dart';
 import 'package:cn_delivery/utils/app_validation.dart';
 import 'package:cn_delivery/utils/constants.dart';
 import 'package:cn_delivery/utils/session_manager.dart';
+import 'package:cn_delivery/utils/upper_case.dart';
 import 'package:cn_delivery/utils/utils.dart';
 import 'package:cn_delivery/widget/appBar.dart';
 import 'package:cn_delivery/widget/dialog_box.dart';
@@ -44,7 +45,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final myProvider = Provider.of<ProfileProvider>(context, listen: false);
     myProvider.clearValues();
     Future.delayed(Duration.zero, () {
-      myProvider.getProfileApiFunction(false);
+      myProvider.getProfileApiFunction(true);
       myProvider.setValuesInController();
     });
   }
@@ -740,6 +741,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           isReadOnly: false,
           textInputAction: TextInputAction.next,
           errorMsg: profileProvider.vehicleRegistrationErrorMsg,
+          inputFormatters: [
+            UpperCaseTextFormatter()
+          ],
           onChanged: (val) {
             profileProvider.vehicleRegistrationErrorMsg =
                 AppValidation.vehicleRegistrationValidator(val);

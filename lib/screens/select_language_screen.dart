@@ -43,7 +43,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                 title: getTranslated('choose', context)!,
                 size: 35,
                 fontFamily: FontFamily.poppinsMedium,
-                color: AppColor.appTheme,
+                color: AppColor.blueColor,
                 fontWeight: FontWeight.w700),
             getText(
                 title: getTranslated('your_language', context)!,
@@ -104,7 +104,7 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                     title: title,
                     size: 20,
                     fontFamily: FontFamily.poppinsMedium,
-                    color: AppColor.appTheme,
+                    color: AppColor.blueColor,
                     fontWeight: FontWeight.w800),
                 ScreenSize.height(15),
                 getText(
